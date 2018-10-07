@@ -31,3 +31,7 @@
 *.out
 *.app
 
+# CLion IDE
+cmake-build-*
+.idea
+
