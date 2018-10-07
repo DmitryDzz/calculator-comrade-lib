@@ -17,3 +17,7 @@ Windows: `cmake -G "MinGW Makefiles" ..\calculator-comrade-lib`<br>
 Build the project.<br>
 Linux: `make`<br>
 Windows: `mingw32-make`
+
+Run tests.<br>
+Linux: `./bin/tests`<br>
+Windows: `bin\tests.exe`
