@@ -1,7 +1,7 @@
 set(
     SOURCES 
         "src/main.cpp"
-        "src/main_test.cpp"
+        "src/basic_input_tests.cpp"
 )
 
 set(TARGET tests)

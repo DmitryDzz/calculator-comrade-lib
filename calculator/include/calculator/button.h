@@ -20,7 +20,7 @@ namespace calculatorcomrade {
         d7,
         d8,
         d9,
-        dot,
+        point,
         plus,
         minus,
         mul,
