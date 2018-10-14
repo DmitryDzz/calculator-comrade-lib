@@ -8,8 +8,8 @@
 namespace calculatorcomrade {
 
     enum class Button {
-        ca,         // clean all
-        ce,         // clean entry
+        ca,         // clear all
+        ce,         // clear entry
         d0,
         d1,
         d2,

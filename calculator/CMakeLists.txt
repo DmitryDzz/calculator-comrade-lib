@@ -7,7 +7,7 @@ set(
         "include/calculator/operation.h"
         "include/calculator/display_register.h"
         "include/calculator/button.h"
-        "include/calculator/register.h")
+        "include/calculator/register.h" include/calculator/config.h)
 
 set(TARGET calculator)
 

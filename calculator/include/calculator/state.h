@@ -5,10 +5,12 @@
 #ifndef CALCULATORCOMRADE_STATE_H
 #define CALCULATORCOMRADE_STATE_H
 
-#include <stdint-gcc.h>
-#include "operation.h"
-#include "display_register.h"
-#include "register.h"
+#include <cassert>
+
+#include "calculator/config.h"
+#include "calculator/operation.h"
+#include "calculator/display_register.h"
+#include "calculator/register.h"
 
 namespace calculatorcomrade {
 
@@ -19,10 +21,24 @@ namespace calculatorcomrade {
         Operation operation = Operation::none;
         DisplayRegister displayRegister = DisplayRegister::x;
 
-        State() = default;
+        State() : State(Config::DEFAULT_DIGITS) {}
+        explicit State(uint8_t digits) : x(digits), y(digits) {
+            assert(digits <= Config::MAX_DIGITS);
+        }
+
+        void clear() {
+            x.clear();
+            y.clear();
+            operation = {};
+            displayRegister = {};
+        }
 
         bool operator==(const State& other) {
-            return *this == other;
+            return isEqual(*this, other);
+        }
+
+        bool operator!=(const State& other) {
+            return !isEqual(*this, other);
         }
 
         bool static isEqual(const State& lhs, const State& rhs) {

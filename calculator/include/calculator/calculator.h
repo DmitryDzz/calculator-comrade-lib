@@ -5,27 +5,32 @@
 #ifndef CALCULATORCOMRADE_CALCULATOR_H
 #define CALCULATORCOMRADE_CALCULATOR_H
 
-#include "calculator/state.h"
 #include "calculator/button.h"
-#include "calculator/operation.h"
 #include "calculator/display_register.h"
+#include "calculator/operation.h"
+#include "calculator/state.h"
 
 namespace calculatorcomrade {
 
     class Calculator {
     public:
-        Calculator() = default;
-        Calculator(int digits) : digits_(digits) {};
+        const static uint8_t DIGITS = 8;
+
+        Calculator() : Calculator(DIGITS) {};
+        explicit Calculator(uint8_t digits) : state_(digits), digits_(digits) {
+
+        };
 
         State getState();
         void input(Button button);
     private:
-        int digits_ = 8;
+        uint8_t digits_;
         State state_;
+
+        Register& getDisplayedRegister();
 
         void clearAll();
         void clearEntry();
-        void inputDigit(int digit);
     };
 };
 
