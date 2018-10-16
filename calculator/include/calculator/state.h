@@ -29,6 +29,7 @@ namespace calculatorcomrade {
         void clear() {
             x.clear();
             y.clear();
+            //TODO How to reset the object to default state?
             operation = {};
             displayRegister = {};
         }

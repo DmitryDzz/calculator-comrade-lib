@@ -21,6 +21,7 @@ namespace calculatorcomrade {
         bool negative = false;
         bool overflow = false;
 
+        Register() = delete;
         explicit Register(uint8_t digits) : digits_(digits) {
             assert(digits <= Config::MAX_DIGITS);
             data_ = new uint8_t[digits]();

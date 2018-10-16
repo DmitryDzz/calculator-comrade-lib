@@ -17,9 +17,7 @@ namespace calculatorcomrade {
         const static uint8_t DIGITS = 8;
 
         Calculator() : Calculator(DIGITS) {};
-        explicit Calculator(uint8_t digits) : state_(digits), digits_(digits) {
-
-        };
+        explicit Calculator(uint8_t digits) : state_(digits), digits_(digits) {};
 
         State getState();
         void input(Button button);
