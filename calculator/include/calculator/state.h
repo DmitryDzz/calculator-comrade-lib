@@ -51,11 +51,11 @@ namespace calculatorcomrade {
         }
     };
 
-    bool operator==(const State& lhs, const State& rhs) {
+    inline bool operator==(const State& lhs, const State& rhs) {
         return State::isEqual(lhs, rhs);
     }
 
-    bool operator!=(const State& lhs, const State& rhs) {
+    inline bool operator!=(const State& lhs, const State& rhs) {
         return !State::isEqual(lhs, rhs);
     }
 }

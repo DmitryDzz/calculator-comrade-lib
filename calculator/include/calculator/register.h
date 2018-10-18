@@ -90,11 +90,11 @@ namespace calculatorcomrade {
         }
     };
 
-    bool operator==(const Register& lhs, const Register& rhs) {
+    inline bool operator==(const Register& lhs, const Register& rhs) {
         return Register::isEqual(lhs, rhs);
     }
 
-    bool operator!=(const Register& lhs, const Register& rhs) {
+    inline bool operator!=(const Register& lhs, const Register& rhs) {
         return !Register::isEqual(lhs, rhs);
     }
 }

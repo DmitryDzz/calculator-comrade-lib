@@ -1,6 +1,5 @@
 #include <gmock/gmock.h>
 
-#include "calculator/main.h"
 #include "calculator/calculator.h"
 #include "calculator/state.h"
 #include "calculator/button.h"
