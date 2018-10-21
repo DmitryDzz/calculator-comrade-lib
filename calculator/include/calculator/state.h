@@ -29,9 +29,8 @@ namespace calculatorcomrade {
         void clear() {
             x.clear();
             y.clear();
-            //TODO How to reset the object to default state?
-            operation = {};
-            displayRegister = {};
+            operation = Operation::none;
+            displayRegister = DisplayRegister::x;
         }
 
         bool operator==(const State& other) {
@@ -42,7 +41,7 @@ namespace calculatorcomrade {
             return !isEqual(*this, other);
         }
 
-        bool static isEqual(const State& lhs, const State& rhs) {
+        static bool isEqual(const State& lhs, const State& rhs) {
             bool result = lhs.x == rhs.x &&
                           lhs.y == rhs.y &&
                           lhs.operation == rhs.operation &&

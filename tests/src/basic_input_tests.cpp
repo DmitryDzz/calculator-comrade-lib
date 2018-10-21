@@ -16,13 +16,13 @@ TEST_CALCULATOR_INPUT(ClearAll) {
     Calculator calc;
     State defaultState;
     State state = calc.getState();
-    EXPECT_EQ(defaultState, state);
+    ASSERT_EQ(defaultState, state);
     calc.input(Button::d1);
     state = calc.getState();
-    EXPECT_NE(defaultState, state);
+    ASSERT_NE(defaultState, state);
     calc.input(Button::ca);
     state = calc.getState();
-    EXPECT_EQ(defaultState, state);
+    ASSERT_EQ(defaultState, state);
 }
 
 TEST_CALCULATOR_INPUT(ZeroTyping) {
@@ -30,7 +30,7 @@ TEST_CALCULATOR_INPUT(ZeroTyping) {
     State defaultState(4);
     for (int i = 0; i < 10; i++) {
         c.input(Button::d0);
-        EXPECT_EQ(defaultState, c.getState());
+        ASSERT_EQ(defaultState, c.getState());
     }
 }
 
@@ -40,32 +40,32 @@ TEST_CALCULATOR_INPUT(PositiveInt) {
 
     c.input(Button::d1);
     expected.x[0] = 1;
-    EXPECT_EQ(expected, c.getState());
+    ASSERT_EQ(expected, c.getState());
 
     c.input(Button::d2);
     expected.x[0] = 2;
     expected.x[1] = 1;
-    EXPECT_EQ(expected, c.getState());
+    ASSERT_EQ(expected, c.getState());
 
     c.input(Button::d3);
     expected.x[0] = 3;
     expected.x[1] = 2;
     expected.x[2] = 1;
-    EXPECT_EQ(expected, c.getState());
+    ASSERT_EQ(expected, c.getState());
 
     c.input(Button::d4);
     expected.x[0] = 4;
     expected.x[1] = 3;
     expected.x[2] = 2;
     expected.x[3] = 1;
-    EXPECT_EQ(expected, c.getState());
+    ASSERT_EQ(expected, c.getState());
 
     c.input(Button::d5);
     expected.x[0] = 4;
     expected.x[1] = 3;
     expected.x[2] = 2;
     expected.x[3] = 1;
-    EXPECT_EQ(expected, c.getState());
+    ASSERT_EQ(expected, c.getState());
 }
 
 
@@ -75,36 +75,36 @@ TEST_CALCULATOR_INPUT(NegativeInt) {
 
     c.input(Button::minus);
     expected.operation = Operation::sub;
-    EXPECT_EQ(expected, c.getState());
+    ASSERT_EQ(expected, c.getState());
 
     c.input(Button::d1);
     expected.x[0] = 1;
-    EXPECT_EQ(expected, c.getState());
+    ASSERT_EQ(expected, c.getState());
 
     c.input(Button::d2);
     expected.x[0] = 2;
     expected.x[1] = 1;
-    EXPECT_EQ(expected, c.getState());
+    ASSERT_EQ(expected, c.getState());
 
     c.input(Button::d3);
     expected.x[0] = 3;
     expected.x[1] = 2;
     expected.x[2] = 1;
-    EXPECT_EQ(expected, c.getState());
+    ASSERT_EQ(expected, c.getState());
 
     c.input(Button::d4);
     expected.x[0] = 4;
     expected.x[1] = 3;
     expected.x[2] = 2;
     expected.x[3] = 1;
-    EXPECT_EQ(expected, c.getState());
+    ASSERT_EQ(expected, c.getState());
 
     c.input(Button::d5);
     expected.x[0] = 4;
     expected.x[1] = 3;
     expected.x[2] = 2;
     expected.x[3] = 1;
-    EXPECT_EQ(expected, c.getState());
+    ASSERT_EQ(expected, c.getState());
 }
 
 TEST_CALCULATOR_INPUT(PositiveReal) {
@@ -113,24 +113,24 @@ TEST_CALCULATOR_INPUT(PositiveReal) {
 
     c.input(Button::d1);
     expected.x[0] = 1;
-    EXPECT_EQ(expected, c.getState());
+    ASSERT_EQ(expected, c.getState());
 
     c.input(Button::point);
     expected.x.pointPos = 0;
-    EXPECT_EQ(expected, c.getState());
+    ASSERT_EQ(expected, c.getState());
 
     c.input(Button::d2);
     expected.x[0] = 2;
     expected.x[1] = 1;
     expected.x.pointPos = 1;
-    EXPECT_EQ(expected, c.getState());
+    ASSERT_EQ(expected, c.getState());
 
     c.input(Button::d3);
     expected.x[0] = 3;
     expected.x[1] = 2;
     expected.x[2] = 1;
     expected.x.pointPos = 2;
-    EXPECT_EQ(expected, c.getState());
+    ASSERT_EQ(expected, c.getState());
 
     c.input(Button::d4);
     expected.x[0] = 4;
@@ -138,12 +138,12 @@ TEST_CALCULATOR_INPUT(PositiveReal) {
     expected.x[2] = 2;
     expected.x[3] = 1;
     expected.x.pointPos = 3;
-    EXPECT_EQ(expected, c.getState());
+    ASSERT_EQ(expected, c.getState());
 
     c.input(Button::d5);
     expected.x[0] = 4;
     expected.x[1] = 3;
     expected.x[2] = 2;
     expected.x[3] = 1;
-    EXPECT_EQ(expected, c.getState());
+    ASSERT_EQ(expected, c.getState());
 }

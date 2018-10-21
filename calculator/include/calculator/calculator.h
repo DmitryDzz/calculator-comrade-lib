@@ -21,11 +21,13 @@ namespace calculatorcomrade {
 
         State getState();
         void input(Button button);
+        void input(const std::string& button);
     private:
         uint8_t digits_;
         State state_;
 
         Register& getDisplayedRegister();
+        Button stringToButton(const std::string& button);
 
         void clearAll();
         void clearEntry();

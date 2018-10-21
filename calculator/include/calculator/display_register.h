@@ -11,6 +11,7 @@
 namespace calculatorcomrade {
 
     enum class DisplayRegister {
+        none,
         x,
         y
     };

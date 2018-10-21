@@ -8,7 +8,7 @@
 namespace calculatorcomrade {
 
     enum class Operation {
-        none, //TODO Do I really need it?
+        none,
         add,
         sub,
         mul,

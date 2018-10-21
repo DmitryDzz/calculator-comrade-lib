@@ -11,6 +11,7 @@
 #include <cstdint>
 #include <iterator>
 #include <vector>
+#include <string>
 
 #include "calculator/config.h"
 
@@ -50,6 +51,28 @@ namespace calculatorcomrade {
             if (pointPos == 0xFF) pointPos = 0;
         }
 
+        uint64_t getValue() {
+            uint64_t result = 0;
+            uint64_t factor = 1;
+            for (int i = 0; i < digits_; i++, factor *= 10)
+                result += factor * data_[i];
+            return result;
+        }
+
+        void setValue(int64_t value) {
+            negative = value < 0;
+            std::string text = std::to_string(negative ? -value : value);
+            auto textDigits = (uint8_t) text.size();
+            overflow = textDigits > digits_;
+            for (int8_t i = 0; i < digits_; i++) {
+                char digitChar = i < textDigits ? text[textDigits - i - 1] : '0';
+                std::string digitText(1, digitChar);
+                data_[i] = static_cast<uint8_t>(std::stoi(digitText));
+            }
+            if (overflow)
+                pointPos = textDigits - digits_;
+        }
+
         bool operator==(const Register& other) {
             return isEqual(*this, other);
         }
@@ -66,7 +89,7 @@ namespace calculatorcomrade {
             return data_[index];
         }
 
-        bool static isEqual(const Register& lhs, const Register& rhs) {
+        static bool isEqual(const Register& lhs, const Register& rhs) {
             if (lhs.digits_ != rhs.digits_)
                 return false;
             for (int i = 0; i < lhs.digits_; i++)
