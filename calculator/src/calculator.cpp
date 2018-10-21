@@ -21,7 +21,7 @@ Register& Calculator::getDisplayedRegister() {
     return state_.y;
 }
 
-State Calculator::getState() {
+State& Calculator::getState() {
     return state_;
 }
 
@@ -43,8 +43,20 @@ void Calculator::input(calculatorcomrade::Button button) {
         case Button::point:
             getDisplayedRegister().inputPoint();
             break;
+        case Button::plus:
+            state_.operation = Operation::add;
+            break;
         case Button::minus:
             state_.operation = Operation::sub;
+            break;
+        case Button::mul:
+            state_.operation = Operation::mul;
+            break;
+        case Button::div:
+            state_.operation = Operation::div;
+            break;
+        case Button::percent:
+            state_.operation = Operation::percent;
             break;
     }
 }

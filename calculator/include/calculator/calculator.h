@@ -19,7 +19,7 @@ namespace calculatorcomrade {
         Calculator() : Calculator(DIGITS) {};
         explicit Calculator(uint8_t digits) : state_(digits), digits_(digits) {};
 
-        State getState();
+        State& getState();
         void input(Button button);
         void input(const std::string& button);
     private:

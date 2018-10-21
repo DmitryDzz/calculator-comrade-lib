@@ -150,13 +150,14 @@ TEST(TestStates, JsonTests) {
 
         for (auto& test : tests) {
             std::cout << "[   TEST   ] " << test.name << std::endl;
-            int line = 1;
+            Calculator calculator(digits);
+            int line = 0;
             for (auto& keyState : test.keys) {
-                Calculator calculator(digits);
                 calculator.input(keyState.key);
                 State state(digits);
                 fillState(keyState.state, state);
-                ASSERT_EQ(state, calculator.getState()) << "(" << test.name << ": line #" << line++ << ")" << std::endl;
+                line++;
+                ASSERT_EQ(state, calculator.getState()) << "(" << test.name << ": line #" << line << ")" << std::endl;
             }
         }
     }
