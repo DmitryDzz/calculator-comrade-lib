@@ -23,10 +23,26 @@ void Calculator::input(const std::string& button) {
     input(stringToButton(button));
 }
 
-void Calculator::input(calculatorcomrade::Button button) {
+void Calculator::input(Button button) {
+    switch (button) {
+        case Button::d0 ... Button::d9:
+        case Button::point:
+            // First digit or point after operation:
+            if (hasOperation_ && !inNumber_) {
+                state_.y.set(state_.x);
+                state_.x.clear();
+            }
+            inNumber_ = true;
+            break;
+        default:
+            inNumber_ = false;
+            break;
+    }
+
     switch (button) {
         case Button::ca:
             state_.clear();
+            hasOperation_ = false;
             break;
         case Button::ce:
             state_.x.clear();
@@ -38,22 +54,31 @@ void Calculator::input(calculatorcomrade::Button button) {
             state_.x.inputPoint();
             break;
         case Button::plus:
+            calculateAddSubMulDiv();
             state_.operation = Operation::add;
+            hasOperation_ = true;
             break;
         case Button::minus:
+            calculateAddSubMulDiv();
             state_.operation = Operation::sub;
+            hasOperation_ = true;
             break;
         case Button::mul:
+            calculateAddSubMulDiv();
             state_.operation = Operation::mul;
+            hasOperation_ = true;
             break;
         case Button::div:
+            calculateAddSubMulDiv();
             state_.operation = Operation::div;
+            hasOperation_ = true;
             break;
         case Button::percent:
             state_.operation = Operation::percent;
             break;
         case Button::equals:
-            calculate();
+            calculateEquals();
+            hasOperation_ = false;
             break;
     }
 }
@@ -110,21 +135,16 @@ Button Calculator::stringToButton(const std::string& button) {
     return Button::none;
 }
 
-void Calculator::calculate() {
-//    Register& a = getDisplayedRegister();
-//    int64_t va = a.getValue();
-//    if (a.negative) va = -va;
-//
-//    Register& b = getOtherRegister();
-//    int64_t vb = b.getValue();
-//    if (b.negative) vb = -vb;
-//
-//    switch (state_.operation) {
-//        case Operation::add:
-//            int64_t result = va + vb;
-//            b.negative = result < 0;
-//            b.setValue(llabs(vb));
-//            switchDisplayedRegister();
-//            break;
-//    }
+void Calculator::calculateEquals() {
+    Operation op = state_.operation;
+    if (hasOperation_ && (op == Operation::add || op == Operation::sub || op == Operation::div)) {
+        state_.exchangeXY();
+    }
+    state_.calculate();
+}
+
+void Calculator::calculateAddSubMulDiv() {
+    if (!hasOperation_) return;
+    calculateEquals();
+    state_.y.clear();
 }

@@ -17,7 +17,7 @@ namespace calculatorcomrade {
         const static uint8_t DIGITS = 8;
 
         Calculator() : Calculator(DIGITS) {};
-        explicit Calculator(uint8_t digits) : state_(digits), digits_(digits) {};
+        explicit Calculator(uint8_t digits) : state_(digits), digits_(digits), hasOperation_(false), inNumber_(false) {};
 
         State& getState();
         void input(Button button);
@@ -25,10 +25,13 @@ namespace calculatorcomrade {
     private:
         uint8_t digits_;
         State state_;
+        bool hasOperation_;
+        bool inNumber_;
 
         Button stringToButton(const std::string& button);
 
-        void calculate();
+        void calculateEquals();
+        void calculateAddSubMulDiv();
     };
 };
 

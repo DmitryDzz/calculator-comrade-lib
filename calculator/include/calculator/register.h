@@ -73,6 +73,18 @@ namespace calculatorcomrade {
                 pointPos = textDigits - digits_;
         }
 
+        void set(const Register& rhs) {
+            this->clear();
+            uint8_t digits = rhs.digits_;
+            if (this->digits_ < digits)
+                digits = this->digits_;
+            for (int i = 0; i < digits; i++)
+                this->data_[i] = rhs.data_[i];
+            this->pointPos = rhs.pointPos;
+            this->negative = rhs.negative;
+            this->overflow = rhs.overflow;
+        }
+
         bool operator==(const Register& other) {
             return isEqual(*this, other);
         }
@@ -120,6 +132,8 @@ namespace calculatorcomrade {
     inline bool operator!=(const Register& lhs, const Register& rhs) {
         return !Register::isEqual(lhs, rhs);
     }
+
+
 }
 
 #endif //CALCULATORCOMRADE_REGISTER_H

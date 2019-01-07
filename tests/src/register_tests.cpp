@@ -56,3 +56,15 @@ TEST(TestRegister, SetNegativeOverflowValue) {
     ASSERT_EQ(true, reg.negative);
     ASSERT_EQ(true, reg.overflow);
 }
+
+TEST(TestRegister, Assigning) {
+    Register regA(8);
+    regA.setValue(-1234567890);
+
+    Register regB(8);
+    regB.set(regA);
+    ASSERT_EQ(34567890, regB.getValue());
+    ASSERT_EQ(2, regB.pointPos);
+    ASSERT_EQ(true, regB.negative);
+    ASSERT_EQ(true, regB.overflow);
+}
