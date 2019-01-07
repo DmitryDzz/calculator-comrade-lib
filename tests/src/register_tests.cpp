@@ -21,6 +21,10 @@ TEST(TestRegister, SetPositiveValue) {
     Register reg(Config::DEFAULT_DIGITS);
     reg.setValue(1974);
     ASSERT_EQ(1974, reg.getValue());
+    ASSERT_EQ(4, reg[0]);
+    ASSERT_EQ(7, reg[1]);
+    ASSERT_EQ(9, reg[2]);
+    ASSERT_EQ(1, reg[3]);
     ASSERT_EQ(0xFF, reg.pointPos);
     ASSERT_EQ(false, reg.negative);
     ASSERT_EQ(false, reg.overflow);

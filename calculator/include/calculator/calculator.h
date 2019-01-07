@@ -26,11 +26,9 @@ namespace calculatorcomrade {
         uint8_t digits_;
         State state_;
 
-        Register& getDisplayedRegister();
         Button stringToButton(const std::string& button);
 
-        void clearAll();
-        void clearEntry();
+        void calculate();
     };
 };
 

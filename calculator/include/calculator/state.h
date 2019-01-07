@@ -18,19 +18,17 @@ namespace calculatorcomrade {
     public:
         Register x;
         Register y;
-        Operation operation = Operation::none;
-        DisplayRegister displayRegister = DisplayRegister::x;
+        Operation operation;
 
         State() : State(Config::DEFAULT_DIGITS) {}
-        explicit State(uint8_t digits) : x(digits), y(digits) {
+        explicit State(uint8_t digits) : x(digits), y(digits), operation(Operation::add) {
             assert(digits <= Config::MAX_DIGITS);
         }
 
         void clear() {
             x.clear();
             y.clear();
-            operation = Operation::none;
-            displayRegister = DisplayRegister::x;
+            operation = Operation::add;
         }
 
         bool operator==(const State& other) {
@@ -44,8 +42,7 @@ namespace calculatorcomrade {
         static bool isEqual(const State& lhs, const State& rhs) {
             bool result = lhs.x == rhs.x &&
                           lhs.y == rhs.y &&
-                          lhs.operation == rhs.operation &&
-                          lhs.displayRegister == rhs.displayRegister;
+                          lhs.operation == rhs.operation;
             return result;
         }
     };

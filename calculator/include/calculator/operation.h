@@ -8,7 +8,6 @@
 namespace calculatorcomrade {
 
     enum class Operation {
-        none,
         add,
         sub,
         mul,

@@ -12,7 +12,7 @@ using calculatorcomrade::Operation;
 
 #define TEST_CALCULATOR_INPUT(test_name) TEST(CalculatorInput, test_name)
 
-TEST_CALCULATOR_INPUT(ClearAll) {
+TEST_CALCULATOR_INPUT(ClearEntry) {
     Calculator calc;
     State defaultState;
     State state = calc.getState();
@@ -20,7 +20,7 @@ TEST_CALCULATOR_INPUT(ClearAll) {
     calc.input(Button::d1);
     state = calc.getState();
     ASSERT_NE(defaultState, state);
-    calc.input(Button::ca);
+    calc.input(Button::ce);
     state = calc.getState();
     ASSERT_EQ(defaultState, state);
 }
@@ -113,6 +113,7 @@ TEST_CALCULATOR_INPUT(PositiveReal) {
 
     c.input(Button::d1);
     expected.x[0] = 1;
+    expected.x.pointPos = 0xFF;
     ASSERT_EQ(expected, c.getState());
 
     c.input(Button::point);
@@ -141,9 +142,5 @@ TEST_CALCULATOR_INPUT(PositiveReal) {
     ASSERT_EQ(expected, c.getState());
 
     c.input(Button::d5);
-    expected.x[0] = 4;
-    expected.x[1] = 3;
-    expected.x[2] = 2;
-    expected.x[3] = 1;
     ASSERT_EQ(expected, c.getState());
 }

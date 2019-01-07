@@ -113,14 +113,7 @@ void fillState(const JsonState& jsonState, State& state) {
     else if (jsonState.operation == "%")
         state.operation = Operation::percent;
     else
-        state.operation = Operation::none;
-
-    if (jsonState.displayReg == 0)
-        state.displayRegister = DisplayRegister::x;
-    else if (jsonState.displayReg == 1)
-        state.displayRegister = DisplayRegister::y;
-    else
-        state.displayRegister = DisplayRegister::none;
+        state.operation = Operation::add;
 
     state.x.setValue(jsonState.x);
     state.y.setValue(jsonState.y);

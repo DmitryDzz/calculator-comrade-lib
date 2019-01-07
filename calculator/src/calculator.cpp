@@ -15,12 +15,6 @@ using calculatorcomrade::DisplayRegister;
 using calculatorcomrade::Register;
 using calculatorcomrade::State;
 
-Register& Calculator::getDisplayedRegister() {
-    if (state_.displayRegister == DisplayRegister::x)
-        return state_.x;
-    return state_.y;
-}
-
 State& Calculator::getState() {
     return state_;
 }
@@ -32,16 +26,16 @@ void Calculator::input(const std::string& button) {
 void Calculator::input(calculatorcomrade::Button button) {
     switch (button) {
         case Button::ca:
-            clearAll();
+            state_.clear();
             break;
         case Button::ce:
-            clearEntry();
+            state_.x.clear();
             break;
         case Button::d0 ... Button::d9:
-            getDisplayedRegister().inputDigit((uint8_t)((int)button - (int)Button::d0));
+            state_.x.inputDigit((uint8_t)((int)button - (int)Button::d0));
             break;
         case Button::point:
-            getDisplayedRegister().inputPoint();
+            state_.x.inputPoint();
             break;
         case Button::plus:
             state_.operation = Operation::add;
@@ -57,6 +51,9 @@ void Calculator::input(calculatorcomrade::Button button) {
             break;
         case Button::percent:
             state_.operation = Operation::percent;
+            break;
+        case Button::equals:
+            calculate();
             break;
     }
 }
@@ -113,10 +110,21 @@ Button Calculator::stringToButton(const std::string& button) {
     return Button::none;
 }
 
-void Calculator::clearAll() {
-    state_.clear();
-}
-
-void Calculator::clearEntry() {
-    getDisplayedRegister().clear();
+void Calculator::calculate() {
+//    Register& a = getDisplayedRegister();
+//    int64_t va = a.getValue();
+//    if (a.negative) va = -va;
+//
+//    Register& b = getOtherRegister();
+//    int64_t vb = b.getValue();
+//    if (b.negative) vb = -vb;
+//
+//    switch (state_.operation) {
+//        case Operation::add:
+//            int64_t result = va + vb;
+//            b.negative = result < 0;
+//            b.setValue(llabs(vb));
+//            switchDisplayedRegister();
+//            break;
+//    }
 }
