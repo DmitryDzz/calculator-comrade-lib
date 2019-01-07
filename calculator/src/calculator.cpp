@@ -28,8 +28,10 @@ void Calculator::input(Button button) {
         case Button::d0 ... Button::d9:
         case Button::point:
             // First digit or point after operation:
-            if (hasOperation_ && !inNumber_) {
-                state_.y.set(state_.x);
+            if (!inNumber_) {
+                if (hasOperation_) {
+                    state_.y.set(state_.x);
+                }
                 state_.x.clear();
             }
             inNumber_ = true;
@@ -65,11 +67,13 @@ void Calculator::input(Button button) {
             break;
         case Button::mul:
             calculateAddSubMulDiv();
+            state_.y.set(state_.x);
             state_.operation = Operation::mul;
             hasOperation_ = true;
             break;
         case Button::div:
             calculateAddSubMulDiv();
+            state_.y.setValue(1);
             state_.operation = Operation::div;
             hasOperation_ = true;
             break;

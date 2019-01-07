@@ -15,8 +15,8 @@ using calculatorcomrade::Operation;
 // Input: 2==
 TEST(TestAddSub, NoOperations) {
     State expectedState(Config::DEFAULT_DIGITS);
-
     Calculator calc(Config::DEFAULT_DIGITS);
+
     calc.input(Button::d2);
     expectedState.x.setValue(2);
     ASSERT_EQ(expectedState, calc.getState());

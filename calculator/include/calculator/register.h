@@ -18,7 +18,7 @@
 namespace calculatorcomrade {
     class Register {
     public:
-        uint8_t pointPos = 0xFF;
+        uint8_t pointPos = NO_POINT;
         bool negative = false;
         bool overflow = false;
 
@@ -32,7 +32,7 @@ namespace calculatorcomrade {
             for (int i = 0; i < digits_; i++)
                 data_[i] = 0;
             inputSize_ = 0;
-            pointPos = 0xFF;
+            pointPos = NO_POINT;
             negative = false;
             overflow = false;
         }
@@ -43,12 +43,12 @@ namespace calculatorcomrade {
             shiftDigits();
             data_[0] = digit;
             inputSize_++;
-            if (pointPos != 0xFF) pointPos++;
+            if (pointPos != NO_POINT) pointPos++;
         }
 
         void inputPoint() {
             if (inputSize_ >= digits_) return;
-            if (pointPos == 0xFF) pointPos = 0;
+            if (pointPos == NO_POINT) pointPos = 0;
         }
 
         uint64_t getValue() {
@@ -69,8 +69,7 @@ namespace calculatorcomrade {
                 std::string digitText(1, digitChar);
                 data_[i] = static_cast<uint8_t>(std::stoi(digitText));
             }
-            if (overflow)
-                pointPos = textDigits - digits_;
+            pointPos = overflow ? textDigits - digits_ : NO_POINT;
         }
 
         void set(const Register& rhs) {
@@ -112,6 +111,8 @@ namespace calculatorcomrade {
                    lhs.overflow == rhs.overflow;
         }
     private:
+        static const uint8_t NO_POINT = 0xFF;
+
         uint8_t digits_;
         uint8_t* data_;
         uint8_t inputSize_ = 0;

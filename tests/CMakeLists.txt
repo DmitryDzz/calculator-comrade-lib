@@ -3,9 +3,10 @@ set(SOURCES
         src/basic_input_tests.cpp
         src/json.hpp
         src/register_tests.cpp
-        src/add_sub_tests.cpp
         src/state_tests.cpp
         #src/state_tests_json.cpp
+        src/add_sub_tests.cpp
+        src/mul_tests.cpp
 )
 
 set(TARGET tests)
