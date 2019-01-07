@@ -13,7 +13,7 @@ using calculatorcomrade::State;
 using calculatorcomrade::Operation;
 
 // Input: 2*==
-TEST(TestAddSub, Mul1) {
+TEST(TestMul, Mul1) {
     State expectedState(Config::DEFAULT_DIGITS);
     Calculator calc(Config::DEFAULT_DIGITS);
 
@@ -43,7 +43,7 @@ TEST(TestAddSub, Mul1) {
 }
 
 // Input: 2*3===
-TEST(TestAddSub, Mul2) {
+TEST(TestMul, Mul2) {
     State expectedState(Config::DEFAULT_DIGITS);
     Calculator calc(Config::DEFAULT_DIGITS);
 
@@ -85,7 +85,7 @@ TEST(TestAddSub, Mul2) {
 }
 
 // Input: 2*3=4*5==
-TEST(TestAddSub, Mul3) {
+TEST(TestMul, Mul3) {
     State expectedState(Config::DEFAULT_DIGITS);
     Calculator calc(Config::DEFAULT_DIGITS);
 
@@ -145,7 +145,7 @@ TEST(TestAddSub, Mul3) {
 }
 
 // Input: 2*3*4*5===
-TEST(TestAddSub, Mul4) {
+TEST(TestMul, Mul4) {
     State expectedState(Config::DEFAULT_DIGITS);
     Calculator calc(Config::DEFAULT_DIGITS);
 
@@ -211,7 +211,7 @@ TEST(TestAddSub, Mul4) {
 }
 
 // Input: 2*3=4==
-TEST(TestAddSub, Mul5) {
+TEST(TestMul, Mul5) {
     State expectedState(Config::DEFAULT_DIGITS);
     Calculator calc(Config::DEFAULT_DIGITS);
 
@@ -259,7 +259,7 @@ TEST(TestAddSub, Mul5) {
 }
 
 // Input: 2*3=*==
-TEST(TestAddSub, Mul6) {
+TEST(TestMul, Mul6) {
     State expectedState(Config::DEFAULT_DIGITS);
     Calculator calc(Config::DEFAULT_DIGITS);
 
@@ -307,7 +307,7 @@ TEST(TestAddSub, Mul6) {
 }
 
 // Input: 2*3*==
-TEST(TestAddSub, Mul7) {
+TEST(TestMul, Mul7) {
     State expectedState(Config::DEFAULT_DIGITS);
     Calculator calc(Config::DEFAULT_DIGITS);
 

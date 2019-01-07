@@ -60,9 +60,24 @@ namespace calculatorcomrade {
         }
 
         void setValue(int64_t value) {
+            setValue(value, NO_POINT);
+//            negative = value < 0;
+//            std::string text = std::to_string(negative ? -value : value);
+//            auto textDigits = (uint8_t) text.size();
+//            overflow = textDigits > digits_;
+//            for (int8_t i = 0; i < digits_; i++) {
+//                char digitChar = i < textDigits ? text[textDigits - i - 1] : '0';
+//                std::string digitText(1, digitChar);
+//                data_[i] = static_cast<uint8_t>(std::stoi(digitText));
+//            }
+//            pointPos = overflow ? textDigits - digits_ : NO_POINT;
+        }
+
+        void setValue(int64_t value, uint8_t pointPo) {
             negative = value < 0;
             std::string text = std::to_string(negative ? -value : value);
             auto textDigits = (uint8_t) text.size();
+
             overflow = textDigits > digits_;
             for (int8_t i = 0; i < digits_; i++) {
                 char digitChar = i < textDigits ? text[textDigits - i - 1] : '0';

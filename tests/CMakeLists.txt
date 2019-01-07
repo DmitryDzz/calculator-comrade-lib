@@ -5,8 +5,9 @@ set(SOURCES
         src/register_tests.cpp
         src/state_tests.cpp
         #src/state_tests_json.cpp
-        src/add_sub_tests.cpp
-        src/mul_tests.cpp
+        src/calc_add_sub_tests.cpp
+        src/calc_mul_tests.cpp
+        src/calc_div_tests.cpp
 )
 
 set(TARGET tests)
