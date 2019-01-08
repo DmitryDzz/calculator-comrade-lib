@@ -18,6 +18,8 @@
 namespace calculatorcomrade {
     class Register {
     public:
+        static const uint8_t NO_POINT = 0xFF;
+
         uint8_t pointPos = NO_POINT;
         bool negative = false;
         bool overflow = false;
@@ -61,30 +63,61 @@ namespace calculatorcomrade {
 
         void setValue(int64_t value) {
             setValue(value, NO_POINT);
-//            negative = value < 0;
-//            std::string text = std::to_string(negative ? -value : value);
-//            auto textDigits = (uint8_t) text.size();
-//            overflow = textDigits > digits_;
-//            for (int8_t i = 0; i < digits_; i++) {
-//                char digitChar = i < textDigits ? text[textDigits - i - 1] : '0';
-//                std::string digitText(1, digitChar);
-//                data_[i] = static_cast<uint8_t>(std::stoi(digitText));
-//            }
-//            pointPos = overflow ? textDigits - digits_ : NO_POINT;
         }
 
-        void setValue(int64_t value, uint8_t pointPo) {
+        void setValue(int64_t value, uint8_t pointPosition) {
             negative = value < 0;
             std::string text = std::to_string(negative ? -value : value);
-            auto textDigits = (uint8_t) text.size();
+            auto totalDigits = (uint8_t) text.size();
+            if (pointPosition == NO_POINT)
+                pointPosition = 0;
 
-            overflow = textDigits > digits_;
-            for (int8_t i = 0; i < digits_; i++) {
-                char digitChar = i < textDigits ? text[textDigits - i - 1] : '0';
-                std::string digitText(1, digitChar);
-                data_[i] = static_cast<uint8_t>(std::stoi(digitText));
+            if (pointPosition < totalDigits) {
+                uint8_t intDigits = totalDigits - pointPosition;
+                overflow = intDigits > digits_;
+                if (overflow) {
+                    pointPos = digits_ - (intDigits - digits_);
+                    for (int16_t i = 0; i < digits_; i++) {
+                        char digitChar = text[digits_ - i - 1];
+                        std::string digitText(1, digitChar);
+                        data_[i] = static_cast<uint8_t>(std::stoi(digitText));
+                    }
+                } else {
+                    if (totalDigits > digits_) {
+                        pointPos = digits_ - intDigits;
+                        for (int16_t i = 0; i < digits_; i++) {
+                            char digitChar = text[digits_ - i - 1];
+                            std::string digitText(1, digitChar);
+                            data_[i] = static_cast<uint8_t>(std::stoi(digitText));
+                        }
+                    } else {
+                        pointPos = pointPosition;
+                        for (int16_t i = 0; i < digits_; i++) {
+                            char digitChar = i < totalDigits ? text[totalDigits - i - 1] : '0';
+                            std::string digitText(1, digitChar);
+                            data_[i] = static_cast<uint8_t>(std::stoi(digitText));
+                        }
+                    }
+                }
+            } else { // means: (pointPosition >= totalDigits)
+                overflow = false;
+                uint8_t newTotalDigits = pointPosition + (uint8_t)1;
+                int16_t delta = newTotalDigits > digits_ ? newTotalDigits - digits_ : (int16_t)0;
+                if (newTotalDigits - totalDigits >= digits_) {
+                    pointPos = 0;
+                } else {
+                    pointPos = delta > (int16_t) 0 ? pointPosition - delta : pointPosition;
+                }
+                for (int16_t i = 0; i < digits_; i++) {
+                    int16_t charIndex = totalDigits - delta - ((uint8_t)1) - i;
+                    char digitChar = charIndex >= 0 ? text[charIndex] : '0';
+                    std::string digitText(1, digitChar);
+                    data_[i] = static_cast<uint8_t>(std::stoi(digitText));
+                }
             }
-            pointPos = overflow ? textDigits - digits_ : NO_POINT;
+
+            if (pointPos == 0)
+                pointPos = NO_POINT;
         }
 
         void set(const Register& rhs) {
@@ -126,8 +159,6 @@ namespace calculatorcomrade {
                    lhs.overflow == rhs.overflow;
         }
     private:
-        static const uint8_t NO_POINT = 0xFF;
-
         uint8_t digits_;
         uint8_t* data_;
         uint8_t inputSize_ = 0;

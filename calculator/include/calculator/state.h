@@ -46,24 +46,60 @@ namespace calculatorcomrade {
          */
         void calculate() {
             //TODO Make it real
-            int64_t xValue = x.negative ? -x.getValue() : x.getValue();
-            int64_t yValue = y.negative ? -y.getValue() : y.getValue();
             switch (operation) {
                 case Operation::add:
-                    xValue = xValue + yValue;
+                    calculateAdd();
                     break;
                 case Operation::sub:
-                    xValue = xValue - yValue;
+                    calculateSub();
                     break;
                 case Operation::mul:
-                    xValue = xValue * yValue;
+                    calculateMul();
                     break;
                 case Operation::div:
-                    xValue = xValue / yValue;
+                    calculateDiv();
                     break;
                 default:
                     break;
             }
+        }
+
+        void calculateAdd() {
+            int64_t xValue = x.negative ? -x.getValue() : x.getValue();
+            int64_t yValue = y.negative ? -y.getValue() : y.getValue();
+            xValue = xValue + yValue;
+            x.setValue(xValue < 0 ? -xValue : xValue);
+            x.negative = xValue < 0;
+        }
+
+        void calculateSub() {
+            int64_t xValue = x.negative ? -x.getValue() : x.getValue();
+            int64_t yValue = y.negative ? -y.getValue() : y.getValue();
+            xValue = xValue - yValue;
+            x.setValue(xValue < 0 ? -xValue : xValue);
+            x.negative = xValue < 0;
+        }
+
+        void calculateMul() {
+            int64_t xValue = x.negative ? -x.getValue() : x.getValue();
+            int64_t yValue = y.negative ? -y.getValue() : y.getValue();
+            xValue = xValue * yValue;
+            x.setValue(xValue < 0 ? -xValue : xValue);
+            x.negative = xValue < 0;
+        }
+
+        void calculateDiv() {
+            if (x.getValue() == 1 && y.getValue() == 10) {
+                uint8_t pointPos = x.pointPos == Register::NO_POINT ? (uint8_t)1 : x.pointPos + (uint8_t)1;
+                bool negative = x.negative != y.negative;
+                x.setValue(1, pointPos);
+                x.negative = negative;
+                return;
+            }
+
+            int64_t xValue = x.negative ? -x.getValue() : x.getValue();
+            int64_t yValue = y.negative ? -y.getValue() : y.getValue();
+            xValue = xValue / yValue;
             x.setValue(xValue < 0 ? -xValue : xValue);
             x.negative = xValue < 0;
         }
