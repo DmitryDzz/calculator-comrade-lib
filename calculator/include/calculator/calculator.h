@@ -30,6 +30,13 @@ namespace calculatorcomrade {
 
         Button stringToButton(const std::string& button);
 
+        uint8_t inputSize_ = 0;
+        bool inputHasPoint_ = false;
+        void clearInput();
+        void inputDigit(uint8_t digit);
+        void inputPoint();
+        void shiftLeftOnInput();
+
         void calculateEquals();
         void calculateAddSubMulDiv();
     };

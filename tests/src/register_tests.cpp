@@ -9,12 +9,10 @@
 
 using calculatorcomrade::Register;
 
-const uint8_t Register::NO_POINT;
-
 TEST(TestRegister, DefaultState) {
     Register reg(Config::DEFAULT_DIGITS);
     ASSERT_EQ(0, reg.getAbsIntValue());
-    ASSERT_EQ(Register::NO_POINT, reg.pointPos);
+    ASSERT_EQ(0, reg.pointPos);
     ASSERT_EQ(false, reg.negative);
     ASSERT_EQ(false, reg.overflow);
 }
@@ -27,7 +25,7 @@ TEST(TestRegister, SetPositiveValue) {
     ASSERT_EQ(7, reg[1]);
     ASSERT_EQ(9, reg[2]);
     ASSERT_EQ(1, reg[3]);
-    ASSERT_EQ(Register::NO_POINT, reg.pointPos);
+    ASSERT_EQ(0, reg.pointPos);
     ASSERT_EQ(false, reg.negative);
     ASSERT_EQ(false, reg.overflow);
 }
@@ -36,7 +34,7 @@ TEST(TestRegister, SetNegativeValue) {
     Register reg(Config::DEFAULT_DIGITS);
     reg.setValue(-1974);
     ASSERT_EQ(1974, reg.getAbsIntValue());
-    ASSERT_EQ(Register::NO_POINT, reg.pointPos);
+    ASSERT_EQ(0, reg.pointPos);
     ASSERT_EQ(true, reg.negative);
     ASSERT_EQ(false, reg.overflow);
 }
@@ -98,7 +96,7 @@ TEST(TestRegister, PointPos) {
     Register reg(5);
     reg.setValue(123456789, 4); // 12345.6789
     ASSERT_EQ(12345, reg.getAbsIntValue());
-    ASSERT_EQ(Register::NO_POINT, reg.pointPos);
+    ASSERT_EQ(0, reg.pointPos);
     ASSERT_EQ(false, reg.negative);
     ASSERT_EQ(false, reg.overflow);
 
@@ -119,14 +117,14 @@ TEST(TestRegister, PointPos) {
     reg.clear();
     reg.setValue(12, 0); // 12
     ASSERT_EQ(12, reg.getAbsIntValue());
-    ASSERT_EQ(Register::NO_POINT, reg.pointPos);
+    ASSERT_EQ(0, reg.pointPos);
     ASSERT_EQ(false, reg.negative);
     ASSERT_EQ(false, reg.overflow);
 
     reg.clear();
     reg.setValue(12); // 12
     ASSERT_EQ(12, reg.getAbsIntValue());
-    ASSERT_EQ(Register::NO_POINT, reg.pointPos);
+    ASSERT_EQ(0, reg.pointPos);
     ASSERT_EQ(false, reg.negative);
     ASSERT_EQ(false, reg.overflow);
 
@@ -140,7 +138,7 @@ TEST(TestRegister, PointPos) {
     reg.clear();
     reg.setValue(123, 7); // 0.0000123
     ASSERT_EQ(0, reg.getAbsIntValue());
-    ASSERT_EQ(Register::NO_POINT, reg.pointPos);
+    ASSERT_EQ(0, reg.pointPos);
     ASSERT_EQ(false, reg.negative);
     ASSERT_EQ(false, reg.overflow);
 

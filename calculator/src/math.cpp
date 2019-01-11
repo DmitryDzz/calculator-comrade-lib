@@ -37,9 +37,7 @@ void Math::unsafeShiftRight(Register &r) {
         r[i - 1] = r[i];
     }
     r[digits - 1] = 0;
-    if (r.pointPos == 0)
-        r.pointPos = Register::NO_POINT;
-    else if (r.pointPos > 0)
+    if (r.pointPos > 0)
         r.pointPos -= 1;
 }
 
@@ -47,15 +45,13 @@ void Math::unsafeShiftRight(Register &r) {
 // until there is a non-zero value in the highest digit.
 void Math::safeShiftLeft(Register &r) {
     uint8_t digits = r.getDigits();
-    if (digits == 0 || r[digits - 1] != 0) return;
-    for (auto i = static_cast<uint8_t>(digits - 1); i <= 0; i--) {
+    auto lastIndex = static_cast<uint8_t>(digits - 1);
+    if (digits == 0 || r[digits - 1] != 0 || r.pointPos == lastIndex) return;
+    for (auto i = lastIndex; i >= 1; i--) {
         r[i] = r[i - 1];
     }
     r[0] = 0;
-    if (r.pointPos == Register::NO_POINT)
-        r.pointPos = 1;
-    else
-        r.pointPos += 1;
+    r.pointPos += 1;
 }
 
 void Math::sum(Register &r1, Register &r2) {
@@ -107,6 +103,7 @@ void Math::sum(Register &r1, Register &r2) {
     }
 
     truncRightZeros(r1);
+    truncRightZeros(r2);
 }
 
 int8_t Math::compareIgnoreSign(const Register &r1, const Register &r2) {
@@ -123,44 +120,33 @@ int8_t Math::compareIgnoreSign(const Register &r1, const Register &r2) {
 }
 
 void Math::normalizePointPositions(Register &r1, Register &r2) {
-//    if (r1.pointPos == Register::NO_POINT)
-//        r1.pointPos = 0;
-//    if (r2.pointPos == Register::NO_POINT)
-//        r2.pointPos = 0;
-//
-//    uint8_t digits = r1.getDigits();
-//    if (digits == 0 || digits != r2.getDigits() || r1.pointPos == r2.pointPos) return;
-//
-//    Register &rL = r1.pointPos < r2.pointPos ? r1 : r2;
-//    Register &rR = r1.pointPos > r2.pointPos ? r1 : r2;
-//
-//    // First shift left the register where pointPos is smaller.
-//    for (uint8_t i = 0; i < digits; i++) {
-//        if (rL[digits - 1] != 0) break;
-//        safeShiftLeft(rL);
-//        if (r1.pointPos == r2.pointPos) return;
-//    }
-//
-//    // Than shift right the other register until pointPos's are equal.
-//    for (uint8_t i = 0; i < digits; i++) {
-//        unsafeShiftRight(rR);
-//        if (r1.pointPos == r2.pointPos) return;
-//    }
+    uint8_t digits = r1.getDigits();
+    if (digits == 0 || digits != r2.getDigits() || r1.pointPos == r2.pointPos) return;
+
+    Register &rL = r1.pointPos < r2.pointPos ? r1 : r2;
+    Register &rR = r1.pointPos > r2.pointPos ? r1 : r2;
+
+    // First shift left the register where pointPos is smaller.
+    for (uint8_t i = 0; i < digits; i++) {
+        if (rL[digits - 1] != 0) break;
+        safeShiftLeft(rL);
+        if (r1.pointPos == r2.pointPos) return;
+    }
+
+    // Than shift right the other register until pointPos's are equal.
+    for (uint8_t i = 0; i < digits; i++) {
+        unsafeShiftRight(rR);
+        if (r1.pointPos == r2.pointPos) return;
+    }
 }
 
 void Math::truncRightZeros(Register &r) {
     uint8_t digits = r.getDigits();
     if (digits == 0) return;
 
-    if (r.pointPos == Register::NO_POINT)
-        r.pointPos = 0;
-
     for (uint8_t i = 0; i < digits; i++) {
         if (r[0] != 0 || r.pointPos == 0) break;
         unsafeShiftRight(r);
     }
-
-    if (r.pointPos == 0)
-        r.pointPos = Register::NO_POINT;
 }
 

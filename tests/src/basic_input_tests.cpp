@@ -113,7 +113,7 @@ TEST_CALCULATOR_INPUT(PositiveReal) {
 
     c.input(Button::d1);
     expected.x[0] = 1;
-    expected.x.pointPos = 0xFF;
+    expected.x.pointPos = 0;
     ASSERT_EQ(expected, c.getState());
 
     c.input(Button::point);
@@ -131,6 +131,9 @@ TEST_CALCULATOR_INPUT(PositiveReal) {
     expected.x[1] = 2;
     expected.x[2] = 1;
     expected.x.pointPos = 2;
+    ASSERT_EQ(expected, c.getState());
+
+    c.input(Button::point); // should ignore this input
     ASSERT_EQ(expected, c.getState());
 
     c.input(Button::d4);

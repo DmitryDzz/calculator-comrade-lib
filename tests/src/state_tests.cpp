@@ -17,7 +17,7 @@ TEST(TestState, ExchangeXY) {
     state.exchangeXY();
 
     ASSERT_EQ(1974, state.x.getAbsIntValue());
-    ASSERT_EQ(0xFF, state.x.pointPos);
+    ASSERT_EQ(0, state.x.pointPos);
     ASSERT_EQ(false, state.x.negative);
     ASSERT_EQ(false, state.x.overflow);
 

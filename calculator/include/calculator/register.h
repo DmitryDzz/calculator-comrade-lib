@@ -18,9 +18,7 @@
 namespace calculatorcomrade {
     class Register {
     public:
-        static const uint8_t NO_POINT = 0xFF;
-
-        uint8_t pointPos = NO_POINT;
+        uint8_t pointPos = 0;
         bool negative = false;
         bool overflow = false;
 
@@ -33,28 +31,13 @@ namespace calculatorcomrade {
         void clear() {
             for (int i = 0; i < digits_; i++)
                 data_[i] = 0;
-            inputSize_ = 0;
-            pointPos = NO_POINT;
+            pointPos = 0;
             negative = false;
             overflow = false;
         }
 
         uint8_t getDigits() const {
             return digits_;
-        }
-
-        void inputDigit(uint8_t digit) {
-            if (digit == 0 && inputSize_ == 0) return;
-            if (inputSize_ >= digits_) return;
-            shiftLeft();
-            data_[0] = digit;
-            inputSize_++;
-            if (pointPos != NO_POINT) pointPos++;
-        }
-
-        void inputPoint() {
-            if (inputSize_ >= digits_) return;
-            if (pointPos == NO_POINT) pointPos = 0;
         }
 
         uint64_t getAbsIntValue() {
@@ -68,19 +51,17 @@ namespace calculatorcomrade {
 
         void setValue(int64_t value) {
             //TODO Move to tests
-            setValue(value, NO_POINT);
+            setValue(value, 0);
         }
 
-        void setValue(int64_t value, uint8_t pointPosition) {
+        void setValue(int64_t value, uint8_t digitsAfterPoint) {
             //TODO Move to tests
             negative = value < 0;
             std::string text = std::to_string(negative ? -value : value);
             auto totalDigits = (uint8_t) text.size();
-            if (pointPosition == NO_POINT)
-                pointPosition = 0;
 
-            if (pointPosition < totalDigits) {
-                uint8_t intDigits = totalDigits - pointPosition;
+            if (digitsAfterPoint < totalDigits) {
+                uint8_t intDigits = totalDigits - digitsAfterPoint;
                 overflow = intDigits > digits_;
                 if (overflow) {
                     pointPos = digits_ - (intDigits - digits_);
@@ -98,7 +79,7 @@ namespace calculatorcomrade {
                             data_[i] = static_cast<uint8_t>(std::stoi(digitText));
                         }
                     } else {
-                        pointPos = pointPosition;
+                        pointPos = digitsAfterPoint;
                         for (int16_t i = 0; i < digits_; i++) {
                             char digitChar = i < totalDigits ? text[totalDigits - i - 1] : '0';
                             std::string digitText(1, digitChar);
@@ -106,14 +87,14 @@ namespace calculatorcomrade {
                         }
                     }
                 }
-            } else { // means: (pointPosition >= totalDigits)
+            } else { // means: (digitsAfterPoint >= totalDigits)
                 overflow = false;
-                uint8_t newTotalDigits = pointPosition + (uint8_t)1;
+                uint8_t newTotalDigits = digitsAfterPoint + (uint8_t)1;
                 int16_t delta = newTotalDigits > digits_ ? newTotalDigits - digits_ : (int16_t)0;
                 if (newTotalDigits - totalDigits >= digits_) {
                     pointPos = 0;
                 } else {
-                    pointPos = delta > (uint8_t)0 ? (uint8_t)(pointPosition - delta) : pointPosition;
+                    pointPos = delta > (uint8_t)0 ? (uint8_t)(digitsAfterPoint - delta) : digitsAfterPoint;
                 }
                 for (int16_t i = 0; i < digits_; i++) {
                     int16_t charIndex = totalDigits - delta - ((uint8_t)1) - i;
@@ -122,9 +103,6 @@ namespace calculatorcomrade {
                     data_[i] = static_cast<uint8_t>(std::stoi(digitText));
                 }
             }
-
-            if (pointPos == 0)
-                pointPos = NO_POINT;
         }
 
         void set(const Register& rhs) {
@@ -168,15 +146,6 @@ namespace calculatorcomrade {
     private:
         uint8_t digits_;
         uint8_t* data_;
-        uint8_t inputSize_ = 0;
-
-        void shiftLeft() {
-            if (inputSize_ >= digits_) return;
-            for (int i = inputSize_ - 1; i >= 0; i--) {
-                data_[i + 1] = data_[i];
-            }
-            data_[0] = 0;
-        }
     };
 
     inline bool operator==(const Register& lhs, const Register& rhs) {

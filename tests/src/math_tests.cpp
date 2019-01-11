@@ -18,7 +18,7 @@ TEST(TestMath, AddInt) {
     r2.setValue(456);
     Math::calculate(r1, r2, Operation::add);
     ASSERT_EQ(579, r1.getAbsIntValue());
-    ASSERT_EQ(Register::NO_POINT, r1.pointPos);
+    ASSERT_EQ(0, r1.pointPos);
     ASSERT_EQ(false, r1.negative);
     ASSERT_EQ(false, r1.overflow);
 
@@ -26,7 +26,7 @@ TEST(TestMath, AddInt) {
     r2.setValue(-456);
     Math::calculate(r1, r2, Operation::add);
     ASSERT_EQ(579, r1.getAbsIntValue());
-    ASSERT_EQ(Register::NO_POINT, r1.pointPos);
+    ASSERT_EQ(0, r1.pointPos);
     ASSERT_EQ(true, r1.negative);
     ASSERT_EQ(false, r1.overflow);
 
@@ -34,7 +34,7 @@ TEST(TestMath, AddInt) {
     r2.setValue(456);
     Math::calculate(r1, r2, Operation::add);
     ASSERT_EQ(333, r1.getAbsIntValue());
-    ASSERT_EQ(Register::NO_POINT, r1.pointPos);
+    ASSERT_EQ(0, r1.pointPos);
     ASSERT_EQ(false, r1.negative);
     ASSERT_EQ(false, r1.overflow);
 
@@ -42,7 +42,7 @@ TEST(TestMath, AddInt) {
     r2.setValue(-456);
     Math::calculate(r1, r2, Operation::add);
     ASSERT_EQ(333, r1.getAbsIntValue());
-    ASSERT_EQ(Register::NO_POINT, r1.pointPos);
+    ASSERT_EQ(0, r1.pointPos);
     ASSERT_EQ(true, r1.negative);
     ASSERT_EQ(false, r1.overflow);
 }
@@ -56,7 +56,7 @@ TEST(TestMath, AddOverflow) {
     Math::calculate(r1, r2, Operation::add);
     ASSERT_EQ(1, r1.getAbsIntValue());
     ASSERT_EQ(1, r1[0]);
-    ASSERT_EQ(Register::NO_POINT, r1.pointPos);
+    ASSERT_EQ(0, r1.pointPos);
     ASSERT_EQ(false, r1.negative);
     ASSERT_EQ(true, r1.overflow);
 
@@ -65,7 +65,7 @@ TEST(TestMath, AddOverflow) {
     Math::calculate(r1, r2, Operation::add);
     ASSERT_EQ(1, r1.getAbsIntValue());
     ASSERT_EQ(1, r1[0]);
-    ASSERT_EQ(Register::NO_POINT, r1.pointPos);
+    ASSERT_EQ(0, r1.pointPos);
     ASSERT_EQ(true, r1.negative);
     ASSERT_EQ(true, r1.overflow);
 }
@@ -82,7 +82,7 @@ TEST(TestMath, AddReal) {
     ASSERT_EQ(false, r1.negative);
     ASSERT_EQ(false, r1.overflow);
     ASSERT_EQ(123, r2.getAbsIntValue());
-    ASSERT_EQ(2, r1.pointPos);
+    ASSERT_EQ(2, r2.pointPos);
 
     //TODO Some special test
     /*

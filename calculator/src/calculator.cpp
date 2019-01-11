@@ -45,15 +45,17 @@ void Calculator::input(Button button) {
         case Button::ca:
             state_.clear();
             hasOperation_ = false;
+            clearInput();
             break;
         case Button::ce:
             state_.x.clear();
+            clearInput();
             break;
         case Button::d0 ... Button::d9:
-            state_.x.inputDigit((uint8_t)((int)button - (int)Button::d0));
+            inputDigit((uint8_t)((int)button - (int)Button::d0));
             break;
         case Button::point:
-            state_.x.inputPoint();
+            inputPoint();
             break;
         case Button::plus:
             calculateAddSubMulDiv();
@@ -137,6 +139,34 @@ Button Calculator::stringToButton(const std::string& button) {
     else if (button == "MC")
         return Button::memC;
     return Button::none;
+}
+
+void Calculator::clearInput() {
+    state_.x.clear();
+    inputSize_ = 0;
+    inputHasPoint_ = false;
+}
+
+void Calculator::inputDigit(uint8_t digit) {
+    if (digit == 0 && inputSize_ == 0) return;
+    if (inputSize_ >= digits_) return;
+    shiftLeftOnInput();
+    state_.x[0] = digit;
+    inputSize_++;
+    if (inputHasPoint_) state_.x.pointPos++;
+}
+
+void Calculator::inputPoint() {
+    if (inputSize_ >= digits_) return;
+    inputHasPoint_ = true;
+}
+
+void Calculator::shiftLeftOnInput() {
+    if (inputSize_ >= digits_) return;
+    for (int i = inputSize_ - 1; i >= 0; i--) {
+        state_.x[i + 1] = state_.x[i];
+    }
+    state_.x[0] = 0;
 }
 
 void Calculator::calculateEquals() {

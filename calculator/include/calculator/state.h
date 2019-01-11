@@ -89,7 +89,7 @@ namespace calculatorcomrade {
 
         void calculateDiv() {
             if (x.getAbsIntValue() == 1 && y.getAbsIntValue() == 10) {
-                uint8_t pointPos = x.pointPos == Register::NO_POINT ? (uint8_t)1 : x.pointPos + (uint8_t)1;
+                uint8_t pointPos = x.pointPos + (uint8_t)1;
                 bool negative = x.negative != y.negative;
                 x.setValue(1, pointPos);
                 x.negative = negative;
