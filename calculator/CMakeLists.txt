@@ -7,7 +7,9 @@ set(
         include/calculator/display_register.h
         include/calculator/button.h
         include/calculator/register.h
-        include/calculator/config.h)
+        include/calculator/config.h
+        src/math.cpp
+)
 
 set(TARGET calculator)
 

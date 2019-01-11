@@ -39,10 +39,14 @@ namespace calculatorcomrade {
             overflow = false;
         }
 
+        uint8_t getDigits() const {
+            return digits_;
+        }
+
         void inputDigit(uint8_t digit) {
             if (digit == 0 && inputSize_ == 0) return;
             if (inputSize_ >= digits_) return;
-            shiftDigits();
+            shiftLeft();
             data_[0] = digit;
             inputSize_++;
             if (pointPos != NO_POINT) pointPos++;
@@ -53,7 +57,8 @@ namespace calculatorcomrade {
             if (pointPos == NO_POINT) pointPos = 0;
         }
 
-        uint64_t getValue() {
+        uint64_t getAbsIntValue() {
+            //TODO Move to tests
             uint64_t result = 0;
             uint64_t factor = 1;
             for (int i = 0; i < digits_; i++, factor *= 10)
@@ -62,10 +67,12 @@ namespace calculatorcomrade {
         }
 
         void setValue(int64_t value) {
+            //TODO Move to tests
             setValue(value, NO_POINT);
         }
 
         void setValue(int64_t value, uint8_t pointPosition) {
+            //TODO Move to tests
             negative = value < 0;
             std::string text = std::to_string(negative ? -value : value);
             auto totalDigits = (uint8_t) text.size();
@@ -106,7 +113,7 @@ namespace calculatorcomrade {
                 if (newTotalDigits - totalDigits >= digits_) {
                     pointPos = 0;
                 } else {
-                    pointPos = delta > (int16_t) 0 ? pointPosition - delta : pointPosition;
+                    pointPos = delta > (uint8_t)0 ? (uint8_t)(pointPosition - delta) : pointPosition;
                 }
                 for (int16_t i = 0; i < digits_; i++) {
                     int16_t charIndex = totalDigits - delta - ((uint8_t)1) - i;
@@ -163,7 +170,7 @@ namespace calculatorcomrade {
         uint8_t* data_;
         uint8_t inputSize_ = 0;
 
-        void shiftDigits() {
+        void shiftLeft() {
             if (inputSize_ >= digits_) return;
             for (int i = inputSize_ - 1; i >= 0; i--) {
                 data_[i + 1] = data_[i];
