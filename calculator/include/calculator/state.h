@@ -104,7 +104,7 @@ namespace calculatorcomrade {
     private:
         uint8_t digits_;
 
-        //TODO Delete these three methods after mul and div implementation
+        //TODO DZZ Delete these three methods after mul and div implementation
         uint64_t getAbsIntValueTemp(Register &r) {
             uint64_t result = 0;
             uint64_t factor = 1;

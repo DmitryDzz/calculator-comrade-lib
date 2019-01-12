@@ -17,13 +17,13 @@ void Math::calculate(Register &r1, Register &r2, const Operation &operation) {
             r1.negative = !r1.negative;
             break;
         case Operation::mul:
-            //TODO mul
+            //TODO DZZ mul
             break;
         case Operation::div:
-            //TODO div
+            //TODO DZZ div
             break;
         default:
-            //TODO %, ...
+            //TODO DZZ %, ...
             break;
     }
 }

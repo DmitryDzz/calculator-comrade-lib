@@ -4,7 +4,7 @@ set(SOURCES
         src/json.hpp
         src/register_tests.cpp
         src/state_tests.cpp
-        #src/state_tests_json.cpp
+        #src/state_tests_json.cpp  #TODO DZZ Rename it to "complex_json_tests.cpp"
         src/calc_add_sub_tests.cpp
         src/calc_mul_tests.cpp
         src/calc_div_tests.cpp

@@ -9,6 +9,7 @@ using calculatorcomrade::Calculator;
 using calculatorcomrade::State;
 using calculatorcomrade::Button;
 using calculatorcomrade::Operation;
+using calculatorcomrade::Register;
 
 #define TEST_CALCULATOR_INPUT(test_name) TEST(CalculatorInput, test_name)
 
@@ -146,4 +147,22 @@ TEST_CALCULATOR_INPUT(PositiveReal) {
 
     c.input(Button::d5);
     ASSERT_EQ(expected, c.getState());
+}
+
+TEST_CALCULATOR_INPUT(ZeroInHighDigit) {
+    Calculator c(4);
+
+    // ".1234" input should be "0.123" on display
+    c.input(Button::point);
+    c.input(Button::d1);
+    c.input(Button::d2);
+    c.input(Button::d3);
+    c.input(Button::d4);
+
+    Register &x = c.getState().x;
+    ASSERT_EQ(0, x[3]);
+    ASSERT_EQ(1, x[2]);
+    ASSERT_EQ(2, x[1]);
+    ASSERT_EQ(3, x[0]);
+    ASSERT_EQ(3, x.pointPos);
 }

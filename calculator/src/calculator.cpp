@@ -40,6 +40,8 @@ void Calculator::input(Button button) {
     }
 
     switch (button) {
+        case Button::none:
+            break;
         case Button::ca:
             state_.clear();
             hasOperation_ = false;
@@ -83,6 +85,16 @@ void Calculator::input(Button button) {
         case Button::equals:
             calculateEquals();
             hasOperation_ = false;
+            break;
+        case Button::sqrt:
+            break;
+        case Button::memPlus:
+            break;
+        case Button::memMinus:
+            break;
+        case Button::memR:
+            break;
+        case Button::memC:
             break;
     }
 }
@@ -147,7 +159,7 @@ void Calculator::clearInput() {
 
 void Calculator::inputDigit(uint8_t digit) {
     if (digit == 0 && inputSize_ == 0) return;
-    if (inputSize_ >= digits_) return;
+    if (inputSize_ >= digits_ || state_.x.pointPos == digits_ - 1) return;
     shiftLeftOnInput();
     state_.x[0] = digit;
     inputSize_++;
