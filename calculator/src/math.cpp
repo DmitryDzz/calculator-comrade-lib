@@ -88,13 +88,30 @@ void Math::sum(Register &r1, Register &r2) {
         }
     } else { // (different signs)
         int8_t comparision = compareIgnoreSign(r1, r2);
+        uint8_t borrowedDigit = 0;
+        uint8_t srcDigit;
         if (comparision == 1) { // |r1| > |r2|
             for (uint8_t i = 0; i < digits; i++) {
-                r1[i] = r1[i] < r2[i] ? (uint8_t)(r1[i] + 10 - r2[i]) : r1[i] - r2[i];
+                srcDigit = r1[i] - borrowedDigit;
+                if (srcDigit < r2[i]) {
+                    r1[i] = (uint8_t)(srcDigit + 10 - r2[i]);
+                    borrowedDigit = 1;
+                } else {
+                    r1[i] = srcDigit - r2[i];
+                    borrowedDigit = 0;
+                }
             }
         } else if (comparision == -1) { // |r1| < |r2|
             for (uint8_t i = 0; i < digits; i++) {
-                r1[i] = r2[i] < r1[i] ? (uint8_t)(r2[i] + 10 - r1[i]) : r2[i] - r1[i];
+                srcDigit = r2[i] - borrowedDigit;
+                if (srcDigit < r1[i]) {
+                    r1[i] = (uint8_t)(srcDigit + 10 - r1[i]);
+                    borrowedDigit = 1;
+                } else {
+                    r1[i] = srcDigit - r1[i];
+                    borrowedDigit = 0;
+                }
+//                r1[i] = r2[i] < r1[i] ? (uint8_t)(r2[i] + 10 - r1[i]) : r2[i] - r1[i];
             }
             r1.negative = r2.negative;
         } else { // |r1|==|r2|

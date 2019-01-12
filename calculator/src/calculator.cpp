@@ -31,6 +31,8 @@ void Calculator::input(Button button) {
                     state_.y.set(state_.x);
                 }
                 state_.x.clear();
+                inputSize_ = 0;
+                inputHasPoint_ = false;
             }
             inNumber_ = true;
             break;
