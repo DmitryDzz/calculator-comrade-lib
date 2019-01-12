@@ -21,6 +21,7 @@ namespace calculatorcomrade {
         static void truncRightZeros(Register &r);
 
         static void sum(Register &r1, Register &r2);
+        static void mul(Register &r1, Register &r2);
     };
 };
 

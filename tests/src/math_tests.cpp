@@ -11,7 +11,9 @@ using calculatorcomrade::Register;
 using calculatorcomrade::Math;
 using calculatorcomrade::Operation;
 
-TEST(TestMath, AddInt) {
+#define TEST_MATH(test_name) TEST(TestMath, test_name)
+
+TEST_MATH(AddInt) {
     Register r1(8);
     Register r2(8);
 
@@ -48,7 +50,7 @@ TEST(TestMath, AddInt) {
     ASSERT_EQ(false, r1.overflow);
 }
 
-TEST(TestMath, AddOverflow) {
+TEST_MATH(AddOverflow) {
     Register r1(8);
     Register r2(8);
 
@@ -71,7 +73,7 @@ TEST(TestMath, AddOverflow) {
     ASSERT_EQ(true, r1.overflow);
 }
 
-TEST(TestMath, AddReal) {
+TEST_MATH(AddReal) {
     Register r1(8);
     Register r2(8);
 
@@ -86,7 +88,7 @@ TEST(TestMath, AddReal) {
     ASSERT_EQ(2, r2.pointPos);
 }
 
-TEST(TestMath, SubInt) {
+TEST_MATH(SubInt) {
     Register r1(8);
     Register r2(8);
 
@@ -123,7 +125,7 @@ TEST(TestMath, SubInt) {
     ASSERT_EQ(false, r1.overflow);
 }
 
-TEST(TestMath, SubOverflow) {
+TEST_MATH(SubOverflow) {
     Register r1(8);
     Register r2(8);
 
@@ -146,7 +148,7 @@ TEST(TestMath, SubOverflow) {
     ASSERT_EQ(true, r1.overflow);
 }
 
-TEST(TestMath, SubReal) {
+TEST_MATH(SubReal) {
     Register r1(8);
     Register r2(8);
 
@@ -159,4 +161,17 @@ TEST(TestMath, SubReal) {
     ASSERT_EQ(false, r1.overflow);
     ASSERT_EQ(123, getAbsIntValue(r2));
     ASSERT_EQ(2, r2.pointPos);
+}
+
+TEST_MATH(MulInt) {
+    Register r1(4);
+    Register r2(4);
+
+    setValue(r1, 12);
+    setValue(r2, 34);
+    Math::calculate(r1, r2, Operation::mul);
+    ASSERT_EQ(408, getAbsIntValue(r1));
+    ASSERT_EQ(0, r1.pointPos);
+    ASSERT_EQ(false, r1.negative);
+    ASSERT_EQ(false, r1.overflow);
 }
