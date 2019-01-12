@@ -6,6 +6,7 @@
 
 #include "calculator/calculator.h"
 #include "calculator/config.h"
+#include "calc_helper.h"
 
 using calculatorcomrade::Calculator;
 using calculatorcomrade::Button;
@@ -19,26 +20,26 @@ TEST(TestDiv, Div1) {
 
     calc.input(Button::d1);
     calc.input(Button::d0);
-    expectedState.x.setValue(10);
-    expectedState.y.setValue(0);
+    setValue(expectedState.x, 10);
+    setValue(expectedState.y, 0);
     expectedState.operation = Operation::add;
     ASSERT_EQ(expectedState, calc.getState());
 
     calc.input(Button::div);
-    expectedState.x.setValue(10);
-    expectedState.y.setValue(1);
+    setValue(expectedState.x, 10);
+    setValue(expectedState.y, 1);
     expectedState.operation = Operation::div;
     ASSERT_EQ(expectedState, calc.getState());
 
     calc.input(Button::equals);
-    expectedState.x.setValue(1, 1); // 0.1
-    expectedState.y.setValue(10);
+    setValue(expectedState.x, 1, 1); // 0.1
+    setValue(expectedState.y, 10);
     expectedState.operation = Operation::div;
     ASSERT_EQ(expectedState, calc.getState());
 
     calc.input(Button::equals);
-    expectedState.x.setValue(1, 2); // 0.01
-    expectedState.y.setValue(10);
+    setValue(expectedState.x, 1, 2); // 0.01
+    setValue(expectedState.y, 10);
     expectedState.operation = Operation::div;
     ASSERT_EQ(expectedState, calc.getState());
 }
@@ -50,38 +51,38 @@ TEST(TestDiv, Div2) {
 
     calc.input(Button::d2);
     calc.input(Button::d4);
-    expectedState.x.setValue(24);
-    expectedState.y.setValue(0);
+    setValue(expectedState.x, 24);
+    setValue(expectedState.y, 0);
     expectedState.operation = Operation::add;
     ASSERT_EQ(expectedState, calc.getState());
 
     calc.input(Button::div);
-    expectedState.x.setValue(24);
-    expectedState.y.setValue(1);
+    setValue(expectedState.x, 24);
+    setValue(expectedState.y, 1);
     expectedState.operation = Operation::div;
     ASSERT_EQ(expectedState, calc.getState());
 
     calc.input(Button::d2);
-    expectedState.x.setValue(2);
-    expectedState.y.setValue(24);
+    setValue(expectedState.x, 2);
+    setValue(expectedState.y, 24);
     expectedState.operation = Operation::div;
     ASSERT_EQ(expectedState, calc.getState());
 
     calc.input(Button::equals);
-    expectedState.x.setValue(12);
-    expectedState.y.setValue(2);
+    setValue(expectedState.x, 12);
+    setValue(expectedState.y, 2);
     expectedState.operation = Operation::div;
     ASSERT_EQ(expectedState, calc.getState());
 
     calc.input(Button::equals);
-    expectedState.x.setValue(6);
-    expectedState.y.setValue(2);
+    setValue(expectedState.x, 6);
+    setValue(expectedState.y, 2);
     expectedState.operation = Operation::div;
     ASSERT_EQ(expectedState, calc.getState());
 
     calc.input(Button::equals);
-    expectedState.x.setValue(3);
-    expectedState.y.setValue(2);
+    setValue(expectedState.x, 3);
+    setValue(expectedState.y, 2);
     expectedState.operation = Operation::div;
     ASSERT_EQ(expectedState, calc.getState());
 }
@@ -93,57 +94,57 @@ TEST(TestDiv, Div3) {
 
     calc.input(Button::d2);
     calc.input(Button::d7);
-    expectedState.x.setValue(27);
-    expectedState.y.setValue(0);
+    setValue(expectedState.x, 27);
+    setValue(expectedState.y, 0);
     expectedState.operation = Operation::add;
     ASSERT_EQ(expectedState, calc.getState());
 
     calc.input(Button::div);
-    expectedState.x.setValue(27);
-    expectedState.y.setValue(1);
+    setValue(expectedState.x, 27);
+    setValue(expectedState.y, 1);
     expectedState.operation = Operation::div;
     ASSERT_EQ(expectedState, calc.getState());
 
     calc.input(Button::d3);
-    expectedState.x.setValue(3);
-    expectedState.y.setValue(27);
+    setValue(expectedState.x, 3);
+    setValue(expectedState.y, 27);
     expectedState.operation = Operation::div;
     ASSERT_EQ(expectedState, calc.getState());
 
     calc.input(Button::equals);
-    expectedState.x.setValue(9);
-    expectedState.y.setValue(3);
+    setValue(expectedState.x, 9);
+    setValue(expectedState.y, 3);
     expectedState.operation = Operation::div;
     ASSERT_EQ(expectedState, calc.getState());
 
     calc.input(Button::d1);
     calc.input(Button::d2);
-    expectedState.x.setValue(12);
-    expectedState.y.setValue(3);
+    setValue(expectedState.x, 12);
+    setValue(expectedState.y, 3);
     expectedState.operation = Operation::div;
     ASSERT_EQ(expectedState, calc.getState());
 
     calc.input(Button::div);
-    expectedState.x.setValue(12);
-    expectedState.y.setValue(1);
+    setValue(expectedState.x, 12);
+    setValue(expectedState.y, 1);
     expectedState.operation = Operation::div;
     ASSERT_EQ(expectedState, calc.getState());
 
     calc.input(Button::d2);
-    expectedState.x.setValue(2);
-    expectedState.y.setValue(12);
+    setValue(expectedState.x, 2);
+    setValue(expectedState.y, 12);
     expectedState.operation = Operation::div;
     ASSERT_EQ(expectedState, calc.getState());
 
     calc.input(Button::equals);
-    expectedState.x.setValue(6);
-    expectedState.y.setValue(2);
+    setValue(expectedState.x, 6);
+    setValue(expectedState.y, 2);
     expectedState.operation = Operation::div;
     ASSERT_EQ(expectedState, calc.getState());
 
     calc.input(Button::equals);
-    expectedState.x.setValue(3);
-    expectedState.y.setValue(2);
+    setValue(expectedState.x, 3);
+    setValue(expectedState.y, 2);
     expectedState.operation = Operation::div;
     ASSERT_EQ(expectedState, calc.getState());
 }
@@ -156,62 +157,62 @@ TEST(TestDiv, Div4) {
     calc.input(Button::d1);
     calc.input(Button::d2);
     calc.input(Button::d0);
-    expectedState.x.setValue(120);
-    expectedState.y.setValue(0);
+    setValue(expectedState.x, 120);
+    setValue(expectedState.y, 0);
     expectedState.operation = Operation::add;
     ASSERT_EQ(expectedState, calc.getState());
 
     calc.input(Button::div);
-    expectedState.x.setValue(120);
-    expectedState.y.setValue(1);
+    setValue(expectedState.x, 120);
+    setValue(expectedState.y, 1);
     expectedState.operation = Operation::div;
     ASSERT_EQ(expectedState, calc.getState());
 
     calc.input(Button::d5);
-    expectedState.x.setValue(5);
-    expectedState.y.setValue(120);
+    setValue(expectedState.x, 5);
+    setValue(expectedState.y, 120);
     expectedState.operation = Operation::div;
     ASSERT_EQ(expectedState, calc.getState());
 
     calc.input(Button::div);
-    expectedState.x.setValue(24);
-    expectedState.y.setValue(1);
+    setValue(expectedState.x, 24);
+    setValue(expectedState.y, 1);
     expectedState.operation = Operation::div;
     ASSERT_EQ(expectedState, calc.getState());
 
     calc.input(Button::d3);
-    expectedState.x.setValue(3);
-    expectedState.y.setValue(24);
+    setValue(expectedState.x, 3);
+    setValue(expectedState.y, 24);
     expectedState.operation = Operation::div;
     ASSERT_EQ(expectedState, calc.getState());
 
     calc.input(Button::div);
-    expectedState.x.setValue(8);
-    expectedState.y.setValue(1);
+    setValue(expectedState.x, 8);
+    setValue(expectedState.y, 1);
     expectedState.operation = Operation::div;
     ASSERT_EQ(expectedState, calc.getState());
 
     calc.input(Button::d2);
-    expectedState.x.setValue(2);
-    expectedState.y.setValue(8);
+    setValue(expectedState.x, 2);
+    setValue(expectedState.y, 8);
     expectedState.operation = Operation::div;
     ASSERT_EQ(expectedState, calc.getState());
 
     calc.input(Button::equals);
-    expectedState.x.setValue(4);
-    expectedState.y.setValue(2);
+    setValue(expectedState.x, 4);
+    setValue(expectedState.y, 2);
     expectedState.operation = Operation::div;
     ASSERT_EQ(expectedState, calc.getState());
 
     calc.input(Button::equals);
-    expectedState.x.setValue(2);
-    expectedState.y.setValue(2);
+    setValue(expectedState.x, 2);
+    setValue(expectedState.y, 2);
     expectedState.operation = Operation::div;
     ASSERT_EQ(expectedState, calc.getState());
 
     calc.input(Button::equals);
-    expectedState.x.setValue(1);
-    expectedState.y.setValue(2);
+    setValue(expectedState.x, 1);
+    setValue(expectedState.y, 2);
     expectedState.operation = Operation::div;
     ASSERT_EQ(expectedState, calc.getState());
 }
@@ -223,44 +224,44 @@ TEST(TestDiv, Div5) {
 
     calc.input(Button::d1);
     calc.input(Button::d2);
-    expectedState.x.setValue(12);
-    expectedState.y.setValue(0);
+    setValue(expectedState.x, 12);
+    setValue(expectedState.y, 0);
     expectedState.operation = Operation::add;
     ASSERT_EQ(expectedState, calc.getState());
 
     calc.input(Button::div);
-    expectedState.x.setValue(12);
-    expectedState.y.setValue(1);
+    setValue(expectedState.x, 12);
+    setValue(expectedState.y, 1);
     expectedState.operation = Operation::div;
     ASSERT_EQ(expectedState, calc.getState());
 
     calc.input(Button::d2);
-    expectedState.x.setValue(2);
-    expectedState.y.setValue(12);
+    setValue(expectedState.x, 2);
+    setValue(expectedState.y, 12);
     expectedState.operation = Operation::div;
     ASSERT_EQ(expectedState, calc.getState());
 
     calc.input(Button::equals);
-    expectedState.x.setValue(6);
-    expectedState.y.setValue(2);
+    setValue(expectedState.x, 6);
+    setValue(expectedState.y, 2);
     expectedState.operation = Operation::div;
     ASSERT_EQ(expectedState, calc.getState());
 
     calc.input(Button::d8);
-    expectedState.x.setValue(8);
-    expectedState.y.setValue(2);
+    setValue(expectedState.x, 8);
+    setValue(expectedState.y, 2);
     expectedState.operation = Operation::div;
     ASSERT_EQ(expectedState, calc.getState());
 
     calc.input(Button::equals);
-    expectedState.x.setValue(4);
-    expectedState.y.setValue(2);
+    setValue(expectedState.x, 4);
+    setValue(expectedState.y, 2);
     expectedState.operation = Operation::div;
     ASSERT_EQ(expectedState, calc.getState());
 
     calc.input(Button::equals);
-    expectedState.x.setValue(2);
-    expectedState.y.setValue(2);
+    setValue(expectedState.x, 2);
+    setValue(expectedState.y, 2);
     expectedState.operation = Operation::div;
     ASSERT_EQ(expectedState, calc.getState());
 }
@@ -272,44 +273,44 @@ TEST(TestDiv, Div6) {
 
     calc.input(Button::d4);
     calc.input(Button::d0);
-    expectedState.x.setValue(40);
-    expectedState.y.setValue(0);
+    setValue(expectedState.x, 40);
+    setValue(expectedState.y, 0);
     expectedState.operation = Operation::add;
     ASSERT_EQ(expectedState, calc.getState());
 
     calc.input(Button::div);
-    expectedState.x.setValue(40);
-    expectedState.y.setValue(1);
+    setValue(expectedState.x, 40);
+    setValue(expectedState.y, 1);
     expectedState.operation = Operation::div;
     ASSERT_EQ(expectedState, calc.getState());
 
     calc.input(Button::d4);
-    expectedState.x.setValue(4);
-    expectedState.y.setValue(40);
+    setValue(expectedState.x, 4);
+    setValue(expectedState.y, 40);
     expectedState.operation = Operation::div;
     ASSERT_EQ(expectedState, calc.getState());
 
     calc.input(Button::equals);
-    expectedState.x.setValue(10);
-    expectedState.y.setValue(4);
+    setValue(expectedState.x, 10);
+    setValue(expectedState.y, 4);
     expectedState.operation = Operation::div;
     ASSERT_EQ(expectedState, calc.getState());
 
     calc.input(Button::div);
-    expectedState.x.setValue(10);
-    expectedState.y.setValue(1);
+    setValue(expectedState.x, 10);
+    setValue(expectedState.y, 1);
     expectedState.operation = Operation::div;
     ASSERT_EQ(expectedState, calc.getState());
 
     calc.input(Button::equals);
-    expectedState.x.setValue(1, 1); // 0.1
-    expectedState.y.setValue(10);
+    setValue(expectedState.x, 1, 1); // 0.1
+    setValue(expectedState.y, 10);
     expectedState.operation = Operation::div;
     ASSERT_EQ(expectedState, calc.getState());
 
     calc.input(Button::equals);
-    expectedState.x.setValue(1, 2); // 0.01
-    expectedState.y.setValue(10);
+    setValue(expectedState.x, 1, 2); // 0.01
+    setValue(expectedState.y, 10);
     expectedState.operation = Operation::div;
     ASSERT_EQ(expectedState, calc.getState());
 }
@@ -321,38 +322,38 @@ TEST(TestDiv, Div7) {
 
     calc.input(Button::d4);
     calc.input(Button::d0);
-    expectedState.x.setValue(40);
-    expectedState.y.setValue(0);
+    setValue(expectedState.x, 40);
+    setValue(expectedState.y, 0);
     expectedState.operation = Operation::add;
     ASSERT_EQ(expectedState, calc.getState());
 
     calc.input(Button::div);
-    expectedState.x.setValue(40);
-    expectedState.y.setValue(1);
+    setValue(expectedState.x, 40);
+    setValue(expectedState.y, 1);
     expectedState.operation = Operation::div;
     ASSERT_EQ(expectedState, calc.getState());
 
     calc.input(Button::d4);
-    expectedState.x.setValue(4);
-    expectedState.y.setValue(40);
+    setValue(expectedState.x, 4);
+    setValue(expectedState.y, 40);
     expectedState.operation = Operation::div;
     ASSERT_EQ(expectedState, calc.getState());
 
     calc.input(Button::div);
-    expectedState.x.setValue(10);
-    expectedState.y.setValue(1);
+    setValue(expectedState.x, 10);
+    setValue(expectedState.y, 1);
     expectedState.operation = Operation::div;
     ASSERT_EQ(expectedState, calc.getState());
 
     calc.input(Button::equals);
-    expectedState.x.setValue(1, 1);
-    expectedState.y.setValue(10);
+    setValue(expectedState.x, 1, 1);
+    setValue(expectedState.y, 10);
     expectedState.operation = Operation::div;
     ASSERT_EQ(expectedState, calc.getState());
 
     calc.input(Button::equals);
-    expectedState.x.setValue(1, 2);
-    expectedState.y.setValue(10);
+    setValue(expectedState.x, 1, 2);
+    setValue(expectedState.y, 10);
     expectedState.operation = Operation::div;
     ASSERT_EQ(expectedState, calc.getState());
 }

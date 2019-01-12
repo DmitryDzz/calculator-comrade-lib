@@ -7,11 +7,9 @@
 #include <locale>
 
 #include "calculator/calculator.h"
-#include "calculator/display_register.h"
 
 using calculatorcomrade::Button;
 using calculatorcomrade::Calculator;
-using calculatorcomrade::DisplayRegister;
 using calculatorcomrade::Register;
 using calculatorcomrade::State;
 
@@ -75,7 +73,7 @@ void Calculator::input(Button button) {
             break;
         case Button::div:
             calculateAddSubMulDiv();
-            state_.y.setValue(1);
+            state_.y.setOne();
             state_.operation = Operation::div;
             hasOperation_ = true;
             break;

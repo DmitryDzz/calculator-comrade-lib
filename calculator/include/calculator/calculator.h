@@ -6,7 +6,6 @@
 #define CALCULATORCOMRADE_CALCULATOR_H
 
 #include "calculator/button.h"
-#include "calculator/display_register.h"
 #include "calculator/operation.h"
 #include "calculator/state.h"
 

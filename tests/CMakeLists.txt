@@ -9,6 +9,8 @@ set(SOURCES
         src/calc_mul_tests.cpp
         src/calc_div_tests.cpp
         src/math_tests.cpp
+        src/calc_helper.cpp
+        src/special_tests.cpp
 )
 
 set(TARGET tests)
