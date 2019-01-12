@@ -163,6 +163,26 @@ TEST_MATH(SubReal) {
     ASSERT_EQ(2, r2.pointPos);
 }
 
+TEST_MATH(NonNegativeZeroAfterSum) {
+    Register r1(8);
+    Register r2(8);
+
+    setValue(r1, -1974);
+    setValue(r2, 1974);
+    Math::calculate(r1, r2, Operation::add);
+    bool zero = true;
+    for (uint8_t i = 0; i < 8; i++) {
+        if (r1[i] > 0) {
+            zero = false;
+            break;
+        }
+    }
+    ASSERT_TRUE(zero);
+    ASSERT_EQ(0, r1.pointPos);
+    ASSERT_EQ(false, r1.negative);
+    ASSERT_EQ(false, r1.overflow);
+}
+
 TEST_MATH(MulInt) {
     Register r1(4);
     Register r2(4);
@@ -171,6 +191,27 @@ TEST_MATH(MulInt) {
     setValue(r2, 34);
     Math::calculate(r1, r2, Operation::mul);
     ASSERT_EQ(408, getAbsIntValue(r1));
+    ASSERT_EQ(0, r1.pointPos);
+    ASSERT_EQ(false, r1.negative);
+    ASSERT_EQ(false, r1.overflow);
+
+    setValue(r1, 12);
+    setValue(r2, -34);
+    Math::calculate(r1, r2, Operation::mul);
+    ASSERT_EQ(408, getAbsIntValue(r1));
+    ASSERT_EQ(0, r1.pointPos);
+    ASSERT_EQ(true, r1.negative);
+    ASSERT_EQ(false, r1.overflow);
+}
+
+TEST_MATH(NonNegativeZeroAfterMul) {
+    Register r1(8);
+    Register r2(8);
+
+    setValue(r1, -1974);
+    setValue(r2, 0);
+    Math::calculate(r1, r2, Operation::mul);
+    ASSERT_TRUE(r1.isZeroData());
     ASSERT_EQ(0, r1.pointPos);
     ASSERT_EQ(false, r1.negative);
     ASSERT_EQ(false, r1.overflow);

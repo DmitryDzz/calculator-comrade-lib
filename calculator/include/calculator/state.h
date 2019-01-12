@@ -109,8 +109,9 @@ namespace calculatorcomrade {
             uint64_t result = 0;
             uint64_t factor = 1;
             uint8_t digits = r.getDigits();
-            for (int i = 0; i < digits; i++, factor *= 10)
-                result += factor * r[i];
+            if (digits > 0)
+                for (int i = 0; i < digits; i++, factor *= 10)
+                    result += factor * r[i];
             return result;
         }
 

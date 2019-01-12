@@ -45,8 +45,9 @@ void Math::unsafeShiftRight(Register &r) {
 // until there is a non-zero value in the highest digit.
 void Math::safeShiftLeft(Register &r) {
     uint8_t digits = r.getDigits();
+    if (digits == 0) return;
     auto lastIndex = static_cast<uint8_t>(digits - 1);
-    if (digits == 0 || r[digits - 1] != 0 || r.pointPos == lastIndex) return;
+    if (r[digits - 1] != 0 || r.pointPos == lastIndex) return;
     for (auto i = lastIndex; i >= 1; i--) {
         r[i] = r[i - 1];
     }
@@ -58,10 +59,11 @@ int8_t Math::compareIgnoreSign(const Register &r1, const Register &r2) {
     uint8_t digits = r1.getDigits();
     if (digits == 0) return 0;
     if (digits != r2.getDigits()) return 0;
-    for (auto i = static_cast<uint8_t>(digits - 1); i >= 0; i--) {
-        if (r1[i] > r2[i])
+    for (uint8_t i = 0; i < digits; i++) {
+        uint8_t index = digits - i - (uint8_t)1;
+        if (r1[index] > r2[index])
             return 1;
-        else if (r1[i] < r2[i])
+        else if (r1[index] < r2[index])
             return -1;
     }
     return 0;
@@ -171,10 +173,11 @@ void Math::mul(Register &r1, Register &r2) {
         return;
     }
 
+    bool negative = r1.negative != r2.negative;
+
     Register r0(digits);
     r0.set(r1); // r0 is for the first operand. The second one is in r2.
     r1.clear(); // r1 will accumulate the result value.
-    r1.negative = r1.negative != r2.negative;
 
     auto lastIndex = static_cast<uint8_t>(digits - 1);
     bool inNumber = false;
@@ -194,4 +197,7 @@ void Math::mul(Register &r1, Register &r2) {
             r1[k] = r1[k - 1];
         r1[0] = 0;
     }
+
+    truncRightZeros(r1);
+    r1.negative = r1.isZeroData() ? false : negative;
 }

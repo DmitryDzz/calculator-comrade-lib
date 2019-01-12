@@ -29,8 +29,9 @@ namespace calculatorcomrade {
         }
 
         void clear() {
-            for (int i = 0; i < digits_; i++)
-                data_[i] = 0;
+            if (digits_ > 0)
+                for (uint8_t i = 0; i < digits_; i++)
+                    data_[i] = 0;
             pointPos = 0;
             negative = false;
             overflow = false;
@@ -41,21 +42,30 @@ namespace calculatorcomrade {
         }
 
         void set(const Register& rhs) {
-            this->clear();
+            clear();
             uint8_t digits = rhs.digits_;
             if (this->digits_ < digits)
                 digits = this->digits_;
-            for (int i = 0; i < digits; i++)
-                this->data_[i] = rhs.data_[i];
-            this->pointPos = rhs.pointPos;
-            this->negative = rhs.negative;
-            this->overflow = rhs.overflow;
+            if (digits > 0)
+                for (uint8_t i = 0; i < digits; i++)
+                    data_[i] = rhs.data_[i];
+            pointPos = rhs.pointPos;
+            negative = rhs.negative;
+            overflow = rhs.overflow;
         }
 
         void setOne() {
             clear();
             if (digits_ > 0)
                 data_[0] = 1;
+        }
+
+        bool isZeroData() {
+            if (digits_ == 0) return true;
+            for (uint8_t i = 0; i < digits_; i++)
+                if (data_[i] > 0)
+                    return false;
+            return true;
         }
 
         bool operator==(const Register& other) {
@@ -66,20 +76,21 @@ namespace calculatorcomrade {
             return !isEqual(*this, other);
         }
 
-        uint8_t& operator[](int index) {
+        uint8_t& operator[](uint8_t index) {
             return data_[index];
         }
 
-        const uint8_t& operator[](int index) const {
+        const uint8_t& operator[](uint8_t index) const {
             return data_[index];
         }
 
         static bool isEqual(const Register& lhs, const Register& rhs) {
             if (lhs.digits_ != rhs.digits_)
                 return false;
-            for (int i = 0; i < lhs.digits_; i++)
-                if (lhs.data_[i] != rhs.data_[i])
-                    return false;
+            if (lhs.digits_ > 0)
+                for (uint8_t i = 0; i < lhs.digits_; i++)
+                    if (lhs.data_[i] != rhs.data_[i])
+                        return false;
             return lhs.pointPos == rhs.pointPos &&
                    lhs.negative == rhs.negative &&
                    lhs.overflow == rhs.overflow;

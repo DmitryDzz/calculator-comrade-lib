@@ -54,7 +54,7 @@ void Calculator::input(Button button) {
             clearInput();
             break;
         case Button::d0 ... Button::d9:
-            inputDigit((uint8_t)((int)button - (int)Button::d0));
+            inputDigit((uint8_t)button - (uint8_t)Button::d0);
             break;
         case Button::point:
             inputPoint();
@@ -174,11 +174,12 @@ void Calculator::inputPoint() {
 }
 
 void Calculator::shiftLeftOnInput() {
-    if (inputSize_ >= digits_) return;
-    for (int i = inputSize_ - 1; i >= 0; i--) {
-        state_.x[i + 1] = state_.x[i];
+    if (digits_ == 0 || inputSize_ >= digits_) return;
+    if (inputSize_ > 0) {
+        for (uint8_t i = 0; i < inputSize_; i++)
+            state_.x[inputSize_ - i] = state_.x[inputSize_ - i - 1];
+        state_.x[0] = 0;
     }
-    state_.x[0] = 0;
 }
 
 void Calculator::calculateEquals() {
