@@ -216,3 +216,16 @@ TEST_MATH(NonNegativeZeroAfterMul) {
     ASSERT_EQ(false, r1.negative);
     ASSERT_EQ(false, r1.overflow);
 }
+
+TEST_MATH(MulTruncAfterPoint) {
+    Register r1(3);
+    Register r2(3);
+
+    setValue(r1, 87, 1);
+    setValue(r2, 54, 1);
+    Math::calculate(r1, r2, Operation::mul);
+    ASSERT_EQ(469, getAbsIntValue(r1));
+    ASSERT_EQ(1, r1.pointPos);
+    ASSERT_EQ(false, r1.negative);
+    ASSERT_EQ(false, r1.overflow);
+}

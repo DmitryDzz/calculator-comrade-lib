@@ -174,11 +174,14 @@ void Math::mul(Register &r1, Register &r2) {
     }
 
     bool negative = r1.negative != r2.negative;
+    uint8_t pointPos = r1.pointPos + r2.pointPos;
 
     Register r0(digits);
     r0.set(r1); // r0 is for the first operand. The second one is in r2.
-    r1.clear(); // r1 will accumulate the result value.
+    r0.negative = false;
+    r0.pointPos = 0;
 
+    r1.clear(); // r1 will accumulate the result value.
     auto lastIndex = static_cast<uint8_t>(digits - 1);
     bool inNumber = false;
     for (uint8_t i = 0; i < digits; i++) {
@@ -189,15 +192,32 @@ void Math::mul(Register &r1, Register &r2) {
 
         for (uint8_t j = 0; j < digit; j++) {
             sum(r1, r0);
+            if (r1.overflow) {
+                r1.overflow = false;
+                //TODO DZZ I should check pointPos
+                {
+                    unsafeShiftRight(r1);
+                    unsafeShiftRight(r0);
+                    pointPos--;
+                }
+            }
         }
 
         if (i == digits - 1) break;
         // Shift left:
-        for (uint8_t k = lastIndex; k >= 1; k--)
-            r1[k] = r1[k - 1];
-        r1[0] = 0;
+        if (r1[lastIndex] > 0) { //TODO DZZ Plus I should check pointPos
+            // Cannot shift the result to the left, so shifting the operand to the right
+            unsafeShiftRight(r0);
+            pointPos--;
+        } else {
+            // Left shift
+            for (uint8_t k = lastIndex; k >= 1; k--)
+                r1[k] = r1[k - 1];
+            r1[0] = 0;
+        }
     }
 
     truncRightZeros(r1);
     r1.negative = r1.isZeroData() ? false : negative;
+    r1.pointPos = pointPos;
 }
