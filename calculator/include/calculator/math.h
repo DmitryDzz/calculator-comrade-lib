@@ -20,7 +20,7 @@ namespace calculatorcomrade {
         static void normalizePointPositions(Register &r1, Register &r2);
         static void truncRightZeros(Register &r);
 
-        static void sum(Register &r1, Register &r2);
+        static void sum(Register &r1, Register &r2, bool truncRightZeros);
         static void mul(Register &r1, Register &r2);
     };
 };

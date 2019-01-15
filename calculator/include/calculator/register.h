@@ -5,17 +5,15 @@
 #ifndef CALCULATORCOMRADE_REGISTER_H
 #define CALCULATORCOMRADE_REGISTER_H
 
-#include <array>
-#include <algorithm>
 #include <cassert>
-#include <cstdint>
-#include <iterator>
-#include <vector>
-#include <string>
 
 #include "calculator/config.h"
 
 namespace calculatorcomrade {
+    class Register;
+
+    using RegisterChangedCallback = void(*)(Register &r);
+
     class Register {
     public:
         uint8_t pointPos = 0;
@@ -26,6 +24,8 @@ namespace calculatorcomrade {
         explicit Register(uint8_t digits) : digits_(digits) {
             assert(digits <= Config::MAX_DIGITS);
             data_ = new uint8_t[digits]();
+            changedCallback_ = nullptr;
+            inChangedCallback_ = false;
         }
 
         void clear() {
@@ -60,6 +60,10 @@ namespace calculatorcomrade {
                 data_[0] = 1;
         }
 
+        void setChangedCallback(const RegisterChangedCallback changedCallback) {
+            changedCallback_ = changedCallback;
+        }
+
         bool isZeroData() {
             if (digits_ == 0) return true;
             for (uint8_t i = 0; i < digits_; i++)
@@ -77,6 +81,13 @@ namespace calculatorcomrade {
         }
 
         uint8_t& operator[](uint8_t index) {
+            if (changedCallback_ != nullptr) {
+                if (!inChangedCallback_) {
+                    inChangedCallback_ = true;
+                    changedCallback_(*this);
+                    inChangedCallback_ = false;
+                }
+            }
             return data_[index];
         }
 
@@ -98,6 +109,9 @@ namespace calculatorcomrade {
     private:
         uint8_t digits_;
         uint8_t* data_;
+
+        RegisterChangedCallback changedCallback_;
+        bool inChangedCallback_;
     };
 
     inline bool operator==(const Register& lhs, const Register& rhs) {

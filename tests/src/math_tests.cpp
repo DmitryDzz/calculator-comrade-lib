@@ -13,6 +13,19 @@ using calculatorcomrade::Operation;
 
 #define TEST_MATH(test_name) TEST(TestMath, test_name)
 
+std::string r1_text;
+std::string r2_text;
+
+void on_r1_changed(Register &r) {
+    calculatorcomrade::evaluateText(r, &r1_text);
+    r1_text = "r1: " + r1_text;
+}
+
+void on_r2_changed(Register &r) {
+    calculatorcomrade::evaluateText(r, &r2_text);
+    r2_text = "r2: " + r2_text;
+}
+
 TEST_MATH(AddInt) {
     Register r1(8);
     Register r2(8);
@@ -217,15 +230,71 @@ TEST_MATH(NonNegativeZeroAfterMul) {
     ASSERT_EQ(false, r1.overflow);
 }
 
-TEST_MATH(MulTruncAfterPoint) {
+TEST_MATH(MulTruncAfterPoint1) {
     Register r1(3);
     Register r2(3);
 
-    setValue(r1, 87, 1);
-    setValue(r2, 54, 1);
+    setValue(r1, 87, 1); // 8.7
+    setValue(r2, 54, 1); // 5.4
     Math::calculate(r1, r2, Operation::mul);
     ASSERT_EQ(469, getAbsIntValue(r1));
     ASSERT_EQ(1, r1.pointPos);
     ASSERT_EQ(false, r1.negative);
     ASSERT_EQ(false, r1.overflow);
+}
+
+TEST_MATH(MulTruncAfterPoint2) {
+    Register r1(3);
+    Register r2(3);
+
+    setValue(r1, 12, 1); // 1.2
+    setValue(r2, 523, 2); // 5.23
+    Math::calculate(r1, r2, Operation::mul);
+    ASSERT_EQ(627, getAbsIntValue(r1));
+    ASSERT_EQ(2, r1.pointPos);
+    ASSERT_EQ(false, r1.negative);
+    ASSERT_EQ(false, r1.overflow);
+}
+
+TEST_MATH(MulOverflow) {
+    Register r1(3);
+    Register r2(3);
+
+    setValue(r1, 987, 1); // 98.7
+    setValue(r2, 654, 1); // 65.4
+    Math::calculate(r1, r2, Operation::mul);
+//    ASSERT_EQ(645, getAbsIntValue(r1));
+    ASSERT_EQ(640, getAbsIntValue(r1));
+    ASSERT_EQ(2, r1.pointPos);
+    ASSERT_EQ(false, r1.negative);
+    ASSERT_EQ(true, r1.overflow);
+}
+
+TEST_MATH(Temp1) {
+    Register r1(8);
+    Register r2(8);
+
+    r1.setChangedCallback(on_r1_changed);
+    r2.setChangedCallback(on_r2_changed);
+
+    setValue(r1, 56987658, 0);
+    setValue(r2, 98065232, 0);
+    Math::calculate(r1, r2, Operation::mul);
+    ASSERT_EQ(55885079, getAbsIntValue(r1));
+    ASSERT_EQ(0, r1.pointPos);
+    ASSERT_EQ(false, r1.negative);
+    ASSERT_EQ(true, r1.overflow);
+}
+
+TEST_MATH(Temp2) {
+    Register r1(3);
+    Register r2(3);
+
+    setValue(r2, 604, 0);
+    setValue(r1, 987, 0);
+    Math::calculate(r1, r2, Operation::mul);
+    ASSERT_EQ(591, getAbsIntValue(r1));
+    ASSERT_EQ(0, r1.pointPos);
+    ASSERT_EQ(false, r1.negative);
+    ASSERT_EQ(true, r1.overflow);
 }

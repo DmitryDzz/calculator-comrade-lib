@@ -9,11 +9,11 @@ using calculatorcomrade::Math;
 void Math::calculate(Register &r1, Register &r2, const Operation &operation) {
     switch (operation) {
         case Operation::add:
-            sum(r1, r2);
+            sum(r1, r2, true);
             break;
         case Operation::sub:
             r1.negative = !r1.negative;
-            sum(r1, r2);
+            sum(r1, r2, true);
             r1.negative = !r1.negative;
             break;
         case Operation::mul:
@@ -100,7 +100,7 @@ void Math::truncRightZeros(Register &r) {
     }
 }
 
-void Math::sum(Register &r1, Register &r2) {
+void Math::sum(Register &r1, Register &r2, bool truncRightZeros) {
     uint8_t digits = r1.getDigits();
     if (digits != r2.getDigits() || digits == 0) {
         r1.clear();
@@ -125,9 +125,9 @@ void Math::sum(Register &r1, Register &r2) {
 
         if (extraDigit) {
             r1.overflow = true;
-            r1.pointPos = digits;
             unsafeShiftRight(r1);
             r1[digits - 1] = 1;
+            r1.pointPos = static_cast<uint8_t>(digits - 1);
         }
     } else { // (different signs)
         int8_t comparision = compareIgnoreSign(r1, r2);
@@ -161,8 +161,10 @@ void Math::sum(Register &r1, Register &r2) {
         }
     }
 
-    truncRightZeros(r1);
-    truncRightZeros(r2);
+    if (truncRightZeros) {
+        Math::truncRightZeros(r1);
+        Math::truncRightZeros(r2);
+    }
 }
 
 void Math::mul(Register &r1, Register &r2) {
@@ -175,6 +177,7 @@ void Math::mul(Register &r1, Register &r2) {
 
     bool negative = r1.negative != r2.negative;
     uint8_t pointPos = r1.pointPos + r2.pointPos;
+    uint8_t overflowPos = 0;
 
     Register r0(digits);
     r0.set(r1); // r0 is for the first operand. The second one is in r2.
@@ -183,41 +186,55 @@ void Math::mul(Register &r1, Register &r2) {
 
     r1.clear(); // r1 will accumulate the result value.
     auto lastIndex = static_cast<uint8_t>(digits - 1);
-    bool inNumber = false;
     for (uint8_t i = 0; i < digits; i++) {
-        uint8_t digit = r2[lastIndex - i];
+        uint8_t digit = r2[i];
 
-        inNumber |= digit > 0;
-        if (!inNumber) continue;
-
-        for (uint8_t j = 0; j < digit; j++) {
-            sum(r1, r0);
-            if (r1.overflow) {
-                r1.overflow = false;
-                //TODO DZZ I should check pointPos
-                {
-                    unsafeShiftRight(r1);
+        if (digit > 0) {
+            for (uint8_t j = 0; j < digit; j++) {
+                sum(r1, r0, false);
+                if (r1.overflow) {
+                    r1.overflow = false;
+                    r1.pointPos = 0;
                     unsafeShiftRight(r0);
-                    pointPos--;
+
+                    if (pointPos == 0) overflowPos++;
+                    else pointPos--;
                 }
             }
         }
 
-        if (i == digits - 1) break;
-        // Shift left:
-        if (r1[lastIndex] > 0) { //TODO DZZ Plus I should check pointPos
-            // Cannot shift the result to the left, so shifting the operand to the right
-            unsafeShiftRight(r0);
-            pointPos--;
+        // Break the cycle or shift registers for the next iteration:
+        if (i == lastIndex) break;
+        bool hasNonZeroDigits = false;
+        for (uint8_t j = i; j <= lastIndex; j++) {
+            if (r2[j] > 0) {
+                hasNonZeroDigits = true;
+                break;
+            }
+        }
+        if (!hasNonZeroDigits) break;
+
+        // Shift r0 left:
+        if (r0[lastIndex] > 0) {
+            // Cannot shift r0 to the left, so we'll shift the result to the right:
+            unsafeShiftRight(r1);
+
+            if (pointPos == 0) overflowPos++;
+            else pointPos--;
         } else {
-            // Left shift
-            for (uint8_t k = lastIndex; k >= 1; k--)
-                r1[k] = r1[k - 1];
-            r1[0] = 0;
+            // Do left shift for r0:
+            for (uint8_t j = lastIndex; j >= 1; j--)
+                r0[j] = r0[j - 1];
+            r0[0] = 0;
         }
     }
 
     truncRightZeros(r1);
     r1.negative = r1.isZeroData() ? false : negative;
-    r1.pointPos = pointPos;
+    if (overflowPos > 0) {
+        r1.overflow = true;
+        r1.pointPos = digits - overflowPos;
+    } else {
+        r1.pointPos = pointPos;
+    }
 }

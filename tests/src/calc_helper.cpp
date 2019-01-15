@@ -69,3 +69,21 @@ void calculatorcomrade::setValue(Register &r, int64_t value, uint8_t digitsAfter
         }
     }
 }
+
+void calculatorcomrade::evaluateText(Register &r, std::string *output) {
+    uint8_t digits = r.getDigits();
+
+    if (digits == 0) {
+        *output = "Empty";
+        return;
+    }
+
+    *output = "";
+    if (r.overflow)
+        *output += "Err";
+    if (r.negative)
+        *output += "-";
+    for (uint8_t i = 0; i < digits; i++)
+        *output += std::to_string(r[digits - i - 1]);
+    return;
+}

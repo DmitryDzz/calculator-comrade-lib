@@ -6,6 +6,7 @@
 #define CALCULATORCOMRADE_CALC_HELPER_HPP
 
 #include <cstdint>
+#include <string>
 #include "calculator/register.h"
 
 namespace calculatorcomrade {
@@ -15,6 +16,8 @@ namespace calculatorcomrade {
     void setValue(Register &r, int64_t value);
 
     void setValue(Register &r, int64_t value, uint8_t digitsAfterPoint);
+
+    void evaluateText(Register &r, std::string *output);
 }
 
 #endif //CALCULATORCOMRADE_CALC_HELPER_HPP

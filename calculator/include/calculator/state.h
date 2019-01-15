@@ -7,6 +7,10 @@
 
 #include <cassert>
 
+//TODO DZZ Remove it:
+#include <string>
+
+
 #include "calculator/config.h"
 #include "calculator/operation.h"
 #include "calculator/register.h"
