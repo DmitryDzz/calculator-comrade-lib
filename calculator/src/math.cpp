@@ -6,15 +6,17 @@
 
 using calculatorcomrade::Math;
 
+#define U1 ((uint8_t)1)
+
 void Math::calculate(Register &r1, Register &r2, const Operation &operation) {
     switch (operation) {
         case Operation::add:
             sum(r1, r2, true);
             break;
         case Operation::sub:
-            r1.negative = !r1.negative;
+            r1.switchNegative();
             sum(r1, r2, true);
-            r1.negative = !r1.negative;
+            r1.switchNegative();
             break;
         case Operation::mul:
             mul(r1, r2);
@@ -34,11 +36,11 @@ void Math::unsafeShiftRight(Register &r) {
     uint8_t digits = r.getDigits();
     if (digits == 0) return;
     for (uint8_t i = 1; i < digits; i++) {
-        r[i - 1] = r[i];
+        r.setDigit(i - U1, r.getDigit(i));
     }
-    r[digits - 1] = 0;
-    if (r.pointPos > 0)
-        r.pointPos -= 1;
+    r.setDigit(digits - U1, 0);
+    if (r.getPointPos() > 0)
+        r.incPointPos(-1);
 }
 
 // "safe" means that left shift will be performed
@@ -47,12 +49,12 @@ void Math::safeShiftLeft(Register &r) {
     uint8_t digits = r.getDigits();
     if (digits == 0) return;
     auto lastIndex = static_cast<uint8_t>(digits - 1);
-    if (r[digits - 1] != 0 || r.pointPos == lastIndex) return;
+    if (r.getDigit(digits - U1) != 0 || r.getPointPos() == lastIndex) return;
     for (auto i = lastIndex; i >= 1; i--) {
-        r[i] = r[i - 1];
+        r.setDigit(i, r.getDigit(i - U1));
     }
-    r[0] = 0;
-    r.pointPos += 1;
+    r.setDigit(0, 0);
+    r.incPointPos(+1);
 }
 
 int8_t Math::compareIgnoreSign(const Register &r1, const Register &r2) {
@@ -61,9 +63,9 @@ int8_t Math::compareIgnoreSign(const Register &r1, const Register &r2) {
     if (digits != r2.getDigits()) return 0;
     for (uint8_t i = 0; i < digits; i++) {
         uint8_t index = digits - i - (uint8_t)1;
-        if (r1[index] > r2[index])
+        if (r1.getDigit(index) > r2.getDigit(index))
             return 1;
-        else if (r1[index] < r2[index])
+        else if (r1.getDigit(index) < r2.getDigit(index))
             return -1;
     }
     return 0;
@@ -71,22 +73,22 @@ int8_t Math::compareIgnoreSign(const Register &r1, const Register &r2) {
 
 void Math::normalizePointPositions(Register &r1, Register &r2) {
     uint8_t digits = r1.getDigits();
-    if (digits == 0 || digits != r2.getDigits() || r1.pointPos == r2.pointPos) return;
+    if (digits == 0 || digits != r2.getDigits() || r1.getPointPos() == r2.getPointPos()) return;
 
-    Register &rL = r1.pointPos < r2.pointPos ? r1 : r2;
-    Register &rR = r1.pointPos > r2.pointPos ? r1 : r2;
+    Register &rL = r1.getPointPos() < r2.getPointPos() ? r1 : r2;
+    Register &rR = r1.getPointPos() > r2.getPointPos() ? r1 : r2;
 
     // First shift left the register where pointPos is smaller.
     for (uint8_t i = 0; i < digits; i++) {
-        if (rL[digits - 1] != 0) break;
+        if (rL.getDigit(digits - U1) != 0) break;
         safeShiftLeft(rL);
-        if (r1.pointPos == r2.pointPos) return;
+        if (r1.getPointPos() == r2.getPointPos()) return;
     }
 
     // Than shift right the other register until pointPos's are equal.
     for (uint8_t i = 0; i < digits; i++) {
         unsafeShiftRight(rR);
-        if (r1.pointPos == r2.pointPos) return;
+        if (r1.getPointPos() == r2.getPointPos()) return;
     }
 }
 
@@ -95,7 +97,7 @@ void Math::truncRightZeros(Register &r) {
     if (digits == 0) return;
 
     for (uint8_t i = 0; i < digits; i++) {
-        if (r[0] != 0 || r.pointPos == 0) break;
+        if (r.getDigit(0) != 0 || r.getPointPos() == 0) break;
         unsafeShiftRight(r);
     }
 }
@@ -104,30 +106,29 @@ void Math::sum(Register &r1, Register &r2, bool truncRightZeros) {
     uint8_t digits = r1.getDigits();
     if (digits != r2.getDigits() || digits == 0) {
         r1.clear();
-        r1.overflow = true; // just indicate an error
+        r1.setOverflow(true); // just indicate an error
         return;
     }
 
     normalizePointPositions(r1, r2);
 
-    if (r1.negative == r2.negative) { // (same sign)
+    if (r1.getNegative() == r2.getNegative()) { // (same sign)
         bool extraDigit = false;
         for (uint8_t i = 0; i < digits; i++) {
-            r1[i] = r1[i] + r2[i];
+            r1.setDigit(i, r1.getDigit(i) + r2.getDigit(i));
             if (extraDigit)
-                r1[i] += 1;
+                r1.incDigit(i, 1);
 
-            extraDigit = r1[i] > 9;
-            if (extraDigit) {
-                r1[i] -= 10;
-            }
+            extraDigit = r1.getDigit(i) > 9;
+            if (extraDigit)
+                r1.incDigit(i, -10);
         }
 
         if (extraDigit) {
-            r1.overflow = true;
+            r1.setOverflow(true);
             unsafeShiftRight(r1);
-            r1[digits - 1] = 1;
-            r1.pointPos = static_cast<uint8_t>(digits - 1);
+            r1.setDigit(digits - U1, 1);
+            r1.setPointPos(digits - U1);
         }
     } else { // (different signs)
         int8_t comparision = compareIgnoreSign(r1, r2);
@@ -135,27 +136,27 @@ void Math::sum(Register &r1, Register &r2, bool truncRightZeros) {
         uint8_t srcDigit;
         if (comparision == 1) { // |r1| > |r2|
             for (uint8_t i = 0; i < digits; i++) {
-                srcDigit = r1[i] - borrowedDigit;
-                if (srcDigit < r2[i]) {
-                    r1[i] = (uint8_t)(srcDigit + 10 - r2[i]);
+                srcDigit = r1.getDigit(i) - borrowedDigit;
+                if (srcDigit < r2.getDigit(i)) {
+                    r1.setDigit(i, (uint8_t)(srcDigit + 10 - r2.getDigit(i)));
                     borrowedDigit = 1;
                 } else {
-                    r1[i] = srcDigit - r2[i];
+                    r1.setDigit(i, srcDigit - r2.getDigit(i));
                     borrowedDigit = 0;
                 }
             }
         } else if (comparision == -1) { // |r1| < |r2|
             for (uint8_t i = 0; i < digits; i++) {
-                srcDigit = r2[i] - borrowedDigit;
-                if (srcDigit < r1[i]) {
-                    r1[i] = (uint8_t)(srcDigit + 10 - r1[i]);
+                srcDigit = r2.getDigit(i) - borrowedDigit;
+                if (srcDigit < r1.getDigit(i)) {
+                    r1.setDigit(i, (uint8_t)(srcDigit + 10 - r1.getDigit(i)));
                     borrowedDigit = 1;
                 } else {
-                    r1[i] = srcDigit - r1[i];
+                    r1.setDigit(i, srcDigit - r1.getDigit(i));
                     borrowedDigit = 0;
                 }
             }
-            r1.negative = r2.negative;
+            r1.setNegative(r2.getNegative());
         } else { // |r1|==|r2|
             r1.clear();
         }
@@ -171,30 +172,30 @@ void Math::mul(Register &r1, Register &r2) {
     uint8_t digits = r1.getDigits();
     if (digits != r2.getDigits() || digits == 0) {
         r1.clear();
-        r1.overflow = true; // just indicate an error
+        r1.setOverflow(true); // just indicate an error
         return;
     }
 
-    bool negative = r1.negative != r2.negative;
-    uint8_t pointPos = r1.pointPos + r2.pointPos;
+    bool negative = r1.getNegative() != r2.getNegative();
+    uint8_t pointPos = r1.getPointPos() + r2.getPointPos();
     uint8_t overflowPos = 0;
 
     Register r0(digits);
     r0.set(r1); // r0 is for the first operand. The second one is in r2.
-    r0.negative = false;
-    r0.pointPos = 0;
+    r0.setNegative(false);
+    r0.setPointPos(0);
 
     r1.clear(); // r1 will accumulate the result value.
     auto lastIndex = static_cast<uint8_t>(digits - 1);
     for (uint8_t i = 0; i < digits; i++) {
-        uint8_t digit = r2[i];
+        uint8_t digit = r2.getDigit(i);
 
         if (digit > 0) {
             for (uint8_t j = 0; j < digit; j++) {
                 sum(r1, r0, false);
-                if (r1.overflow) {
-                    r1.overflow = false;
-                    r1.pointPos = 0;
+                if (r1.getOverflow()) {
+                    r1.setOverflow(false);
+                    r1.setPointPos(0);
                     unsafeShiftRight(r0);
 
                     if (pointPos == 0) overflowPos++;
@@ -207,7 +208,7 @@ void Math::mul(Register &r1, Register &r2) {
         if (i == lastIndex) break;
         bool hasNonZeroDigits = false;
         for (uint8_t j = i; j <= lastIndex; j++) {
-            if (r2[j] > 0) {
+            if (r2.getDigit(j) > 0) {
                 hasNonZeroDigits = true;
                 break;
             }
@@ -215,7 +216,7 @@ void Math::mul(Register &r1, Register &r2) {
         if (!hasNonZeroDigits) break;
 
         // Shift r0 left:
-        if (r0[lastIndex] > 0) {
+        if (r0.getDigit(lastIndex) > 0) {
             // Cannot shift r0 to the left, so we'll shift the result to the right:
             unsafeShiftRight(r1);
 
@@ -224,17 +225,17 @@ void Math::mul(Register &r1, Register &r2) {
         } else {
             // Do left shift for r0:
             for (uint8_t j = lastIndex; j >= 1; j--)
-                r0[j] = r0[j - 1];
-            r0[0] = 0;
+                r0.setDigit(j, r0.getDigit(j - U1));
+            r0.setDigit(0, 0);
         }
     }
 
     truncRightZeros(r1);
-    r1.negative = r1.isZeroData() ? false : negative;
+    r1.setNegative(r1.isZeroData() ? false : negative);
     if (overflowPos > 0) {
-        r1.overflow = true;
-        r1.pointPos = digits - overflowPos;
+        r1.setOverflow(true);
+        r1.setPointPos(digits - overflowPos);
     } else {
-        r1.pointPos = pointPos;
+        r1.setPointPos(pointPos);
     }
 }

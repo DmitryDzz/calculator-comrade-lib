@@ -8,6 +8,8 @@
 
 #include "calculator/calculator.h"
 
+#define U1 ((uint8_t)1)
+
 using calculatorcomrade::Button;
 using calculatorcomrade::Calculator;
 using calculatorcomrade::Register;
@@ -161,11 +163,11 @@ void Calculator::clearInput() {
 
 void Calculator::inputDigit(uint8_t digit) {
     if (digit == 0 && inputSize_ == 0) return;
-    if (inputSize_ >= digits_ || state_.x.pointPos == digits_ - 1) return;
+    if (inputSize_ >= digits_ || state_.x.getPointPos() == digits_ - 1) return;
     shiftLeftOnInput();
-    state_.x[0] = digit;
+    state_.x.setDigit(0, digit);
     inputSize_++;
-    if (inputHasPoint_) state_.x.pointPos++;
+    if (inputHasPoint_) state_.x.incPointPos(1);
 }
 
 void Calculator::inputPoint() {
@@ -177,8 +179,8 @@ void Calculator::shiftLeftOnInput() {
     if (digits_ == 0 || inputSize_ >= digits_) return;
     if (inputSize_ > 0) {
         for (uint8_t i = 0; i < inputSize_; i++)
-            state_.x[inputSize_ - i] = state_.x[inputSize_ - i - 1];
-        state_.x[0] = 0;
+            state_.x.setDigit(inputSize_ - i, state_.x.getDigit(inputSize_ - i - U1));
+        state_.x.setDigit(0, 0);
     }
 }
 

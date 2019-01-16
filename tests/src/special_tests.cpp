@@ -54,24 +54,24 @@ TEST(TestSpecial, RegisterYChanged) {
     calc.input(Button::equals);
 
     ASSERT_EQ(11344444, getAbsIntValue(calc.getState().x));
-    ASSERT_EQ(4, calc.getState().x.pointPos);
+    ASSERT_EQ(4, calc.getState().x.getPointPos());
 
     ASSERT_EQ(1001234, getAbsIntValue(calc.getState().y));
-    ASSERT_EQ(4, calc.getState().y.pointPos);
+    ASSERT_EQ(4, calc.getState().y.getPointPos());
 
     calc.input(Button::equals);
 
     ASSERT_EQ(1034321, getAbsIntValue(calc.getState().x));
-    ASSERT_EQ(3, calc.getState().x.pointPos);
+    ASSERT_EQ(3, calc.getState().x.getPointPos());
 
     ASSERT_EQ(1001234, getAbsIntValue(calc.getState().y));
-    ASSERT_EQ(4, calc.getState().y.pointPos);
+    ASSERT_EQ(4, calc.getState().y.getPointPos());
 
     calc.input(Button::equals);
 
     ASSERT_EQ(9341976, getAbsIntValue(calc.getState().x));
-    ASSERT_EQ(4, calc.getState().x.pointPos);
+    ASSERT_EQ(4, calc.getState().x.getPointPos());
 
     ASSERT_EQ(1001234, getAbsIntValue(calc.getState().y));
-    ASSERT_EQ(4, calc.getState().y.pointPos);
+    ASSERT_EQ(4, calc.getState().y.getPointPos());
 }

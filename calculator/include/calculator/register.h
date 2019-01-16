@@ -16,25 +16,17 @@ namespace calculatorcomrade {
 
     class Register {
     public:
-        uint8_t pointPos = 0;
-        bool negative = false;
-        bool overflow = false;
-
         Register() = delete;
         explicit Register(uint8_t digits) : digits_(digits) {
+            assert(digits > 0);
             assert(digits <= Config::MAX_DIGITS);
             data_ = new uint8_t[digits]();
-            changedCallback_ = nullptr;
-            inChangedCallback_ = false;
+            clearInternal();
         }
 
         void clear() {
-            if (digits_ > 0)
-                for (uint8_t i = 0; i < digits_; i++)
-                    data_[i] = 0;
-            pointPos = 0;
-            negative = false;
-            overflow = false;
+            clearInternal();
+            notify();
         }
 
         uint8_t getDigits() const {
@@ -42,22 +34,24 @@ namespace calculatorcomrade {
         }
 
         void set(const Register& rhs) {
-            clear();
+            clearInternal();
             uint8_t digits = rhs.digits_;
             if (this->digits_ < digits)
                 digits = this->digits_;
             if (digits > 0)
                 for (uint8_t i = 0; i < digits; i++)
                     data_[i] = rhs.data_[i];
-            pointPos = rhs.pointPos;
-            negative = rhs.negative;
-            overflow = rhs.overflow;
+            pointPos_ = rhs.pointPos_;
+            negative_ = rhs.negative_;
+            overflow_ = rhs.overflow_;
+            notify();
         }
 
         void setOne() {
-            clear();
+            clearInternal();
             if (digits_ > 0)
                 data_[0] = 1;
+            notify();
         }
 
         void setChangedCallback(const RegisterChangedCallback changedCallback) {
@@ -80,19 +74,59 @@ namespace calculatorcomrade {
             return !isEqual(*this, other);
         }
 
-        uint8_t& operator[](uint8_t index) {
-            if (changedCallback_ != nullptr) {
-                if (!inChangedCallback_) {
-                    inChangedCallback_ = true;
-                    changedCallback_(*this);
-                    inChangedCallback_ = false;
-                }
-            }
+
+        inline uint8_t& getDigit(const uint8_t index) {
             return data_[index];
+        };
+
+        inline const uint8_t& getDigit(const uint8_t index) const {
+            return data_[index];
+        };
+
+        inline void setDigit(const uint8_t index, const uint8_t value) {
+            data_[index] = value;
+            notify();
         }
 
-        const uint8_t& operator[](uint8_t index) const {
-            return data_[index];
+        inline void incDigit(const uint8_t index, const int8_t delta) {
+            uint8_t digit = data_[index] + delta;
+            setDigit(index, digit);
+        }
+
+        inline uint8_t getPointPos() {
+            return pointPos_;
+        }
+
+        inline void setPointPos(const uint8_t value) {
+            pointPos_ = value;
+            notify();
+        }
+
+        inline void incPointPos(const int8_t delta) {
+            setPointPos(pointPos_ + delta);
+        }
+
+        inline bool getNegative() {
+            return negative_;
+        }
+
+        inline void setNegative(const bool value) {
+            negative_ = value;
+            notify();
+        }
+
+        inline void switchNegative() {
+            negative_ = !negative_;
+            notify();
+        }
+
+        inline bool getOverflow() {
+            return overflow_;
+        }
+
+        inline void setOverflow(const bool value) {
+            overflow_ = value;
+            notify();
         }
 
         static bool isEqual(const Register& lhs, const Register& rhs) {
@@ -102,16 +136,37 @@ namespace calculatorcomrade {
                 for (uint8_t i = 0; i < lhs.digits_; i++)
                     if (lhs.data_[i] != rhs.data_[i])
                         return false;
-            return lhs.pointPos == rhs.pointPos &&
-                   lhs.negative == rhs.negative &&
-                   lhs.overflow == rhs.overflow;
+            return lhs.pointPos_ == rhs.pointPos_ &&
+                   lhs.negative_ == rhs.negative_ &&
+                   lhs.overflow_ == rhs.overflow_;
         }
     private:
         uint8_t digits_;
         uint8_t* data_;
+        uint8_t pointPos_ = 0;
+        bool negative_ = false;
+        bool overflow_ = false;
 
-        RegisterChangedCallback changedCallback_;
-        bool inChangedCallback_;
+        RegisterChangedCallback changedCallback_ = nullptr;
+        bool canNotify_ = true;
+        void notify() {
+            if (changedCallback_ != nullptr) {
+                if (canNotify_) {
+                    canNotify_ = false;
+                    changedCallback_(*this);
+                    canNotify_ = true;
+                }
+            }
+        }
+
+        void clearInternal() {
+            if (digits_ > 0)
+                for (uint8_t i = 0; i < digits_; i++)
+                    data_[i] = 0;
+            pointPos_ = 0;
+            negative_ = false;
+            overflow_ = false;
+        }
     };
 
     inline bool operator==(const Register& lhs, const Register& rhs) {
@@ -121,8 +176,6 @@ namespace calculatorcomrade {
     inline bool operator!=(const Register& lhs, const Register& rhs) {
         return !Register::isEqual(lhs, rhs);
     }
-
-
 }
 
 #endif //CALCULATORCOMRADE_REGISTER_H

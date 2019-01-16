@@ -40,32 +40,32 @@ TEST_CALCULATOR_INPUT(PositiveInt) {
     State expected(4);
 
     c.input(Button::d1);
-    expected.x[0] = 1;
+    expected.x.setDigit(0, 1);
     ASSERT_EQ(expected, c.getState());
 
     c.input(Button::d2);
-    expected.x[0] = 2;
-    expected.x[1] = 1;
+    expected.x.setDigit(0, 2);
+    expected.x.setDigit(1, 1);
     ASSERT_EQ(expected, c.getState());
 
     c.input(Button::d3);
-    expected.x[0] = 3;
-    expected.x[1] = 2;
-    expected.x[2] = 1;
+    expected.x.setDigit(0, 3);
+    expected.x.setDigit(1, 2);
+    expected.x.setDigit(2, 1);
     ASSERT_EQ(expected, c.getState());
 
     c.input(Button::d4);
-    expected.x[0] = 4;
-    expected.x[1] = 3;
-    expected.x[2] = 2;
-    expected.x[3] = 1;
+    expected.x.setDigit(0, 4);
+    expected.x.setDigit(1, 3);
+    expected.x.setDigit(2, 2);
+    expected.x.setDigit(3, 1);
     ASSERT_EQ(expected, c.getState());
 
     c.input(Button::d5);
-    expected.x[0] = 4;
-    expected.x[1] = 3;
-    expected.x[2] = 2;
-    expected.x[3] = 1;
+    expected.x.setDigit(0, 4);
+    expected.x.setDigit(1, 3);
+    expected.x.setDigit(2, 2);
+    expected.x.setDigit(3, 1);
     ASSERT_EQ(expected, c.getState());
 }
 
@@ -79,32 +79,32 @@ TEST_CALCULATOR_INPUT(NegativeInt) {
     ASSERT_EQ(expected, c.getState());
 
     c.input(Button::d1);
-    expected.x[0] = 1;
+    expected.x.setDigit(0, 1);
     ASSERT_EQ(expected, c.getState());
 
     c.input(Button::d2);
-    expected.x[0] = 2;
-    expected.x[1] = 1;
+    expected.x.setDigit(0, 2);
+    expected.x.setDigit(1, 1);
     ASSERT_EQ(expected, c.getState());
 
     c.input(Button::d3);
-    expected.x[0] = 3;
-    expected.x[1] = 2;
-    expected.x[2] = 1;
+    expected.x.setDigit(0, 3);
+    expected.x.setDigit(1, 2);
+    expected.x.setDigit(2, 1);
     ASSERT_EQ(expected, c.getState());
 
     c.input(Button::d4);
-    expected.x[0] = 4;
-    expected.x[1] = 3;
-    expected.x[2] = 2;
-    expected.x[3] = 1;
+    expected.x.setDigit(0, 4);
+    expected.x.setDigit(1, 3);
+    expected.x.setDigit(2, 2);
+    expected.x.setDigit(3, 1);
     ASSERT_EQ(expected, c.getState());
 
     c.input(Button::d5);
-    expected.x[0] = 4;
-    expected.x[1] = 3;
-    expected.x[2] = 2;
-    expected.x[3] = 1;
+    expected.x.setDigit(0, 4);
+    expected.x.setDigit(1, 3);
+    expected.x.setDigit(2, 2);
+    expected.x.setDigit(3, 1);
     ASSERT_EQ(expected, c.getState());
 }
 
@@ -113,36 +113,36 @@ TEST_CALCULATOR_INPUT(PositiveReal) {
     State expected(4);
 
     c.input(Button::d1);
-    expected.x[0] = 1;
-    expected.x.pointPos = 0;
+    expected.x.setDigit(0, 1);
+    expected.x.setPointPos(0);
     ASSERT_EQ(expected, c.getState());
 
     c.input(Button::point);
-    expected.x.pointPos = 0;
+    expected.x.setPointPos(0);
     ASSERT_EQ(expected, c.getState());
 
     c.input(Button::d2);
-    expected.x[0] = 2;
-    expected.x[1] = 1;
-    expected.x.pointPos = 1;
+    expected.x.setDigit(0, 2);
+    expected.x.setDigit(1, 1);
+    expected.x.setPointPos(1);
     ASSERT_EQ(expected, c.getState());
 
     c.input(Button::d3);
-    expected.x[0] = 3;
-    expected.x[1] = 2;
-    expected.x[2] = 1;
-    expected.x.pointPos = 2;
+    expected.x.setDigit(0, 3);
+    expected.x.setDigit(1, 2);
+    expected.x.setDigit(2, 1);
+    expected.x.setPointPos(2);
     ASSERT_EQ(expected, c.getState());
 
     c.input(Button::point); // should ignore this input
     ASSERT_EQ(expected, c.getState());
 
     c.input(Button::d4);
-    expected.x[0] = 4;
-    expected.x[1] = 3;
-    expected.x[2] = 2;
-    expected.x[3] = 1;
-    expected.x.pointPos = 3;
+    expected.x.setDigit(0, 4);
+    expected.x.setDigit(1, 3);
+    expected.x.setDigit(2, 2);
+    expected.x.setDigit(3, 1);
+    expected.x.setPointPos(3);
     ASSERT_EQ(expected, c.getState());
 
     c.input(Button::d5);
@@ -160,9 +160,9 @@ TEST_CALCULATOR_INPUT(ZeroInHighDigit) {
     c.input(Button::d4);
 
     Register &x = c.getState().x;
-    ASSERT_EQ(0, x[3]);
-    ASSERT_EQ(1, x[2]);
-    ASSERT_EQ(2, x[1]);
-    ASSERT_EQ(3, x[0]);
-    ASSERT_EQ(3, x.pointPos);
+    ASSERT_EQ(0, x.getDigit(3));
+    ASSERT_EQ(1, x.getDigit(2));
+    ASSERT_EQ(2, x.getDigit(1));
+    ASSERT_EQ(3, x.getDigit(0));
+    ASSERT_EQ(3, x.getPointPos());
 }
