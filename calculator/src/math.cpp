@@ -11,11 +11,11 @@ using calculatorcomrade::Math;
 void Math::calculate(Register &r1, Register &r2, const Operation &operation) {
     switch (operation) {
         case Operation::add:
-            sum(r1, r2, true);
+            sum(r1, r2);
             break;
         case Operation::sub:
             r1.switchNegative();
-            sum(r1, r2, true);
+            sum(r1, r2);
             r1.switchNegative();
             break;
         case Operation::mul:
@@ -102,6 +102,10 @@ void Math::truncRightZeros(Register &r) {
     }
 }
 
+void Math::sum(Register &r1, Register &r2) {
+    Math::sum(r1, r2, true);
+}
+
 void Math::sum(Register &r1, Register &r2, bool truncRightZeros) {
     uint8_t digits = r1.getDigits();
     if (digits != r2.getDigits() || digits == 0) {
@@ -176,14 +180,25 @@ void Math::mul(Register &r1, Register &r2) {
         return;
     }
 
+    Register ex(digits);
+    Math::mul(r1, r2, ex);
+}
+
+void Math::mul(Register &r1, Register &r2, Register &r3) {
+    uint8_t digits = r1.getDigits();
+    if (digits != r2.getDigits() || digits == 0) {
+        r1.clear();
+        r1.setOverflow(true); // just indicate an error
+        return;
+    }
+
     bool negative = r1.getNegative() != r2.getNegative();
     uint8_t pointPos = r1.getPointPos() + r2.getPointPos();
     uint8_t overflowPos = 0;
 
-    Register r0(digits);
-    r0.set(r1); // r0 is for the first operand. The second one is in r2.
-    r0.setNegative(false);
-    r0.setPointPos(0);
+    r3.set(r1); // r3 is for the first operand. The second one is in r2.
+    r3.setNegative(false);
+    r3.setPointPos(0);
 
     r1.clear(); // r1 will accumulate the result value.
     auto lastIndex = static_cast<uint8_t>(digits - 1);
@@ -192,11 +207,11 @@ void Math::mul(Register &r1, Register &r2) {
 
         if (digit > 0) {
             for (uint8_t j = 0; j < digit; j++) {
-                sum(r1, r0, false);
+                sum(r1, r3, false);
                 if (r1.getOverflow()) {
                     r1.setOverflow(false);
                     r1.setPointPos(0);
-                    unsafeShiftRight(r0);
+                    unsafeShiftRight(r3);
 
                     if (pointPos == 0) overflowPos++;
                     else pointPos--;
@@ -215,18 +230,18 @@ void Math::mul(Register &r1, Register &r2) {
         }
         if (!hasNonZeroDigits) break;
 
-        // Shift r0 left:
-        if (r0.getDigit(lastIndex) > 0) {
-            // Cannot shift r0 to the left, so we'll shift the result to the right:
+        // Shift r3 left:
+        if (r3.getDigit(lastIndex) > 0) {
+            // Cannot shift r3 to the left, so we'll shift the result to the right:
             unsafeShiftRight(r1);
 
             if (pointPos == 0) overflowPos++;
             else pointPos--;
         } else {
-            // Do left shift for r0:
+            // Do left shift for r3:
             for (uint8_t j = lastIndex; j >= 1; j--)
-                r0.setDigit(j, r0.getDigit(j - U1));
-            r0.setDigit(0, 0);
+                r3.setDigit(j, r3.getDigit(j - U1));
+            r3.setDigit(0, 0);
         }
     }
 

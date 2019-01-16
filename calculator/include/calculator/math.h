@@ -13,6 +13,10 @@ namespace calculatorcomrade {
     class Math {
     public:
         static void calculate(Register &r1, Register &r2, const Operation &operation);
+
+        static void sum(Register &r1, Register &r2);
+        static void mul(Register &r1, Register &r2);
+        static void mul(Register &r1, Register &r2, Register &r3);
     private:
         static void unsafeShiftRight(Register &r);
         static void safeShiftLeft(Register &r);
@@ -21,7 +25,6 @@ namespace calculatorcomrade {
         static void truncRightZeros(Register &r);
 
         static void sum(Register &r1, Register &r2, bool truncRightZeros);
-        static void mul(Register &r1, Register &r2);
     };
 };
 

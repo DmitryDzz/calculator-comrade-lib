@@ -15,6 +15,7 @@ using calculatorcomrade::Operation;
 
 std::string r1_text;
 std::string r2_text;
+std::string rT_text;
 
 void on_r1_changed(Register &r) {
     calculatorcomrade::evaluateText(r, &r1_text);
@@ -24,6 +25,11 @@ void on_r1_changed(Register &r) {
 void on_r2_changed(Register &r) {
     calculatorcomrade::evaluateText(r, &r2_text);
     r2_text = r2_text;
+}
+
+void on_rt_changed(Register &r) {
+    calculatorcomrade::evaluateText(r, &rT_text);
+    rT_text = rT_text;
 }
 
 TEST_MATH(AddInt) {
@@ -273,13 +279,15 @@ TEST_MATH(MulOverflow) {
 TEST_MATH(Temp1) {
     Register r1(8);
     Register r2(8);
+    Register rT(8);
 
     r1.setChangedCallback(on_r1_changed);
     r2.setChangedCallback(on_r2_changed);
+    rT.setChangedCallback(on_rt_changed);
 
     setValue(r1, 56987658, 0);
     setValue(r2, 98065232, 0);
-    Math::calculate(r1, r2, Operation::mul);
+    Math::mul(r1, r2, rT);
     ASSERT_EQ(55885079, getAbsIntValue(r1));
     ASSERT_EQ(0, r1.getPointPos());
     ASSERT_EQ(false, r1.getNegative());
