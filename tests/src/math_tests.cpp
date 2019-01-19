@@ -90,6 +90,24 @@ TEST_MATH(AddOverflow) {
     ASSERT_EQ(0, r1.getPointPos());
     ASSERT_EQ(true, r1.getNegative());
     ASSERT_EQ(true, r1.getOverflow());
+
+    // There's no rounding on overflow (1):
+    setValue(r1, 99999933);
+    setValue(r2, 121); // The result in 9 digits is 10000005[4]
+    Math::calculate(r1, r2, Operation::add);
+    ASSERT_EQ(10000005, getAbsIntValue(r1));
+    ASSERT_EQ(7, r1.getPointPos());
+    ASSERT_EQ(false, r1.getNegative());
+    ASSERT_EQ(true, r1.getOverflow());
+
+    // There's no rounding on overflow (2):
+    setValue(r1, 99999933);
+    setValue(r2, 126); // The result in 9 digits is 10000005[9]
+    Math::calculate(r1, r2, Operation::add);
+    ASSERT_EQ(10000005, getAbsIntValue(r1));
+    ASSERT_EQ(7, r1.getPointPos());
+    ASSERT_EQ(false, r1.getNegative());
+    ASSERT_EQ(true, r1.getOverflow());
 }
 
 TEST_MATH(AddReal) {
@@ -164,6 +182,24 @@ TEST_MATH(SubOverflow) {
     ASSERT_EQ(1, r1.getDigit(0));
     ASSERT_EQ(0, r1.getPointPos());
     ASSERT_EQ(false, r1.getNegative());
+    ASSERT_EQ(true, r1.getOverflow());
+
+    // There's no rounding on overflow (1):
+    setValue(r1, -99999933);
+    setValue(r2, 121); // The result in 9 digits is 100000054
+    Math::calculate(r1, r2, Operation::sub);
+    ASSERT_EQ(10000005, getAbsIntValue(r1));
+    ASSERT_EQ(7, r1.getPointPos());
+    ASSERT_EQ(true, r1.getNegative());
+    ASSERT_EQ(true, r1.getOverflow());
+
+    // There's no rounding on overflow (2):
+    setValue(r1, -99999933);
+    setValue(r2, 126); // The result in 9 digits is 100000059
+    Math::calculate(r1, r2, Operation::sub);
+    ASSERT_EQ(10000005, getAbsIntValue(r1));
+    ASSERT_EQ(7, r1.getPointPos());
+    ASSERT_EQ(true, r1.getNegative());
     ASSERT_EQ(true, r1.getOverflow());
 }
 
