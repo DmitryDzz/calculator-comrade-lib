@@ -17,10 +17,10 @@ namespace calculatorcomrade {
     class Register {
     public:
         Register() = delete;
-        explicit Register(uint8_t digits) : digits_(digits) {
+        explicit Register(int8_t digits) : digits_(digits) {
             assert(digits > 0);
             assert(digits <= Config::MAX_DIGITS);
-            data_ = new uint8_t[digits]();
+            data_ = new int8_t[digits]();
             clearInternal();
         }
 
@@ -29,13 +29,13 @@ namespace calculatorcomrade {
             notify();
         }
 
-        uint8_t getDigits() const {
+        int8_t getDigits() const {
             return digits_;
         }
 
         void set(const Register& rhs) {
             clearInternal();
-            uint8_t digits = digits_ >= rhs.getDigits() ? rhs.digits_ : digits_;
+            int8_t digits = digits_ >= rhs.getDigits() ? rhs.digits_ : digits_;
             assert(digits > 0);
             for (int8_t i = 0; i < digits; i++)
                 data_[i] = rhs.data_[i];
@@ -47,8 +47,7 @@ namespace calculatorcomrade {
 
         void setOne() {
             clearInternal();
-            if (digits_ > 0)
-                data_[0] = 1;
+            data_[0] = 1;
             notify();
         }
 
@@ -61,8 +60,7 @@ namespace calculatorcomrade {
 //        }
 
         bool isZeroData() {
-            if (digits_ == 0) return true;
-            for (uint8_t i = 0; i < digits_; i++)
+            for (int8_t i = 0; i < digits_; i++)
                 if (data_[i] > 0)
                     return false;
             return true;
@@ -77,29 +75,29 @@ namespace calculatorcomrade {
         }
 
 
-        inline uint8_t& getDigit(const uint8_t index) {
+        inline int8_t& getDigit(const int8_t index) {
             return data_[index];
         };
 
-        inline const uint8_t& getDigit(const uint8_t index) const {
+        inline const int8_t& getDigit(const int8_t index) const {
             return data_[index];
         };
 
-        inline void setDigit(const uint8_t index, const uint8_t value) {
+        inline void setDigit(const int8_t index, const int8_t value) {
             data_[index] = value;
             notify();
         }
 
-        inline void incDigit(const uint8_t index, const int8_t delta) {
-            uint8_t digit = data_[index] + delta;
+        inline void incDigit(const int8_t index, const int8_t delta) {
+            int8_t digit = data_[index] + delta;
             setDigit(index, digit);
         }
 
-        inline uint8_t getPointPos() {
+        inline int8_t getPointPos() {
             return pointPos_;
         }
 
-        inline void setPointPos(const uint8_t value) {
+        inline void setPointPos(const int8_t value) {
             pointPos_ = value;
             notify();
         }
@@ -134,18 +132,17 @@ namespace calculatorcomrade {
         static bool isEqual(const Register& lhs, const Register& rhs) {
             if (lhs.digits_ != rhs.digits_)
                 return false;
-            if (lhs.digits_ > 0)
-                for (uint8_t i = 0; i < lhs.digits_; i++)
-                    if (lhs.data_[i] != rhs.data_[i])
-                        return false;
+            for (int8_t i = 0; i < lhs.digits_; i++)
+                if (lhs.data_[i] != rhs.data_[i])
+                    return false;
             return lhs.pointPos_ == rhs.pointPos_ &&
                    lhs.negative_ == rhs.negative_ &&
                    lhs.overflow_ == rhs.overflow_;
         }
     private:
-        uint8_t digits_;
-        uint8_t* data_;
-        uint8_t pointPos_ = 0;
+        int8_t digits_;
+        int8_t* data_;
+        int8_t pointPos_ = 0;
         bool negative_ = false;
         bool overflow_ = false;
 
@@ -162,9 +159,8 @@ namespace calculatorcomrade {
         }
 
         void clearInternal() {
-            if (digits_ > 0)
-                for (uint8_t i = 0; i < digits_; i++)
-                    data_[i] = 0;
+            for (int8_t i = 0; i < digits_; i++)
+                data_[i] = 0;
             pointPos_ = 0;
             negative_ = false;
             overflow_ = false;

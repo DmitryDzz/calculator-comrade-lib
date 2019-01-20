@@ -18,8 +18,8 @@ namespace calculatorcomrade {
         static void mul(Register &r1, Register &r2);
         static void mul(Register &r1, Register &r2, Register &r3);
     private:
-        static void unsafeShiftRight(Register &r, const bool updatePointPos);
-        static void safeShiftLeft(Register &r, const bool updatePointPos);
+        static void unsafeShiftRight(Register &r, bool updatePointPos);
+        static void safeShiftLeft(Register &r, bool updatePointPos);
         static int8_t compareIgnoreSign(const Register &r1, const Register &r2);
         static void normalizePointPositions(Register &r1, Register &r2);
         static void truncRightZeros(Register &r);

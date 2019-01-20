@@ -8,7 +8,7 @@
 
 #include "calculator/calculator.h"
 
-#define U1 ((uint8_t)1)
+#define S1 ((int8_t)1)
 
 using calculatorcomrade::Button;
 using calculatorcomrade::Calculator;
@@ -56,7 +56,7 @@ void Calculator::input(Button button) {
             clearInput();
             break;
         case Button::d0 ... Button::d9:
-            inputDigit((uint8_t)button - (uint8_t)Button::d0);
+            inputDigit((int8_t)button - (int8_t)Button::d0);
             break;
         case Button::point:
             inputPoint();
@@ -161,7 +161,7 @@ void Calculator::clearInput() {
     inputHasPoint_ = false;
 }
 
-void Calculator::inputDigit(uint8_t digit) {
+void Calculator::inputDigit(int8_t digit) {
     if (digit == 0 && inputSize_ == 0) return;
     if (inputSize_ >= digits_ || state_.x.getPointPos() == digits_ - 1) return;
     shiftLeftOnInput();
@@ -178,8 +178,8 @@ void Calculator::inputPoint() {
 void Calculator::shiftLeftOnInput() {
     if (digits_ == 0 || inputSize_ >= digits_) return;
     if (inputSize_ > 0) {
-        for (uint8_t i = 0; i < inputSize_; i++)
-            state_.x.setDigit(inputSize_ - i, state_.x.getDigit(inputSize_ - i - U1));
+        for (int8_t i = 0; i < inputSize_; i++)
+            state_.x.setDigit(inputSize_ - i, state_.x.getDigit(inputSize_ - i - S1));
         state_.x.setDigit(0, 0);
     }
 }

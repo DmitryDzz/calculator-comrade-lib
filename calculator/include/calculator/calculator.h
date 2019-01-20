@@ -5,6 +5,7 @@
 #ifndef CALCULATORCOMRADE_CALCULATOR_H
 #define CALCULATORCOMRADE_CALCULATOR_H
 
+#include "calculator/config.h"
 #include "calculator/button.h"
 #include "calculator/operation.h"
 #include "calculator/state.h"
@@ -13,26 +14,35 @@ namespace calculatorcomrade {
 
     class Calculator {
     public:
-        const static uint8_t DIGITS = 8;
+        const static int8_t DIGITS = 8;
 
         Calculator() : Calculator(DIGITS) {};
-        explicit Calculator(uint8_t digits) : state_(digits), digits_(digits), hasOperation_(false), inNumber_(false) {};
+        explicit Calculator(int8_t digits) :
+                state_(digits),
+                digits_(digits),
+                hasOperation_(false),
+                inNumber_(false),
+                inputSize_(0),
+                inputHasPoint_(false) {
+            assert(digits > 0);
+            assert(digits <= Config::MAX_DIGITS);
+        };
 
         State& getState();
         void input(Button button);
         void input(const std::string& button);
     private:
-        uint8_t digits_;
+        int8_t digits_;
         State state_;
         bool hasOperation_;
         bool inNumber_;
 
         Button stringToButton(const std::string& button);
 
-        uint8_t inputSize_ = 0;
-        bool inputHasPoint_ = false;
+        int8_t inputSize_;
+        bool inputHasPoint_;
         void clearInput();
-        void inputDigit(uint8_t digit);
+        void inputDigit(int8_t digit);
         void inputPoint();
         void shiftLeftOnInput();
 

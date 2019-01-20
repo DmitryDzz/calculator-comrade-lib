@@ -11,11 +11,11 @@
 
 namespace calculatorcomrade {
 
-    uint64_t getAbsIntValue(Register &r);
+    int64_t getAbsIntValue(Register &r);
 
     void setValue(Register &r, int64_t value);
 
-    void setValue(Register &r, int64_t value, uint8_t digitsAfterPoint);
+    void setValue(Register &r, int64_t value, int8_t digitsAfterPoint);
 
     void evaluateText(Register &r, std::string *output);
 }

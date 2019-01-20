@@ -226,7 +226,7 @@ TEST_MATH(NonNegativeZeroAfterSum) {
     setValue(r2, 1974);
     Math::calculate(r1, r2, Operation::add);
     bool zero = true;
-    for (uint8_t i = 0; i < 8; i++) {
+    for (int8_t i = 0; i < 8; i++) {
         if (r1.getDigit(i) > 0) {
             zero = false;
             break;
