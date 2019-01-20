@@ -288,10 +288,15 @@ TEST_MATH(MulTruncAfterPoint1) {
 TEST_MATH(MulTruncAfterPoint2) {
     Register r1(3);
     Register r2(3);
+    Register acc(6);
+
+    r1.setChangedCallback(on_r1_changed);
+    r2.setChangedCallback(on_r2_changed);
+    acc.setChangedCallback(on_rt_changed);
 
     setValue(r1, 12, 1); // 1.2
     setValue(r2, 523, 2); // 5.23
-    Math::calculate(r1, r2, Operation::mul);
+    Math::mul(r1, r2, acc);
     ASSERT_EQ(627, getAbsIntValue(r1));
     ASSERT_EQ(2, r1.getPointPos());
     ASSERT_EQ(false, r1.getNegative());
@@ -301,43 +306,82 @@ TEST_MATH(MulTruncAfterPoint2) {
 TEST_MATH(MulOverflow) {
     Register r1(3);
     Register r2(3);
+    Register acc(6);
+
+    r1.setChangedCallback(on_r1_changed);
+    r2.setChangedCallback(on_r2_changed);
+    acc.setChangedCallback(on_rt_changed);
 
     setValue(r1, 987, 1); // 98.7
     setValue(r2, 654, 1); // 65.4
-    Math::calculate(r1, r2, Operation::mul);
-//    ASSERT_EQ(645, getAbsIntValue(r1));
-    ASSERT_EQ(640, getAbsIntValue(r1));
+    Math::mul(r1, r2, acc);
+    ASSERT_EQ(645, getAbsIntValue(r1));
     ASSERT_EQ(2, r1.getPointPos());
     ASSERT_EQ(false, r1.getNegative());
     ASSERT_EQ(true, r1.getOverflow());
 }
 
-TEST_MATH(Temp1) {
+TEST_MATH(MulReadOperations) {
     Register r1(8);
     Register r2(8);
-    Register rT(8);
+    Register acc(16);
 
     r1.setChangedCallback(on_r1_changed);
     r2.setChangedCallback(on_r2_changed);
-    rT.setChangedCallback(on_rt_changed);
+    acc.setChangedCallback(on_rt_changed);
+
+    setValue(r1, 56987658, 0);
+    setValue(r2, 2, 0);
+    Math::mul(r1, r2, acc);
+    ASSERT_EQ(11397531, getAbsIntValue(r1));
+    ASSERT_EQ(7, r1.getPointPos());
+    ASSERT_EQ(false, r1.getNegative());
+    ASSERT_EQ(true, r1.getOverflow());
+
+    setValue(r1, 56987658, 0);
+    setValue(r2, 32, 0);
+    Math::mul(r1, r2, acc);
+    ASSERT_EQ(1823605, getAbsIntValue(r1));
+    ASSERT_EQ(5, r1.getPointPos());
+    ASSERT_EQ(false, r1.getNegative());
+    ASSERT_EQ(true, r1.getOverflow());
+
+    setValue(r1, 56987658, 0);
+    setValue(r2, 232, 0);
+    Math::mul(r1, r2, acc);
+    ASSERT_EQ(13221136, getAbsIntValue(r1));
+    ASSERT_EQ(5, r1.getPointPos());
+    ASSERT_EQ(false, r1.getNegative());
+    ASSERT_EQ(true, r1.getOverflow());
+
+    setValue(r1, 56987658, 0);
+    setValue(r2, 5232, 0);
+    Math::mul(r1, r2, acc);
+    ASSERT_EQ(29815942, getAbsIntValue(r1));
+    ASSERT_EQ(4, r1.getPointPos());
+    ASSERT_EQ(false, r1.getNegative());
+    ASSERT_EQ(true, r1.getOverflow());
+
+    setValue(r1, 56987658, 0);
+    setValue(r2, 65232, 0);
+    Math::mul(r1, r2, acc);
+    ASSERT_EQ(37174189, getAbsIntValue(r1));
+    ASSERT_EQ(3, r1.getPointPos());
+    ASSERT_EQ(false, r1.getNegative());
+    ASSERT_EQ(true, r1.getOverflow());
+
+    setValue(r1, 56987658, 0);
+    setValue(r2, 8065232, 0);
+    Math::mul(r1, r2, acc);
+    ASSERT_EQ(45961868, getAbsIntValue(r1));
+    ASSERT_EQ(1, r1.getPointPos());
+    ASSERT_EQ(false, r1.getNegative());
+    ASSERT_EQ(true, r1.getOverflow());
 
     setValue(r1, 56987658, 0);
     setValue(r2, 98065232, 0);
-    Math::mul(r1, r2, rT);
+    Math::mul(r1, r2, acc);
     ASSERT_EQ(55885079, getAbsIntValue(r1));
-    ASSERT_EQ(0, r1.getPointPos());
-    ASSERT_EQ(false, r1.getNegative());
-    ASSERT_EQ(true, r1.getOverflow());
-}
-
-TEST_MATH(Temp2) {
-    Register r1(3);
-    Register r2(3);
-
-    setValue(r2, 604, 0);
-    setValue(r1, 987, 0);
-    Math::calculate(r1, r2, Operation::mul);
-    ASSERT_EQ(591, getAbsIntValue(r1));
     ASSERT_EQ(0, r1.getPointPos());
     ASSERT_EQ(false, r1.getNegative());
     ASSERT_EQ(true, r1.getOverflow());

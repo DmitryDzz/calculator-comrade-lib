@@ -32,20 +32,20 @@ void Math::calculate(Register &r1, Register &r2, const Operation &operation) {
 
 // "unsafe" means that right shift will be performed
 // even if the lowest digit is lost.
-void Math::unsafeShiftRight(Register &r) {
+void Math::unsafeShiftRight(Register &r, const bool updatePointPos) {
     uint8_t digits = r.getDigits();
     if (digits == 0) return;
     for (uint8_t i = 1; i < digits; i++) {
         r.setDigit(i - U1, r.getDigit(i));
     }
     r.setDigit(digits - U1, 0);
-    if (r.getPointPos() > 0)
+    if (updatePointPos && r.getPointPos() > 0)
         r.incPointPos(-1);
 }
 
 // "safe" means that left shift will be performed
 // until there is a non-zero value in the highest digit.
-void Math::safeShiftLeft(Register &r) {
+void Math::safeShiftLeft(Register &r, const bool updatePointPos) {
     uint8_t digits = r.getDigits();
     if (digits == 0) return;
     auto lastIndex = static_cast<uint8_t>(digits - 1);
@@ -54,7 +54,8 @@ void Math::safeShiftLeft(Register &r) {
         r.setDigit(i, r.getDigit(i - U1));
     }
     r.setDigit(0, 0);
-    r.incPointPos(+1);
+    if (updatePointPos)
+        r.incPointPos(+1);
 }
 
 int8_t Math::compareIgnoreSign(const Register &r1, const Register &r2) {
@@ -81,13 +82,13 @@ void Math::normalizePointPositions(Register &r1, Register &r2) {
     // First shift left the register where pointPos is smaller.
     for (uint8_t i = 0; i < digits; i++) {
         if (rL.getDigit(digits - U1) != 0) break;
-        safeShiftLeft(rL);
+        safeShiftLeft(rL, true);
         if (r1.getPointPos() == r2.getPointPos()) return;
     }
 
     // Than shift right the other register until pointPos's are equal.
     for (uint8_t i = 0; i < digits; i++) {
-        unsafeShiftRight(rR);
+        unsafeShiftRight(rR, true);
         if (r1.getPointPos() == r2.getPointPos()) return;
     }
 }
@@ -98,7 +99,7 @@ void Math::truncRightZeros(Register &r) {
 
     for (uint8_t i = 0; i < digits; i++) {
         if (r.getDigit(0) != 0 || r.getPointPos() == 0) break;
-        unsafeShiftRight(r);
+        unsafeShiftRight(r, true);
     }
 }
 
@@ -130,7 +131,7 @@ void Math::sum(Register &r1, Register &r2, bool truncRightZeros) {
 
         if (extraDigit) {
             r1.setOverflow(true);
-            unsafeShiftRight(r1);
+            unsafeShiftRight(r1, false);
             r1.setDigit(digits - U1, 1);
             r1.setPointPos(digits - U1);
         }
@@ -180,77 +181,55 @@ void Math::mul(Register &r1, Register &r2) {
         return;
     }
 
-    Register ex(digits);
-    Math::mul(r1, r2, ex);
+    Register acc(digits + digits);
+    Math::mul(r1, r2, acc);
 }
 
-void Math::mul(Register &r1, Register &r2, Register &r3) {
-    uint8_t digits = r1.getDigits();
-    if (digits != r2.getDigits() || digits == 0) {
-        r1.clear();
-        r1.setOverflow(true); // just indicate an error
-        return;
-    }
+void Math::mul(Register &r1, Register &r2, Register &acc) {
+    int8_t digits = r1.getDigits();
+    assert(digits > 0);
+    assert(digits == r2.getDigits());
+    assert(digits * 2 == acc.getDigits());
 
-    bool negative = r1.getNegative() != r2.getNegative();
-    uint8_t pointPos = r1.getPointPos() + r2.getPointPos();
-    uint8_t overflowPos = 0;
+    Register r2ex(acc.getDigits());
+    r2ex.set(r2);
+    r2ex.setPointPos(0);
+    r2ex.setNegative(false);
 
-    r3.set(r1); // r3 is for the first operand. The second one is in r2.
-    r3.setNegative(false);
-    r3.setPointPos(0);
-
-    r1.clear(); // r1 will accumulate the result value.
-    auto lastIndex = static_cast<uint8_t>(digits - 1);
-    for (uint8_t i = 0; i < digits; i++) {
-        uint8_t digit = r2.getDigit(i);
-
-        if (digit > 0) {
-            for (uint8_t j = 0; j < digit; j++) {
-                sum(r1, r3, false);
-                if (r1.getOverflow()) {
-                    r1.setOverflow(false);
-                    r1.setPointPos(0);
-                    unsafeShiftRight(r3);
-
-                    if (pointPos == 0) overflowPos++;
-                    else pointPos--;
-                }
-            }
+    acc.clear();
+    int8_t lastRegIndex = digits - U1;
+    for (int8_t i = lastRegIndex; i >= 0; i--) {
+        uint8_t digit = r1.getDigit(i);
+        for (int8_t j = 0; j < digit; j++) {
+            Math::sum(acc, r2ex, false);
         }
-
-        // Break the cycle or shift registers for the next iteration:
-        if (i == lastIndex) break;
-        bool hasNonZeroDigits = false;
-        for (uint8_t j = i; j <= lastIndex; j++) {
-            if (r2.getDigit(j) > 0) {
-                hasNonZeroDigits = true;
-                break;
-            }
-        }
-        if (!hasNonZeroDigits) break;
-
-        // Shift r3 left:
-        if (r3.getDigit(lastIndex) > 0) {
-            // Cannot shift r3 to the left, so we'll shift the result to the right:
-            unsafeShiftRight(r1);
-
-            if (pointPos == 0) overflowPos++;
-            else pointPos--;
-        } else {
-            // Do left shift for r3:
-            for (uint8_t j = lastIndex; j >= 1; j--)
-                r3.setDigit(j, r3.getDigit(j - U1));
-            r3.setDigit(0, 0);
+        if (i > 0) {
+            safeShiftLeft(acc, false);
+            acc.setPointPos(0);
         }
     }
 
+    int8_t accSize = acc.getDigits();
+    int8_t firstDigitIndex = 0;
+    for (int8_t i = accSize - U1; i >= 0; i--) {
+        if (acc.getDigit(i) > 0) {
+            firstDigitIndex = i;
+            break;
+        }
+    }
+
+    int8_t pointPos = r1.getPointPos() + r2.getPointPos();
+    int8_t overflowPos = 0;
+    while (firstDigitIndex > lastRegIndex) {
+        unsafeShiftRight(acc, false);
+        if (pointPos == 0) overflowPos++;
+        else pointPos--;
+        firstDigitIndex--;
+    }
+    acc.setOverflow(overflowPos > 0);
+    acc.setPointPos(overflowPos > 0 ? digits - overflowPos : pointPos);
+    acc.setNegative(acc.isZeroData() ? false : r1.getNegative() != r2.getNegative());
+
+    r1.set(acc);
     truncRightZeros(r1);
-    r1.setNegative(r1.isZeroData() ? false : negative);
-    if (overflowPos > 0) {
-        r1.setOverflow(true);
-        r1.setPointPos(digits - overflowPos);
-    } else {
-        r1.setPointPos(pointPos);
-    }
 }

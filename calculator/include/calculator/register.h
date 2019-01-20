@@ -35,12 +35,10 @@ namespace calculatorcomrade {
 
         void set(const Register& rhs) {
             clearInternal();
-            uint8_t digits = rhs.digits_;
-            if (this->digits_ < digits)
-                digits = this->digits_;
-            if (digits > 0)
-                for (uint8_t i = 0; i < digits; i++)
-                    data_[i] = rhs.data_[i];
+            uint8_t digits = digits_ >= rhs.getDigits() ? rhs.digits_ : digits_;
+            assert(digits > 0);
+            for (int8_t i = 0; i < digits; i++)
+                data_[i] = rhs.data_[i];
             pointPos_ = rhs.pointPos_;
             negative_ = rhs.negative_;
             overflow_ = rhs.overflow_;
@@ -57,6 +55,10 @@ namespace calculatorcomrade {
         void setChangedCallback(const RegisterChangedCallback changedCallback) {
             changedCallback_ = changedCallback;
         }
+
+//        RegisterChangedCallback getChangedCallback() {
+//            return changedCallback_;
+//        }
 
         bool isZeroData() {
             if (digits_ == 0) return true;

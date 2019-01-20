@@ -80,13 +80,15 @@ void calculatorcomrade::evaluateText(Register &r, std::string *output) {
         return;
     }
 
+    int8_t digitsInGroup = digits == 6 ? 3 : 4;
+
     *output = "";
     if (r.getOverflow())
         *output += "[Err]";
     if (r.getNegative())
         *output += "–";
     for (uint8_t i = 0; i < digits; i++) {
-        if (i % 4 == 0 && i != 0)
+        if (i % digitsInGroup == 0 && i != 0)
             *output += " ";
         *output += std::to_string(r.getDigit(digits - i - U1));
     }
