@@ -14,25 +14,23 @@ namespace calculatorcomrade {
 
     class Calculator {
     public:
-        const static int8_t DIGITS = 8;
-
-        Calculator() : Calculator(DIGITS) {};
-        explicit Calculator(int8_t digits) :
-                state_(digits),
-                digits_(digits),
+        Calculator() : Calculator(Config::DEFAULT_SIZE) {};
+        explicit Calculator(int8_t size) :
+                state_(size),
+                size_(size),
                 hasOperation_(false),
                 inNumber_(false),
                 inputSize_(0),
                 inputHasPoint_(false) {
-            assert(digits > 0);
-            assert(digits <= Config::MAX_DIGITS);
+            assert(size > 0);
+            assert(size <= Config::MAX_SIZE);
         };
 
         State& getState();
         void input(Button button);
         void input(const std::string& button);
     private:
-        int8_t digits_;
+        int8_t size_;
         State state_;
         bool hasOperation_;
         bool inNumber_;

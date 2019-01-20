@@ -163,7 +163,7 @@ void Calculator::clearInput() {
 
 void Calculator::inputDigit(int8_t digit) {
     if (digit == 0 && inputSize_ == 0) return;
-    if (inputSize_ >= digits_ || state_.x.getPointPos() == digits_ - 1) return;
+    if (inputSize_ >= size_ || state_.x.getPointPos() == size_ - 1) return;
     shiftLeftOnInput();
     state_.x.setDigit(0, digit);
     inputSize_++;
@@ -171,12 +171,12 @@ void Calculator::inputDigit(int8_t digit) {
 }
 
 void Calculator::inputPoint() {
-    if (inputSize_ >= digits_) return;
+    if (inputSize_ >= size_) return;
     inputHasPoint_ = true;
 }
 
 void Calculator::shiftLeftOnInput() {
-    if (digits_ == 0 || inputSize_ >= digits_) return;
+    if (size_ == 0 || inputSize_ >= size_) return;
     if (inputSize_ > 0) {
         for (int8_t i = 0; i < inputSize_; i++)
             state_.x.setDigit(inputSize_ - i, state_.x.getDigit(inputSize_ - i - S1));

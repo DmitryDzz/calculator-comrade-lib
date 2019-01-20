@@ -24,11 +24,11 @@ namespace calculatorcomrade {
         Register y;
         Operation operation;
 
-        State() : State(Config::DEFAULT_DIGITS) {}
+        State() : State(Config::DEFAULT_SIZE) {}
 
-        explicit State(int8_t digits) : digits_(digits), x(digits), y(digits), operation(Operation::add) {
-            assert(digits > 0);
-            assert(digits <= Config::MAX_DIGITS);
+        explicit State(int8_t size) : size_(size), x(size), y(size), operation(Operation::add) {
+            assert(size > 0);
+            assert(size <= Config::MAX_SIZE);
         }
 
         void clear() {
@@ -41,7 +41,7 @@ namespace calculatorcomrade {
          * Exchange values in X and Y registers.
          */
         void exchangeXY() {
-            Register tmp(digits_);
+            Register tmp(size_);
             tmp.set(x);
             x.set(y);
             y.set(tmp);
@@ -107,14 +107,14 @@ namespace calculatorcomrade {
         }
 
     private:
-        int8_t digits_;
+        int8_t size_;
 
         //TODO DZZ Delete these three methods after mul and div implementation
         uint64_t getAbsIntValueTemp(Register &r) {
             uint64_t result = 0;
             uint64_t factor = 1;
-            int8_t digits = r.getDigits();
-            for (int8_t i = 0; i < digits; i++, factor *= 10)
+            int8_t size = r.getSize();
+            for (int8_t i = 0; i < size; i++, factor *= 10)
                 result += factor * r.getDigit(i);
             return result;
         }
@@ -124,49 +124,49 @@ namespace calculatorcomrade {
         }
 
         void setValueTemp(Register &r, int64_t value, int8_t digitsAfterPoint) {
-            int8_t digits = r.getDigits();
+            int8_t size = r.getSize();
             r.setNegative(value < 0);
             std::string text = std::to_string(r.getNegative() ? -value : value);
-            auto totalDigits = (int8_t) text.size();
+            auto totalSize = (int8_t) text.size();
 
-            if (digitsAfterPoint < totalDigits) {
-                int8_t intDigits = totalDigits - digitsAfterPoint;
-                r.setOverflow(intDigits > digits);
+            if (digitsAfterPoint < totalSize) {
+                int8_t intDigits = totalSize - digitsAfterPoint;
+                r.setOverflow(intDigits > size);
                 if (r.getOverflow()) {
-                    r.setPointPos(digits - (intDigits - digits));
-                    for (int16_t i = 0; i < digits; i++) {
-                        char digitChar = text[digits - i - 1];
+                    r.setPointPos(size - (intDigits - size));
+                    for (int16_t i = 0; i < size; i++) {
+                        char digitChar = text[size - i - 1];
                         std::string digitText(1, digitChar);
                         r.setDigit((int8_t)i, (int8_t)std::stoi(digitText));
                     }
                 } else {
-                    if (totalDigits > digits) {
-                        r.setPointPos(digits - intDigits);
-                        for (int16_t i = 0; i < digits; i++) {
-                            char digitChar = text[digits - i - 1];
+                    if (totalSize > size) {
+                        r.setPointPos(size - intDigits);
+                        for (int16_t i = 0; i < size; i++) {
+                            char digitChar = text[size - i - 1];
                             std::string digitText(1, digitChar);
                             r.setDigit((int8_t)i, (int8_t)std::stoi(digitText));
                         }
                     } else {
                         r.setPointPos(digitsAfterPoint);
-                        for (int16_t i = 0; i < digits; i++) {
-                            char digitChar = i < totalDigits ? text[totalDigits - i - 1] : '0';
+                        for (int16_t i = 0; i < size; i++) {
+                            char digitChar = i < totalSize ? text[totalSize - i - 1] : '0';
                             std::string digitText(1, digitChar);
                             r.setDigit((int8_t)i, (int8_t)std::stoi(digitText));
                         }
                     }
                 }
-            } else { // means: (digitsAfterPoint >= totalDigits)
+            } else { // means: (digitsAfterPoint >= totalSize)
                 r.setOverflow(false);
-                int8_t newTotalDigits = digitsAfterPoint + (int8_t) 1;
-                int16_t delta = newTotalDigits > digits ? newTotalDigits - digits : (int16_t) 0;
-                if (newTotalDigits - totalDigits >= digits) {
+                int8_t newTotalSize = digitsAfterPoint + (int8_t) 1;
+                int16_t delta = newTotalSize > size ? newTotalSize - size : (int16_t) 0;
+                if (newTotalSize - totalSize >= size) {
                     r.setPointPos(0);
                 } else {
                     r.setPointPos(delta > (int8_t) 0 ? (int8_t) (digitsAfterPoint - delta) : digitsAfterPoint);
                 }
-                for (int16_t i = 0; i < digits; i++) {
-                    int16_t charIndex = totalDigits - delta - ((int8_t) 1) - i;
+                for (int16_t i = 0; i < size; i++) {
+                    int16_t charIndex = totalSize - delta - ((int8_t) 1) - i;
                     char digitChar = charIndex >= 0 ? text[charIndex] : '0';
                     std::string digitText(1, digitChar);
                     r.setDigit((int8_t)i, (int8_t)std::stoi(digitText));

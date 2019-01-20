@@ -11,7 +11,7 @@ using calculatorcomrade::Register;
 int64_t calculatorcomrade::getAbsIntValue(Register &r) {
     int64_t result = 0;
     int64_t factor = 1;
-    int8_t digits = r.getDigits();
+    int8_t digits = r.getSize();
     for (int i = 0; i < digits; i++, factor *= 10)
         result += factor * r.getDigit((int8_t)i);
     return result;
@@ -22,7 +22,7 @@ void calculatorcomrade::setValue(Register &r, int64_t value) {
 }
 
 void calculatorcomrade::setValue(Register &r, int64_t value, int8_t digitsAfterPoint) {
-    int8_t digits = r.getDigits();
+    int8_t digits = r.getSize();
     r.setNegative(value < 0);
     std::string text = std::to_string(r.getNegative() ? -value : value);
     auto totalDigits = (int8_t) text.size();
@@ -73,7 +73,7 @@ void calculatorcomrade::setValue(Register &r, int64_t value, int8_t digitsAfterP
 }
 
 void calculatorcomrade::evaluateText(Register &r, std::string *output) {
-    int8_t digits = r.getDigits();
+    int8_t digits = r.getSize();
 
     if (digits == 0) {
         *output = "Empty";

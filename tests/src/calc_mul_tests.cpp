@@ -15,8 +15,8 @@ using calculatorcomrade::Operation;
 
 // Input: 2*==
 TEST(TestMul, Mul1) {
-    State expectedState(Config::DEFAULT_DIGITS);
-    Calculator calc(Config::DEFAULT_DIGITS);
+    State expectedState(Config::DEFAULT_SIZE);
+    Calculator calc(Config::DEFAULT_SIZE);
 
     calc.input(Button::d2);
     setValue(expectedState.x, 2);
@@ -45,8 +45,8 @@ TEST(TestMul, Mul1) {
 
 // Input: 2*3===
 TEST(TestMul, Mul2) {
-    State expectedState(Config::DEFAULT_DIGITS);
-    Calculator calc(Config::DEFAULT_DIGITS);
+    State expectedState(Config::DEFAULT_SIZE);
+    Calculator calc(Config::DEFAULT_SIZE);
 
     calc.input(Button::d2);
     setValue(expectedState.x, 2);
@@ -87,8 +87,8 @@ TEST(TestMul, Mul2) {
 
 // Input: 2*3=4*5==
 TEST(TestMul, Mul3) {
-    State expectedState(Config::DEFAULT_DIGITS);
-    Calculator calc(Config::DEFAULT_DIGITS);
+    State expectedState(Config::DEFAULT_SIZE);
+    Calculator calc(Config::DEFAULT_SIZE);
 
     calc.input(Button::d2);
     setValue(expectedState.x, 2);
@@ -147,8 +147,8 @@ TEST(TestMul, Mul3) {
 
 // Input: 2*3*4*5===
 TEST(TestMul, Mul4) {
-    State expectedState(Config::DEFAULT_DIGITS);
-    Calculator calc(Config::DEFAULT_DIGITS);
+    State expectedState(Config::DEFAULT_SIZE);
+    Calculator calc(Config::DEFAULT_SIZE);
 
     calc.input(Button::d2);
     setValue(expectedState.x, 2);
@@ -213,8 +213,8 @@ TEST(TestMul, Mul4) {
 
 // Input: 2*3=4==
 TEST(TestMul, Mul5) {
-    State expectedState(Config::DEFAULT_DIGITS);
-    Calculator calc(Config::DEFAULT_DIGITS);
+    State expectedState(Config::DEFAULT_SIZE);
+    Calculator calc(Config::DEFAULT_SIZE);
 
     calc.input(Button::d2);
     setValue(expectedState.x, 2);
@@ -261,8 +261,8 @@ TEST(TestMul, Mul5) {
 
 // Input: 2*3=*==
 TEST(TestMul, Mul6) {
-    State expectedState(Config::DEFAULT_DIGITS);
-    Calculator calc(Config::DEFAULT_DIGITS);
+    State expectedState(Config::DEFAULT_SIZE);
+    Calculator calc(Config::DEFAULT_SIZE);
 
     calc.input(Button::d2);
     setValue(expectedState.x, 2);
@@ -309,8 +309,8 @@ TEST(TestMul, Mul6) {
 
 // Input: 2*3*==
 TEST(TestMul, Mul7) {
-    State expectedState(Config::DEFAULT_DIGITS);
-    Calculator calc(Config::DEFAULT_DIGITS);
+    State expectedState(Config::DEFAULT_SIZE);
+    Calculator calc(Config::DEFAULT_SIZE);
 
     calc.input(Button::d2);
     setValue(expectedState.x, 2);

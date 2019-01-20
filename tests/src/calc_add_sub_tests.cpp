@@ -15,8 +15,8 @@ using calculatorcomrade::Operation;
 
 // Input: 2==
 TEST(TestAddSub, NoOperations) {
-    State expectedState(Config::DEFAULT_DIGITS);
-    Calculator calc(Config::DEFAULT_DIGITS);
+    State expectedState(Config::DEFAULT_SIZE);
+    Calculator calc(Config::DEFAULT_SIZE);
 
     calc.input(Button::d2);
     setValue(expectedState.x, 2);
@@ -31,8 +31,8 @@ TEST(TestAddSub, NoOperations) {
 
 // Input: 2+==
 TEST(TestAddSub, IncCounter) {
-    State expectedState(Config::DEFAULT_DIGITS);
-    Calculator calc(Config::DEFAULT_DIGITS);
+    State expectedState(Config::DEFAULT_SIZE);
+    Calculator calc(Config::DEFAULT_SIZE);
 
     calc.input(Button::d2);
     setValue(expectedState.x, 2);
@@ -58,8 +58,8 @@ TEST(TestAddSub, IncCounter) {
 
 // Input: 2-==
 TEST(TestAddSub, DecCounter) {
-    State expectedState(Config::DEFAULT_DIGITS);
-    Calculator calc(Config::DEFAULT_DIGITS);
+    State expectedState(Config::DEFAULT_SIZE);
+    Calculator calc(Config::DEFAULT_SIZE);
 
     calc.input(Button::d2);
     setValue(expectedState.x, 2);
@@ -88,8 +88,8 @@ TEST(TestAddSub, DecCounter) {
 
 // Input: 8-1===
 TEST(TestAddSub, Subtraction) {
-    State expectedState(Config::DEFAULT_DIGITS);
-    Calculator calc(Config::DEFAULT_DIGITS);
+    State expectedState(Config::DEFAULT_SIZE);
+    Calculator calc(Config::DEFAULT_SIZE);
 
     calc.input(Button::d8);
     setValue(expectedState.x, 8);
@@ -130,8 +130,8 @@ TEST(TestAddSub, Subtraction) {
 
 // Input: -3+2===
 TEST(TestAddSub, InvertedSubtraction) {
-    State expectedState(Config::DEFAULT_DIGITS);
-    Calculator calc(Config::DEFAULT_DIGITS);
+    State expectedState(Config::DEFAULT_SIZE);
+    Calculator calc(Config::DEFAULT_SIZE);
 
     calc.input(Button::minus);
     setValue(expectedState.x, 0);
@@ -178,8 +178,8 @@ TEST(TestAddSub, InvertedSubtraction) {
 
 // Input: 2+3=8-1==
 TEST(TestAddSub, TwoSeparateCalculationsInARow) {
-    State expectedState(Config::DEFAULT_DIGITS);
-    Calculator calc(Config::DEFAULT_DIGITS);
+    State expectedState(Config::DEFAULT_SIZE);
+    Calculator calc(Config::DEFAULT_SIZE);
 
     calc.input(Button::d2);
     setValue(expectedState.x, 2);
@@ -238,8 +238,8 @@ TEST(TestAddSub, TwoSeparateCalculationsInARow) {
 
 // Input: 2+7-3+1==
 TEST(TestAddSub, FourCalculationsInARow) {
-    State expectedState(Config::DEFAULT_DIGITS);
-    Calculator calc(Config::DEFAULT_DIGITS);
+    State expectedState(Config::DEFAULT_SIZE);
+    Calculator calc(Config::DEFAULT_SIZE);
 
     calc.input(Button::d2);
     setValue(expectedState.x, 2);
@@ -298,8 +298,8 @@ TEST(TestAddSub, FourCalculationsInARow) {
 
 // Input: 9-2=3==
 TEST(TestAddSub, ExtraTest1) {
-    State expectedState(Config::DEFAULT_DIGITS);
-    Calculator calc(Config::DEFAULT_DIGITS);
+    State expectedState(Config::DEFAULT_SIZE);
+    Calculator calc(Config::DEFAULT_SIZE);
 
     calc.input(Button::d9);
     setValue(expectedState.x, 9);
@@ -346,8 +346,8 @@ TEST(TestAddSub, ExtraTest1) {
 
 // Input: 8-1=-===
 TEST(TestAddSub, ExtraTest2) {
-    State expectedState(Config::DEFAULT_DIGITS);
-    Calculator calc(Config::DEFAULT_DIGITS);
+    State expectedState(Config::DEFAULT_SIZE);
+    Calculator calc(Config::DEFAULT_SIZE);
 
     calc.input(Button::d8);
     setValue(expectedState.x, 8);
@@ -400,8 +400,8 @@ TEST(TestAddSub, ExtraTest2) {
 
 // Input: 2+7-===
 TEST(TestAddSub, ExtraTest3) {
-    State expectedState(Config::DEFAULT_DIGITS);
-    Calculator calc(Config::DEFAULT_DIGITS);
+    State expectedState(Config::DEFAULT_SIZE);
+    Calculator calc(Config::DEFAULT_SIZE);
 
     calc.input(Button::d2);
     setValue(expectedState.x, 2);

@@ -17,10 +17,10 @@ namespace calculatorcomrade {
     class Register {
     public:
         Register() = delete;
-        explicit Register(int8_t digits) : digits_(digits) {
-            assert(digits > 0);
-            assert(digits <= Config::MAX_DIGITS);
-            data_ = new int8_t[digits]();
+        explicit Register(int8_t size) : size_(size) {
+            assert(size > 0);
+            assert(size <= Config::MAX_SIZE);
+            data_ = new int8_t[size]();
             clearInternal();
         }
 
@@ -29,15 +29,15 @@ namespace calculatorcomrade {
             notify();
         }
 
-        int8_t getDigits() const {
-            return digits_;
+        int8_t getSize() const {
+            return size_;
         }
 
         void set(const Register& rhs) {
             clearInternal();
-            int8_t digits = digits_ >= rhs.getDigits() ? rhs.digits_ : digits_;
-            assert(digits > 0);
-            for (int8_t i = 0; i < digits; i++)
+            int8_t size = size_ >= rhs.getSize() ? rhs.size_ : size_;
+            assert(size > 0);
+            for (int8_t i = 0; i < size; i++)
                 data_[i] = rhs.data_[i];
             pointPos_ = rhs.pointPos_;
             negative_ = rhs.negative_;
@@ -60,7 +60,7 @@ namespace calculatorcomrade {
 //        }
 
         bool isZeroData() {
-            for (int8_t i = 0; i < digits_; i++)
+            for (int8_t i = 0; i < size_; i++)
                 if (data_[i] > 0)
                     return false;
             return true;
@@ -130,9 +130,9 @@ namespace calculatorcomrade {
         }
 
         static bool isEqual(const Register& lhs, const Register& rhs) {
-            if (lhs.digits_ != rhs.digits_)
+            if (lhs.size_ != rhs.size_)
                 return false;
-            for (int8_t i = 0; i < lhs.digits_; i++)
+            for (int8_t i = 0; i < lhs.size_; i++)
                 if (lhs.data_[i] != rhs.data_[i])
                     return false;
             return lhs.pointPos_ == rhs.pointPos_ &&
@@ -140,7 +140,7 @@ namespace calculatorcomrade {
                    lhs.overflow_ == rhs.overflow_;
         }
     private:
-        int8_t digits_;
+        int8_t size_;
         int8_t* data_;
         int8_t pointPos_ = 0;
         bool negative_ = false;
@@ -159,7 +159,7 @@ namespace calculatorcomrade {
         }
 
         void clearInternal() {
-            for (int8_t i = 0; i < digits_; i++)
+            for (int8_t i = 0; i < size_; i++)
                 data_[i] = 0;
             pointPos_ = 0;
             negative_ = false;

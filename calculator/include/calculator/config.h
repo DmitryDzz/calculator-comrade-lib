@@ -9,8 +9,8 @@
 
 class Config {
 public:
-    static const int8_t MAX_DIGITS = 16;
-    static const int8_t DEFAULT_DIGITS = 8;
+    static const int8_t MAX_SIZE = 16;
+    static const int8_t DEFAULT_SIZE = 8;
 };
 
 #endif //CALCULATORCOMRADE_CONFIG_H

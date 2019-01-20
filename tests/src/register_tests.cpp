@@ -11,7 +11,7 @@
 using calculatorcomrade::Register;
 
 TEST(TestRegister, DefaultState) {
-    Register reg(Config::DEFAULT_DIGITS);
+    Register reg(Config::DEFAULT_SIZE);
     ASSERT_EQ(0, getAbsIntValue(reg));
     ASSERT_EQ(0, reg.getPointPos());
     ASSERT_EQ(false, reg.getNegative());
@@ -19,7 +19,7 @@ TEST(TestRegister, DefaultState) {
 }
 
 TEST(TestRegister, SetPositiveValue) {
-    Register reg(Config::DEFAULT_DIGITS);
+    Register reg(Config::DEFAULT_SIZE);
     setValue(reg, 1974);
     ASSERT_EQ(1974, getAbsIntValue(reg));
     ASSERT_EQ(4, reg.getDigit(0));
@@ -32,7 +32,7 @@ TEST(TestRegister, SetPositiveValue) {
 }
 
 TEST(TestRegister, SetNegativeValue) {
-    Register reg(Config::DEFAULT_DIGITS);
+    Register reg(Config::DEFAULT_SIZE);
     setValue(reg, -1974);
     ASSERT_EQ(1974, getAbsIntValue(reg));
     ASSERT_EQ(0, reg.getPointPos());

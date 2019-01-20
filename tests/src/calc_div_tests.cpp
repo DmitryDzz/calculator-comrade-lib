@@ -15,8 +15,8 @@ using calculatorcomrade::Operation;
 
 // Input: 10/==
 TEST(TestDiv, Div1) {
-    State expectedState(Config::DEFAULT_DIGITS);
-    Calculator calc(Config::DEFAULT_DIGITS);
+    State expectedState(Config::DEFAULT_SIZE);
+    Calculator calc(Config::DEFAULT_SIZE);
 
     calc.input(Button::d1);
     calc.input(Button::d0);
@@ -46,8 +46,8 @@ TEST(TestDiv, Div1) {
 
 // Input: 24/2===
 TEST(TestDiv, Div2) {
-    State expectedState(Config::DEFAULT_DIGITS);
-    Calculator calc(Config::DEFAULT_DIGITS);
+    State expectedState(Config::DEFAULT_SIZE);
+    Calculator calc(Config::DEFAULT_SIZE);
 
     calc.input(Button::d2);
     calc.input(Button::d4);
@@ -89,8 +89,8 @@ TEST(TestDiv, Div2) {
 
 // Input: 27/3=12/2==
 TEST(TestDiv, Div3) {
-    State expectedState(Config::DEFAULT_DIGITS);
-    Calculator calc(Config::DEFAULT_DIGITS);
+    State expectedState(Config::DEFAULT_SIZE);
+    Calculator calc(Config::DEFAULT_SIZE);
 
     calc.input(Button::d2);
     calc.input(Button::d7);
@@ -151,8 +151,8 @@ TEST(TestDiv, Div3) {
 
 // Input: 120/5/3/2===
 TEST(TestDiv, Div4) {
-    State expectedState(Config::DEFAULT_DIGITS);
-    Calculator calc(Config::DEFAULT_DIGITS);
+    State expectedState(Config::DEFAULT_SIZE);
+    Calculator calc(Config::DEFAULT_SIZE);
 
     calc.input(Button::d1);
     calc.input(Button::d2);
@@ -219,8 +219,8 @@ TEST(TestDiv, Div4) {
 
 // Input: 12/2=8==
 TEST(TestDiv, Div5) {
-    State expectedState(Config::DEFAULT_DIGITS);
-    Calculator calc(Config::DEFAULT_DIGITS);
+    State expectedState(Config::DEFAULT_SIZE);
+    Calculator calc(Config::DEFAULT_SIZE);
 
     calc.input(Button::d1);
     calc.input(Button::d2);
@@ -268,8 +268,8 @@ TEST(TestDiv, Div5) {
 
 // Input: 40/4=/==
 TEST(TestDiv, Div6) {
-    State expectedState(Config::DEFAULT_DIGITS);
-    Calculator calc(Config::DEFAULT_DIGITS);
+    State expectedState(Config::DEFAULT_SIZE);
+    Calculator calc(Config::DEFAULT_SIZE);
 
     calc.input(Button::d4);
     calc.input(Button::d0);
@@ -317,8 +317,8 @@ TEST(TestDiv, Div6) {
 
 // Input: 40/4/==
 TEST(TestDiv, Div7) {
-    State expectedState(Config::DEFAULT_DIGITS);
-    Calculator calc(Config::DEFAULT_DIGITS);
+    State expectedState(Config::DEFAULT_SIZE);
+    Calculator calc(Config::DEFAULT_SIZE);
 
     calc.input(Button::d4);
     calc.input(Button::d0);
