@@ -22,7 +22,7 @@ void Math::calculate(Register &r1, Register &r2, const Operation &operation) {
             mul(r1, r2);
             break;
         case Operation::div:
-            //TODO DZZ div
+            div(r1, r2);
             break;
         default:
             //TODO DZZ %, ...
@@ -91,7 +91,6 @@ void Math::normalizePointPositions(Register &r1, Register &r2) {
     }
 }
 
-//TODO DZZ Move to Register class
 void Math::truncRightZeros(Register &r) {
     int8_t size = r.getSize();
     for (int8_t i = 0; i < size; i++) {
@@ -229,33 +228,9 @@ void Math::mul(Register &r1, Register &r2, Register &acc) {
         }
     }
 
-
-
-    int8_t accSize = acc.getSize();
-    int8_t firstDigitIndex = 0;
-    for (int8_t i = accSize - S1; i >= 0; i--) {
-        if (acc.getDigit(i) > 0) {
-            firstDigitIndex = i;
-            break;
-        }
-    }
-
-    int8_t pointPos = r1.getPointPos() + r2.getPointPos();
-    int8_t overflowPos = 0;
-    while (firstDigitIndex > lastRegIndex) {
-        unsafeShiftRight(acc, false);
-        if (pointPos == 0) overflowPos++;
-        else pointPos--;
-        firstDigitIndex--;
-    }
-    acc.setOverflow(overflowPos > 0);
-    acc.setPointPos(overflowPos > 0 ? size - overflowPos : pointPos);
-    acc.setNegative(acc.isZero() ? false : r1.getNegative() != r2.getNegative());
-
-    r1.set(acc);
-
-
-
+    acc.setNegative(r1.getNegative() != r2.getNegative());
+    acc.setPointPos(r1.getPointPos() + r2.getPointPos());
+    doubleSizedRegisterToSingle(acc, r1);
     truncRightZeros(r1);
 }
 

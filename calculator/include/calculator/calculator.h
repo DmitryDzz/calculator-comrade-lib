@@ -28,14 +28,11 @@ namespace calculatorcomrade {
 
         State& getState();
         void input(Button button);
-        void input(const std::string& button);
     private:
         int8_t size_;
         State state_;
         bool hasOperation_;
         bool inNumber_;
-
-        Button stringToButton(const std::string& button);
 
         int8_t inputSize_;
         bool inputHasPoint_;
