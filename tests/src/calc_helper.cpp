@@ -73,23 +73,25 @@ void calculatorcomrade::setValue(Register &r, int64_t value, int8_t digitsAfterP
 }
 
 void calculatorcomrade::evaluateText(Register &r, std::string *output) {
-    int8_t digits = r.getSize();
+    int8_t size = r.getSize();
 
-    if (digits == 0) {
+    if (size == 0) {
         *output = "Empty";
         return;
     }
 
-    auto digitsInGroup = static_cast<int8_t>(digits == 6 ? 3 : 4);
+    auto digitsInGroup = static_cast<int8_t>(size == 6 ? 3 : 4);
 
     *output = "";
     if (r.getOverflow())
         *output += "[Err]";
     if (r.getNegative())
         *output += "–";
-    for (int8_t i = 0; i < digits; i++) {
+    for (int8_t i = 0; i < size; i++) {
         if (i % digitsInGroup == 0 && i != 0)
             *output += " ";
-        *output += std::to_string(r.getDigit(digits - i - S1));
+        *output += std::to_string(r.getDigit(size - i - S1));
+        if (i == size - r.getPointPos() - S1)
+            *output += ".";
     }
 }

@@ -25,6 +25,7 @@ namespace calculatorcomrade {
         static int8_t compareIgnoreSign(const Register &r1, const Register &r2);
         static void normalizePointPositions(Register &r1, Register &r2);
         static void truncRightZeros(Register &r);
+        static void doubleSizedRegisterToSingle(Register &r2, Register &r);
 
         static void sum(Register &r1, Register &r2, bool truncRightZeros);
     };

@@ -563,19 +563,19 @@ TEST_MATH(DivReal5) {
 }
 
 TEST_MATH(DivOverflow1) {
-    Register r1(2);
-    Register r2(2);
-    Register acc(4);
+    Register r1(3);
+    Register r2(3);
+    Register acc(6);
 
     r1.setChangedCallback(on_r1_changed);
     r2.setChangedCallback(on_r2_changed);
     acc.setChangedCallback(on_rt_changed);
 
-    // 99 : 0.2 = [Err]4.9
-    setValue(r1, 99);
-    setValue(r2, 2, 1);
+    // 999 : 0.02 = [Err]49.9 (=49950)
+    setValue(r1, 999);
+    setValue(r2, 2, 2);
     Math::div(r1, r2, acc);
-    ASSERT_EQ(49, getAbsIntValue(r1));
+    ASSERT_EQ(499, getAbsIntValue(r1));
     ASSERT_EQ(1, r1.getPointPos());
     ASSERT_EQ(false, r1.getNegative());
     ASSERT_EQ(true, r1.getOverflow());

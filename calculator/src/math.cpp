@@ -91,6 +91,7 @@ void Math::normalizePointPositions(Register &r1, Register &r2) {
     }
 }
 
+//TODO DZZ Move to Register class
 void Math::truncRightZeros(Register &r) {
     int8_t size = r.getSize();
     for (int8_t i = 0; i < size; i++) {
@@ -98,6 +99,38 @@ void Math::truncRightZeros(Register &r) {
         unsafeShiftRight(r, true);
     }
 }
+
+void Math::doubleSizedRegisterToSingle(Register &r2, Register &r) {
+    int8_t size = r.getSize();
+    int8_t size2 = r2.getSize();
+
+    int8_t pointPos = r2.getPointPos();
+
+    int8_t firstDigitIndex = 0;
+    for (int8_t i = size2 - S1; i >= 0; i--) {
+        if (r2.getDigit(i) > 0) {
+            firstDigitIndex = i;
+            break;
+        }
+    }
+    if (firstDigitIndex < pointPos)
+        firstDigitIndex++;
+
+    int8_t overflowPos = 0;
+    while (firstDigitIndex >= size) {
+        unsafeShiftRight(r2, false);
+        if (pointPos == 0) overflowPos++;
+        else pointPos--;
+        firstDigitIndex--;
+    }
+    r2.setOverflow(overflowPos > 0);
+    r2.setPointPos(overflowPos > 0 ? size - overflowPos : pointPos);
+    if (r2.isZero())
+        r2.setNegative(false);
+
+    r.set(r2);
+}
+
 
 void Math::sum(Register &r1, Register &r2) {
     Math::sum(r1, r2, true);
@@ -196,6 +229,8 @@ void Math::mul(Register &r1, Register &r2, Register &acc) {
         }
     }
 
+
+
     int8_t accSize = acc.getSize();
     int8_t firstDigitIndex = 0;
     for (int8_t i = accSize - S1; i >= 0; i--) {
@@ -218,6 +253,9 @@ void Math::mul(Register &r1, Register &r2, Register &acc) {
     acc.setNegative(acc.isZero() ? false : r1.getNegative() != r2.getNegative());
 
     r1.set(acc);
+
+
+
     truncRightZeros(r1);
 }
 
@@ -231,8 +269,9 @@ void Math::div(Register &r1, Register &r2) {
 
 void Math::div(Register &r1, Register &r2, Register &acc) {
     int8_t size = r1.getSize();
+    int8_t size2 = size + size;
     assert(size == r2.getSize());
-    assert(size * 2 == acc.getSize());
+    assert(size2 == acc.getSize());
 
     if (r2.isZero()) {
         r1.clear();
@@ -245,7 +284,7 @@ void Math::div(Register &r1, Register &r2, Register &acc) {
     acc.set(r1);
     acc.setNegative(false);
 
-    Register r2ex(acc.getSize());
+    Register r2ex(size2);
     r2ex.set(r2);
     r2ex.setChangedCallback(r2.getChangedCallback());
     r2ex.setNegative(true); // Make it negative to sum with positive acc later.
@@ -254,61 +293,58 @@ void Math::div(Register &r1, Register &r2, Register &acc) {
     normalizePointPositions(acc, r2ex);
 
     // Prepare for the result:
-    r1.clear();
+    Register r1ex(size2);
+    r1ex.setChangedCallback(r1.getChangedCallback());
+    r1.setChangedCallback(nullptr);
 
-    int8_t overflowPos = 0;
     if (compareIgnoreSign(acc, r2ex) >= 0) {
         // Shift r2ex to the very right:
-        int8_t lastIndex = acc.getSize() - S1;
-        while (r2ex.getDigit(lastIndex) == 0)
+        int8_t lastIndex2 = size2 - S1;
+        while (r2ex.getDigit(lastIndex2) == 0)
             safeShiftLeft(r2ex, false);
         acc.setPointPos(0);
         r2ex.setPointPos(0);
 
-        for (int8_t i = 0; i <= lastIndex; i++) {
+        for (int8_t i = 0; i <= lastIndex2; i++) {
             int8_t digit = 0;
             if (compareIgnoreSign(acc, r2ex) >= 0) {
                 while (compareIgnoreSign(acc, r2ex) >= 0) {
-                    sum(acc, r2ex);
+                    sum(acc, r2ex, false);
                     digit++;
                 }
             }
-            bool canShift = safeShiftLeft(r1, false);
-            if (!canShift) {
-                overflowPos++;
-                break;
-            }
-            r1.setDigit(0, digit);
+            safeShiftLeft(r1ex, false);
+            r1ex.setDigit(0, digit);
 
-            if (i < lastIndex)
+            if (i < lastIndex2)
                 unsafeShiftRight(r2ex, false);
         }
     }
 
     if (!acc.isZero()) { // (there is a remainder in acc)
-        r1.setPointPos(0);
+        r1ex.setPointPos(0);
         for (int8_t j = 0; j < size; j++) {
             safeShiftLeft(acc, false);
 
             int8_t digit = 0;
             if (compareIgnoreSign(acc, r2ex) >= 0) {
                 while (compareIgnoreSign(acc, r2ex) >= 0) {
-                    sum(acc, r2ex);
+                    sum(acc, r2ex, false);
                     digit++;
                 }
             }
 
-            bool canShift = safeShiftLeft(r1, true);
+            bool canShift = safeShiftLeft(r1ex, true);
             if (canShift)
-                r1.setDigit(0, digit);
+                r1ex.setDigit(0, digit);
         }
     }
 
-    r2.setChangedCallback(r2.getChangedCallback());
+    r1ex.setNegative(negative);
 
-    r1.setNegative(negative);
-    r1.setOverflow(overflowPos > 0);
-    if (overflowPos > 0)
-        r1.setPointPos(size - overflowPos);
+    r1.setChangedCallback(r1ex.getChangedCallback());
+    r2.setChangedCallback(r2ex.getChangedCallback());
+
+    doubleSizedRegisterToSingle(r1ex, r1);
     truncRightZeros(r1);
 }
