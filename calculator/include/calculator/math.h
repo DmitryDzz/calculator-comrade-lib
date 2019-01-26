@@ -16,10 +16,12 @@ namespace calculatorcomrade {
 
         static void sum(Register &r1, Register &r2);
         static void mul(Register &r1, Register &r2);
-        static void mul(Register &r1, Register &r2, Register &r3);
+        static void mul(Register &r1, Register &r2, Register &acc);
+        static void div(Register &r1, Register &r2);
+        static void div(Register &r1, Register &r2, Register &acc);
     private:
         static void unsafeShiftRight(Register &r, bool updatePointPos);
-        static void safeShiftLeft(Register &r, bool updatePointPos);
+        static bool safeShiftLeft(Register &r, bool updatePointPos);
         static int8_t compareIgnoreSign(const Register &r1, const Register &r2);
         static void normalizePointPositions(Register &r1, Register &r2);
         static void truncRightZeros(Register &r);

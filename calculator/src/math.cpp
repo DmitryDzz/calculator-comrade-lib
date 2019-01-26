@@ -2,7 +2,7 @@
 // Created by dmitrydzz on 10.01.19.
 //
 
-#include <calculator/math.h>
+#include "calculator/math.h"
 
 using calculatorcomrade::Math;
 
@@ -44,16 +44,17 @@ void Math::unsafeShiftRight(Register &r, const bool updatePointPos) {
 
 // "safe" means that left shift will be performed
 // until there is a non-zero value in the highest digit.
-void Math::safeShiftLeft(Register &r, const bool updatePointPos) {
+bool Math::safeShiftLeft(Register &r, const bool updatePointPos) {
     int8_t size = r.getSize();
     int8_t lastIndex = size - S1;
-    if (r.getDigit(size - S1) != 0 || r.getPointPos() == lastIndex) return;
+    if (r.getDigit(size - S1) != 0 || r.getPointPos() == lastIndex) return false;
     for (auto i = lastIndex; i >= 1; i--) {
         r.setDigit(i, r.getDigit(i - S1));
     }
     r.setDigit(0, 0);
     if (updatePointPos)
         r.incPointPos(+1);
+    return true;
 }
 
 int8_t Math::compareIgnoreSign(const Register &r1, const Register &r2) {
@@ -214,8 +215,100 @@ void Math::mul(Register &r1, Register &r2, Register &acc) {
     }
     acc.setOverflow(overflowPos > 0);
     acc.setPointPos(overflowPos > 0 ? size - overflowPos : pointPos);
-    acc.setNegative(acc.isZeroData() ? false : r1.getNegative() != r2.getNegative());
+    acc.setNegative(acc.isZero() ? false : r1.getNegative() != r2.getNegative());
 
     r1.set(acc);
+    truncRightZeros(r1);
+}
+
+void Math::div(Register &r1, Register &r2) {
+    int8_t size = r1.getSize();
+    assert(size == r2.getSize());
+
+    Register acc(size + size);
+    Math::div(r1, r2, acc);
+}
+
+void Math::div(Register &r1, Register &r2, Register &acc) {
+    int8_t size = r1.getSize();
+    assert(size == r2.getSize());
+    assert(size * 2 == acc.getSize());
+
+    if (r2.isZero()) {
+        r1.clear();
+        r1.setOverflow(true);
+        return;
+    }
+
+    bool negative = r1.getNegative() != r2.getNegative();
+
+    acc.set(r1);
+    acc.setNegative(false);
+
+    Register r2ex(acc.getSize());
+    r2ex.set(r2);
+    r2ex.setChangedCallback(r2.getChangedCallback());
+    r2ex.setNegative(true); // Make it negative to sum with positive acc later.
+    r2.setChangedCallback(nullptr);
+
+    normalizePointPositions(acc, r2ex);
+
+    // Prepare for the result:
+    r1.clear();
+
+    int8_t overflowPos = 0;
+    if (compareIgnoreSign(acc, r2ex) >= 0) {
+        // Shift r2ex to the very right:
+        int8_t lastIndex = acc.getSize() - S1;
+        while (r2ex.getDigit(lastIndex) == 0)
+            safeShiftLeft(r2ex, false);
+        acc.setPointPos(0);
+        r2ex.setPointPos(0);
+
+        for (int8_t i = 0; i <= lastIndex; i++) {
+            int8_t digit = 0;
+            if (compareIgnoreSign(acc, r2ex) >= 0) {
+                while (compareIgnoreSign(acc, r2ex) >= 0) {
+                    sum(acc, r2ex);
+                    digit++;
+                }
+            }
+            bool canShift = safeShiftLeft(r1, false);
+            if (!canShift) {
+                overflowPos++;
+                break;
+            }
+            r1.setDigit(0, digit);
+
+            if (i < lastIndex)
+                unsafeShiftRight(r2ex, false);
+        }
+    }
+
+    if (!acc.isZero()) { // (there is a remainder in acc)
+        r1.setPointPos(0);
+        for (int8_t j = 0; j < size; j++) {
+            safeShiftLeft(acc, false);
+
+            int8_t digit = 0;
+            if (compareIgnoreSign(acc, r2ex) >= 0) {
+                while (compareIgnoreSign(acc, r2ex) >= 0) {
+                    sum(acc, r2ex);
+                    digit++;
+                }
+            }
+
+            bool canShift = safeShiftLeft(r1, true);
+            if (canShift)
+                r1.setDigit(0, digit);
+        }
+    }
+
+    r2.setChangedCallback(r2.getChangedCallback());
+
+    r1.setNegative(negative);
+    r1.setOverflow(overflowPos > 0);
+    if (overflowPos > 0)
+        r1.setPointPos(size - overflowPos);
     truncRightZeros(r1);
 }

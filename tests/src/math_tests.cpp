@@ -15,21 +15,21 @@ using calculatorcomrade::Operation;
 
 std::string r1_text;
 std::string r2_text;
-std::string rT_text;
+std::string acc_text;
 
 void on_r1_changed(Register &r) {
     calculatorcomrade::evaluateText(r, &r1_text);
-    r1_text = r1_text;
+//    r1_text = r1_text;
 }
 
 void on_r2_changed(Register &r) {
     calculatorcomrade::evaluateText(r, &r2_text);
-    r2_text = r2_text;
+//    r2_text = r2_text;
 }
 
 void on_rt_changed(Register &r) {
-    calculatorcomrade::evaluateText(r, &rT_text);
-    rT_text = rT_text;
+    calculatorcomrade::evaluateText(r, &acc_text);
+//    acc_text = acc_text;
 }
 
 TEST_MATH(AddInt) {
@@ -266,7 +266,7 @@ TEST_MATH(NonNegativeZeroAfterMul) {
     setValue(r1, -1974);
     setValue(r2, 0);
     Math::calculate(r1, r2, Operation::mul);
-    ASSERT_TRUE(r1.isZeroData());
+    ASSERT_TRUE(r1.isZero());
     ASSERT_EQ(0, r1.getPointPos());
     ASSERT_EQ(false, r1.getNegative());
     ASSERT_EQ(false, r1.getOverflow());
@@ -383,6 +383,219 @@ TEST_MATH(MulReadOperations) {
     Math::mul(r1, r2, acc);
     ASSERT_EQ(55885079, getAbsIntValue(r1));
     ASSERT_EQ(0, r1.getPointPos());
+    ASSERT_EQ(false, r1.getNegative());
+    ASSERT_EQ(true, r1.getOverflow());
+}
+
+TEST_MATH(DivInt1) {
+    Register r1(2);
+    Register r2(2);
+    Register acc(4);
+
+    r1.setChangedCallback(on_r1_changed);
+    r2.setChangedCallback(on_r2_changed);
+    acc.setChangedCallback(on_rt_changed);
+
+    // 15 : 5 = 3
+    setValue(r1, 15);
+    setValue(r2, 5);
+    Math::div(r1, r2, acc);
+    ASSERT_EQ(3, getAbsIntValue(r1));
+    ASSERT_EQ(0, r1.getPointPos());
+    ASSERT_EQ(false, r1.getNegative());
+    ASSERT_EQ(false, r1.getOverflow());
+
+    // -15 : 5 = -3
+    setValue(r1, -15);
+    setValue(r2, 5);
+    Math::div(r1, r2, acc);
+    ASSERT_EQ(3, getAbsIntValue(r1));
+    ASSERT_EQ(0, r1.getPointPos());
+    ASSERT_EQ(true, r1.getNegative());
+    ASSERT_EQ(false, r1.getOverflow());
+
+    // 15 : (-5) = -3
+    setValue(r1, 15);
+    setValue(r2, -5);
+    Math::div(r1, r2, acc);
+    ASSERT_EQ(3, getAbsIntValue(r1));
+    ASSERT_EQ(0, r1.getPointPos());
+    ASSERT_EQ(true, r1.getNegative());
+    ASSERT_EQ(false, r1.getOverflow());
+}
+
+TEST_MATH(DivInt2) {
+    Register r1(3);
+    Register r2(3);
+    Register acc(6);
+
+    r1.setChangedCallback(on_r1_changed);
+    r2.setChangedCallback(on_r2_changed);
+    acc.setChangedCallback(on_rt_changed);
+
+    // 500 : 5 = 100
+    setValue(r1, 500);
+    setValue(r2, 5);
+    Math::div(r1, r2, acc);
+    ASSERT_EQ(100, getAbsIntValue(r1));
+    ASSERT_EQ(0, r1.getPointPos());
+    ASSERT_EQ(false, r1.getNegative());
+    ASSERT_EQ(false, r1.getOverflow());
+}
+
+TEST_MATH(DivZero) {
+    Register r1(2);
+    Register r2(2);
+
+    // 15 : 0 = [Err]0
+    setValue(r1, 15);
+    setValue(r2, 0);
+    Math::div(r1, r2);
+    ASSERT_TRUE(r1.isZero());
+    ASSERT_EQ(0, getAbsIntValue(r1));
+    ASSERT_EQ(0, r1.getPointPos());
+    ASSERT_EQ(false, r1.getNegative());
+    ASSERT_EQ(true, r1.getOverflow());
+
+    setValue(r1, -15, 1); // r1 = -1.5
+    setValue(r2, 0);
+    Math::div(r1, r2);
+    ASSERT_TRUE(r1.isZero());
+    ASSERT_EQ(0, getAbsIntValue(r1));
+    ASSERT_EQ(0, r1.getPointPos());
+    ASSERT_EQ(false, r1.getNegative());
+    ASSERT_EQ(true, r1.getOverflow());
+}
+
+TEST_MATH(DivReal1) {
+    Register r1(2);
+    Register r2(2);
+    Register acc(4);
+
+    r1.setChangedCallback(on_r1_changed);
+    r2.setChangedCallback(on_r2_changed);
+    acc.setChangedCallback(on_rt_changed);
+
+    // 5 : 2 = 2.5
+    setValue(r1, 5);
+    setValue(r2, 2);
+    Math::div(r1, r2, acc);
+    ASSERT_EQ(25, getAbsIntValue(r1));
+    ASSERT_EQ(1, r1.getPointPos());
+    ASSERT_EQ(false, r1.getNegative());
+    ASSERT_EQ(false, r1.getOverflow());
+}
+
+TEST_MATH(DivReal2) {
+    Register r1(4);
+    Register r2(4);
+    Register acc(8);
+
+    r1.setChangedCallback(on_r1_changed);
+    r2.setChangedCallback(on_r2_changed);
+    acc.setChangedCallback(on_rt_changed);
+
+    // 10 : 6 = 1.666
+    setValue(r1, 10);
+    setValue(r2, 6);
+    Math::div(r1, r2, acc);
+    ASSERT_EQ(1666, getAbsIntValue(r1));
+    ASSERT_EQ(3, r1.getPointPos());
+    ASSERT_EQ(false, r1.getNegative());
+    ASSERT_EQ(false, r1.getOverflow());
+}
+
+TEST_MATH(DivReal3) {
+    Register r1(4);
+    Register r2(4);
+    Register acc(8);
+
+    r1.setChangedCallback(on_r1_changed);
+    r2.setChangedCallback(on_r2_changed);
+    acc.setChangedCallback(on_rt_changed);
+
+    // 1 : 6 = 0.166
+    setValue(r1, 1);
+    setValue(r2, 6);
+    Math::div(r1, r2, acc);
+    ASSERT_EQ(166, getAbsIntValue(r1));
+    ASSERT_EQ(3, r1.getPointPos());
+    ASSERT_EQ(false, r1.getNegative());
+    ASSERT_EQ(false, r1.getOverflow());
+}
+
+TEST_MATH(DivReal4) {
+    Register r1(8);
+    Register r2(8);
+    Register acc(16);
+
+    r1.setChangedCallback(on_r1_changed);
+    r2.setChangedCallback(on_r2_changed);
+    acc.setChangedCallback(on_rt_changed);
+
+    // 15 : 26 = 0.576923
+    setValue(r1, 15);
+    setValue(r2, 26);
+    Math::div(r1, r2, acc);
+    ASSERT_EQ(576923, getAbsIntValue(r1));
+    ASSERT_EQ(6, r1.getPointPos());
+    ASSERT_EQ(false, r1.getNegative());
+    ASSERT_EQ(false, r1.getOverflow());
+}
+
+TEST_MATH(DivReal5) {
+    Register r1(8);
+    Register r2(8);
+    Register acc(16);
+
+    r1.setChangedCallback(on_r1_changed);
+    r2.setChangedCallback(on_r2_changed);
+    acc.setChangedCallback(on_rt_changed);
+
+    // 197.4 : 0.01 = 19740
+    setValue(r1, 1974, 1);
+    setValue(r2, 1, 2);
+    Math::div(r1, r2, acc);
+    ASSERT_EQ(19740, getAbsIntValue(r1));
+    ASSERT_EQ(0, r1.getPointPos());
+    ASSERT_EQ(false, r1.getNegative());
+    ASSERT_EQ(false, r1.getOverflow());
+}
+
+TEST_MATH(DivOverflow1) {
+    Register r1(2);
+    Register r2(2);
+    Register acc(4);
+
+    r1.setChangedCallback(on_r1_changed);
+    r2.setChangedCallback(on_r2_changed);
+    acc.setChangedCallback(on_rt_changed);
+
+    // 99 : 0.2 = [Err]4.9
+    setValue(r1, 99);
+    setValue(r2, 2, 1);
+    Math::div(r1, r2, acc);
+    ASSERT_EQ(49, getAbsIntValue(r1));
+    ASSERT_EQ(1, r1.getPointPos());
+    ASSERT_EQ(false, r1.getNegative());
+    ASSERT_EQ(true, r1.getOverflow());
+}
+
+TEST_MATH(DivOverflow2) {
+    Register r1(8);
+    Register r2(8);
+    Register acc(16);
+
+    r1.setChangedCallback(on_r1_changed);
+    r2.setChangedCallback(on_r2_changed);
+    acc.setChangedCallback(on_rt_changed);
+
+    // 99999999 : 0.02 = [Err]49.999999
+    setValue(r1, 99999999);
+    setValue(r2, 2, 2);
+    Math::div(r1, r2, acc);
+    ASSERT_EQ(49999999, getAbsIntValue(r1));
+    ASSERT_EQ(6, r1.getPointPos());
     ASSERT_EQ(false, r1.getNegative());
     ASSERT_EQ(true, r1.getOverflow());
 }

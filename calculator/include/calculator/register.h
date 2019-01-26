@@ -55,11 +55,11 @@ namespace calculatorcomrade {
             changedCallback_ = changedCallback;
         }
 
-//        RegisterChangedCallback getChangedCallback() {
-//            return changedCallback_;
-//        }
+        RegisterChangedCallback getChangedCallback() {
+            return changedCallback_;
+        }
 
-        bool isZeroData() {
+        bool isZero() {
             for (int8_t i = 0; i < size_; i++)
                 if (data_[i] > 0)
                     return false;
