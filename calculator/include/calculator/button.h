@@ -7,7 +7,7 @@
 
 namespace calculatorcomrade {
 
-    enum class Button {
+    enum class Button : uint8_t {
         none,
         ca,         // clear all
         ce,         // clear entry

@@ -12,6 +12,9 @@
 
 namespace calculatorcomrade {
 
+//    typedef void(__stdcall * DisplayEventCallback)();
+    typedef void (*DisplayEventCallback)();
+
     class Calculator {
     public:
         Calculator() : Calculator(Config::DEFAULT_SIZE) {};
@@ -20,12 +23,15 @@ namespace calculatorcomrade {
                 size_(size),
                 hasOperation_(false),
                 inNumber_(false),
+                displayEventCallback_(nullptr),
                 inputSize_(0),
                 inputHasPoint_(false) {
             assert(size > 0);
             assert(size <= Config::MAX_SIZE);
         };
 
+        int8_t getSize() { return size_; }
+        void setDisplayEventCallback(DisplayEventCallback callback);
         State& getState();
         void input(Button button);
     private:
@@ -33,6 +39,7 @@ namespace calculatorcomrade {
         State state_;
         bool hasOperation_;
         bool inNumber_;
+        DisplayEventCallback displayEventCallback_;
 
         int8_t inputSize_;
         bool inputHasPoint_;

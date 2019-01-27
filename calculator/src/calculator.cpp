@@ -15,6 +15,10 @@ using calculatorcomrade::Calculator;
 using calculatorcomrade::Register;
 using calculatorcomrade::State;
 
+void Calculator::setDisplayEventCallback(DisplayEventCallback const callback) {
+    displayEventCallback_ = callback;
+}
+
 State& Calculator::getState() {
     return state_;
 }
@@ -98,6 +102,9 @@ void Calculator::input(Button button) {
         case Button::memC:
             break;
     }
+
+    if (displayEventCallback_ != nullptr)
+        displayEventCallback_();
 }
 
 void Calculator::clearInput() {

@@ -29,8 +29,12 @@ namespace calculatorcomrade {
             notify();
         }
 
-        int8_t getSize() const {
+        inline int8_t getSize() const {
             return size_;
+        }
+
+        inline int8_t *getData() const {
+            return data_;
         }
 
         void set(const Register& rhs) {
