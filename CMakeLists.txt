@@ -1,10 +1,8 @@
 cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
 
-if($ENV{CLION_IDE})
+if(($ENV{CLION_IDE}) AND (${CMAKE_HOST_SYSTEM_NAME} EQUAL "Windows"))
 #    message(**************************** " CLION")
     set(CMAKE_TOOLCHAIN_FILE "${CMAKE_CURRENT_SOURCE_DIR}/toolchain-win64.cmake")
-else()
-#    message(**************************** " NOT CLION")
 endif()
 
 set(CMAKE_CXX_STANDARD 14)
