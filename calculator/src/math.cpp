@@ -11,11 +11,11 @@ using calculatorcomrade::Math;
 void Math::calculate(Register &r1, Register &r2, const Operation &operation) {
     switch (operation) {
         case Operation::add:
-            sum(r1, r2);
+            add(r1, r2);
             break;
         case Operation::sub:
             r1.switchNegative();
-            sum(r1, r2);
+            add(r1, r2);
             r1.switchNegative();
             break;
         case Operation::mul:
@@ -23,9 +23,6 @@ void Math::calculate(Register &r1, Register &r2, const Operation &operation) {
             break;
         case Operation::div:
             div(r1, r2);
-            break;
-        default:
-            //TODO DZZ %, ...
             break;
     }
 }
@@ -130,12 +127,11 @@ void Math::doubleSizedRegisterToSingle(Register &r2, Register &r) {
     r.set(r2);
 }
 
-
-void Math::sum(Register &r1, Register &r2) {
-    Math::sum(r1, r2, true);
+void Math::add(Register &r1, Register &r2) {
+    Math::add(r1, r2, true);
 }
 
-void Math::sum(Register &r1, Register &r2, bool truncRightZeros) {
+void Math::add(Register &r1, Register &r2, bool truncRightZeros) {
     int8_t size = r1.getSize();
     assert(size == r2.getSize());
 
@@ -220,7 +216,7 @@ void Math::mul(Register &r1, Register &r2, Register &acc) {
     for (int8_t i = lastRegIndex; i >= 0; i--) {
         int8_t digit = r1.getDigit(i);
         for (int8_t j = 0; j < digit; j++) {
-            Math::sum(acc, r2ex, false);
+            Math::add(acc, r2ex, false);
         }
         if (i > 0) {
             safeShiftLeft(acc, false);
@@ -284,7 +280,7 @@ void Math::div(Register &r1, Register &r2, Register &acc) {
             int8_t digit = 0;
             if (compareIgnoreSign(acc, r2ex) >= 0) {
                 while (compareIgnoreSign(acc, r2ex) >= 0) {
-                    sum(acc, r2ex, false);
+                    add(acc, r2ex, false);
                     digit++;
                 }
             }
@@ -304,7 +300,7 @@ void Math::div(Register &r1, Register &r2, Register &acc) {
             int8_t digit = 0;
             if (compareIgnoreSign(acc, r2ex) >= 0) {
                 while (compareIgnoreSign(acc, r2ex) >= 0) {
-                    sum(acc, r2ex, false);
+                    add(acc, r2ex, false);
                     digit++;
                 }
             }
@@ -322,4 +318,34 @@ void Math::div(Register &r1, Register &r2, Register &acc) {
 
     doubleSizedRegisterToSingle(r1ex, r1);
     truncRightZeros(r1);
+}
+
+void Math::calculatePercent(Register &r1, Register &r2, const Operation &operation) {
+    switch (operation) {
+        case Operation::add:
+            addPercent(r1, r2);
+            break;
+        case Operation::sub:
+            r1.switchNegative();
+            addPercent(r1, r2);
+            break;
+        case Operation::mul:
+            mulPercent(r1, r2);
+            break;
+        case Operation::div:
+            divPercent(r1, r2);
+            break;
+    }
+}
+
+void Math::addPercent(Register &r1, Register &r2) {
+
+}
+
+void Math::mulPercent(Register &r1, Register &r2) {
+
+}
+
+void Math::divPercent(Register &r1, Register &r2) {
+
 }

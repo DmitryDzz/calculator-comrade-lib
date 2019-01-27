@@ -43,6 +43,7 @@ namespace calculatorcomrade {
 
         void calculateEquals();
         void calculateAddSubMulDiv();
+        void calculatePercent();
     };
 };
 

@@ -13,12 +13,17 @@ namespace calculatorcomrade {
     class Math {
     public:
         static void calculate(Register &r1, Register &r2, const Operation &operation);
+        static void calculatePercent(Register &r1, Register &r2, const Operation &operation);
 
-        static void sum(Register &r1, Register &r2);
+        static void add(Register &r1, Register &r2);
         static void mul(Register &r1, Register &r2);
         static void mul(Register &r1, Register &r2, Register &acc);
         static void div(Register &r1, Register &r2);
         static void div(Register &r1, Register &r2, Register &acc);
+
+        static void addPercent(Register &r1, Register &r2);
+        static void mulPercent(Register &r1, Register &r2);
+        static void divPercent(Register &r1, Register &r2);
     private:
         static void unsafeShiftRight(Register &r, bool updatePointPos);
         static bool safeShiftLeft(Register &r, bool updatePointPos);
@@ -27,7 +32,7 @@ namespace calculatorcomrade {
         static void truncRightZeros(Register &r);
         static void doubleSizedRegisterToSingle(Register &r2, Register &r);
 
-        static void sum(Register &r1, Register &r2, bool truncRightZeros);
+        static void add(Register &r1, Register &r2, bool truncRightZeros);
     };
 };
 

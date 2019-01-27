@@ -11,8 +11,7 @@ namespace calculatorcomrade {
         add,
         sub,
         mul,
-        div,
-        percent
+        div
     };
 }
 

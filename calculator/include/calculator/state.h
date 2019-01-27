@@ -47,16 +47,11 @@ namespace calculatorcomrade {
          * Calculates "x operation y". The result is placed to register X.
          */
         void calculate() {
-            switch (operation) {
-                case Operation::add:
-                case Operation::sub:
-                case Operation::mul:
-                case Operation::div:
-                    Math::calculate(x, y, operation);
-                    break;
-                default:
-                    break;
-            }
+            Math::calculate(x, y, operation);
+        }
+
+        void calculatePercent() {
+            Math::calculatePercent(x, y, operation);
         }
 
         bool operator==(const State &other) {

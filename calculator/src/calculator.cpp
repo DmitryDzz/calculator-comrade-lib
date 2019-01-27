@@ -80,7 +80,8 @@ void Calculator::input(Button button) {
             hasOperation_ = true;
             break;
         case Button::percent:
-            state_.operation = Operation::percent;
+            calculatePercent();
+            hasOperation_ = false;
             break;
         case Button::equals:
             calculateEquals();
@@ -140,4 +141,9 @@ void Calculator::calculateAddSubMulDiv() {
     if (!hasOperation_) return;
     calculateEquals();
     state_.y.clear();
+}
+
+void Calculator::calculatePercent() {
+    if (!hasOperation_) return;
+    state_.calculatePercent();
 }
