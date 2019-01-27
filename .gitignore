@@ -32,6 +32,7 @@
 *.app
 
 # CLion IDE
-cmake-build-*
 .idea
 
+# CLion IDE and command line builds
+cmake-build-*

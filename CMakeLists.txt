@@ -9,4 +9,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 add_subdirectory("calculator")
-add_subdirectory("tests")
+
+if(${CMAKE_SYSTEM_NAME} STREQUAL "WindowsStore")
+    add_subdirectory("tests")
+endif()
