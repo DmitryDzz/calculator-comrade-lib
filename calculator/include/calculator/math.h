@@ -24,6 +24,8 @@ namespace calculatorcomrade {
         static void addPercent(Register &r1, Register &r2);
         static void mulPercent(Register &r1, Register &r2);
         static void divPercent(Register &r1, Register &r2);
+
+        static void sqrt(Register &r);
     private:
         static void unsafeShiftRight(Register &r, bool updatePointPos);
         static bool safeShiftLeft(Register &r, bool updatePointPos);

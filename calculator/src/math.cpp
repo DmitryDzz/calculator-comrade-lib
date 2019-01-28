@@ -349,3 +349,7 @@ void Math::mulPercent(Register &r1, Register &r2) {
 void Math::divPercent(Register &r1, Register &r2) {
 
 }
+
+void Math::sqrt(Register &r) {
+    //TODO DZZ sqrt(99999998) = 9999.9998 (should be)
+}
