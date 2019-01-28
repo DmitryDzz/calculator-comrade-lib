@@ -24,6 +24,7 @@ namespace calculatorcomrade {
         point,
         plus,
         minus,
+        changeSign,
         mul,
         div,
         sqrt,
@@ -32,7 +33,8 @@ namespace calculatorcomrade {
         memPlus,    // M+
         memMinus,   // M-
         memR,       // memory restore
-        memC        // memory clean
+        memC,       // memory clean
+        memRC       // memory restore, memory clean
     };
 }
 
