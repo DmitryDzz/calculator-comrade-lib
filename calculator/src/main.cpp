@@ -2,36 +2,27 @@
 // Created by dmitrydzz on 27.01.2019.
 //
 
-#include <memory.h>
-#include <map>
-#include <utility>
-#include "calculator/calculator.h"
-
-#include "calculator/main.h"
-
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunknown-pragmas"
 #pragma ide diagnostic ignored "OCUnusedGlobalDeclarationInspection"
 
+#include <limits>
+#include <map>
+
+#include "calculator/main.h"
+
 using namespace calculatorcomrade;
 
-typedef uint8_t HCALC;
-typedef int8_t HRES;
-
-typedef std::map<HCALC, Calculator*> InstancesMap;
 InstancesMap g_instances;
 HCALC g_calc_hnd = 0;
-
-#define HRES_OK ((HCALC)0)
-#define HRES_ERR_NO_INSTANCE ((HCALC)-1)
-#define HRES_ERR_TOO_MANY_CALCULATORS ((HCALC)-2)
 
 #define CALCULATOR(pCalculator) (*((Calculator *)pCalculator))
 #define DISPLAY_REGISTER(pCalculator) (CALCULATOR(pCalculator).getState().x)
 
 //TODO DZZ Make tests
 HCALC addInstance(Calculator *calculator) {
-    if (g_calc_hnd == 255)
+    //TODO DZZ Check std::numeric_limits with a typedef
+    if (g_calc_hnd == std::numeric_limits<HCALC>::max())
         return HRES_ERR_TOO_MANY_CALCULATORS;
     HCALC result = ++g_calc_hnd;
     g_instances[g_calc_hnd] = calculator;
