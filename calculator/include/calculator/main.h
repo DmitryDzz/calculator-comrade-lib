@@ -1,0 +1,8 @@
+//
+// Created by dmitrydzz on 29.01.2019.
+//
+
+#ifndef CALCULATORCOMRADE_MAIN_H
+#define CALCULATORCOMRADE_MAIN_H
+
+#endif //CALCULATORCOMRADE_MAIN_H
