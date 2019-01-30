@@ -52,7 +52,6 @@ void Calculator::input(Button button) {
             clearInput();
             break;
         case Button::ce:
-            state_.x.clear();
             clearInput();
             break;
         case Button::d0 ... Button::d9:
@@ -93,9 +92,13 @@ void Calculator::input(Button button) {
             break;
         case Button::sqrt:
             break;
+        case Button::changeSign:
+            break;
         case Button::memPlus:
             break;
         case Button::memMinus:
+            break;
+        case Button::memRC:
             break;
         case Button::memR:
             break;

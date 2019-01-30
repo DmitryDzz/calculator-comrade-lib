@@ -11,6 +11,7 @@ set(SOURCES
         src/math_tests.cpp
         src/calc_helper.cpp
         src/special_tests.cpp
+        src/libcalc_tests.cpp
 )
 
 set(TARGET tests)

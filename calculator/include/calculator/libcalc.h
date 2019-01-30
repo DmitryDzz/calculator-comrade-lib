@@ -21,11 +21,11 @@ typedef int8_t HRES;
 
 typedef std::map<HCALC, Calculator*> InstancesMap;
 
-#define HRES_OK ((HCALC)0)
-#define HRES_ERR_NO_INSTANCE ((HCALC)-1)
-#define HRES_ERR_TOO_MANY_CALCULATORS ((HCALC)-2)
+#define HRES_OK ((HRES)0)
+#define HRES_ERR_NO_INSTANCE ((HRES)-1)
+#define HRES_ERR_TOO_MANY_INSTANCES ((HRES)-2)
 
-extern "C" HCALC CreateCalculator(int8_t digits);
+extern "C" HRES CreateCalculator(int8_t digits, HCALC *hcalc);
 
 extern "C" HRES DisposeCalculator(HCALC hCalc);
 
@@ -37,11 +37,11 @@ extern "C" HRES CalculatorInput(HCALC hCalc, Button button);
 
 extern "C" HRES GetSize(HCALC hCalc, int8_t *size);
 
-extern "C" HRES IsNegative(HCALC hCalc, bool *negative);
+extern "C" HRES GetNegative(HCALC hCalc, bool *negative);
 
-extern "C" HRES IsOverflow(HCALC hCalc, bool *overflow);
+extern "C" HRES GetOverflow(HCALC hCalc, bool *overflow);
 
-extern "C" HRES PointPos(HCALC hCalc, int8_t *pointPos);
+extern "C" HRES GetPointPos(HCALC hCalc, int8_t *pointPos);
 
 extern "C" HRES GetDigit(HCALC hCalc, int8_t index, int8_t *digit);
 

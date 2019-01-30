@@ -1,6 +1,6 @@
 set(
     SOURCES
-        src/main.cpp
+        src/libcalc.cpp
         src/calculator.cpp
         include/calculator/calculator.h
         include/calculator/state.h

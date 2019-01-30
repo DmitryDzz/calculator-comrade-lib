@@ -9,7 +9,7 @@
 #include <limits>
 #include <map>
 
-#include "calculator/main.h"
+#include "calculator/libcalc.h"
 
 using namespace calculatorcomrade;
 
@@ -19,16 +19,6 @@ HCALC g_calc_hnd = 0;
 #define CALCULATOR(pCalculator) (*((Calculator *)pCalculator))
 #define DISPLAY_REGISTER(pCalculator) (CALCULATOR(pCalculator).getState().x)
 
-//TODO DZZ Make tests
-HCALC addInstance(Calculator *calculator) {
-    //TODO DZZ Check std::numeric_limits with a typedef
-    if (g_calc_hnd == std::numeric_limits<HCALC>::max())
-        return HRES_ERR_TOO_MANY_CALCULATORS;
-    HCALC result = ++g_calc_hnd;
-    g_instances[g_calc_hnd] = calculator;
-    return result;
-}
-
 Calculator* findInstance(HCALC hCalc) {
     auto it = g_instances.find(hCalc);
     if (it == g_instances.end())
@@ -36,15 +26,20 @@ Calculator* findInstance(HCALC hCalc) {
     return it->second;
 }
 
-extern "C" HCALC CreateCalculator(const int8_t digits) {
-    return addInstance(new Calculator(digits));
+extern "C" HRES CreateCalculator(const int8_t digits, HCALC *hcalc) {
+    if (g_calc_hnd == std::numeric_limits<HCALC>::max())
+        return HRES_ERR_TOO_MANY_INSTANCES;
+    *hcalc = ++g_calc_hnd;
+    g_instances[g_calc_hnd] = new Calculator(digits);
+    return HRES_OK;
 }
 
 extern "C" HRES DisposeCalculator(const HCALC hCalc) {
-    Calculator* calculator = findInstance(hCalc);
-    if (calculator == nullptr)
+    auto it = g_instances.find(hCalc);
+    if (it == g_instances.end())
         return HRES_ERR_NO_INSTANCE;
-    delete calculator;
+    delete it->second;
+    it->second = nullptr;
     return HRES_OK;
 }
 
@@ -80,7 +75,7 @@ extern "C" HRES GetSize(const HCALC hCalc, int8_t *size) {
     return HRES_OK;
 }
 
-extern "C" HRES IsNegative(const HCALC hCalc, bool *negative) {
+extern "C" HRES GetNegative(const HCALC hCalc, bool *negative) {
     Calculator* calculator = findInstance(hCalc);
     if (calculator == nullptr)
         return HRES_ERR_NO_INSTANCE;
@@ -88,7 +83,7 @@ extern "C" HRES IsNegative(const HCALC hCalc, bool *negative) {
     return HRES_OK;
 }
 
-extern "C" HRES IsOverflow(const HCALC hCalc, bool *overflow) {
+extern "C" HRES GetOverflow(const HCALC hCalc, bool *overflow) {
     Calculator* calculator = findInstance(hCalc);
     if (calculator == nullptr)
         return HRES_ERR_NO_INSTANCE;
@@ -96,7 +91,7 @@ extern "C" HRES IsOverflow(const HCALC hCalc, bool *overflow) {
     return HRES_OK;
 }
 
-extern "C" HRES PointPos(const HCALC hCalc, int8_t *pointPos) {
+extern "C" HRES GetPointPos(const HCALC hCalc, int8_t *pointPos) {
     Calculator* calculator = findInstance(hCalc);
     if (calculator == nullptr)
         return HRES_ERR_NO_INSTANCE;
