@@ -24,9 +24,19 @@ State& Calculator::getState() {
 }
 
 void Calculator::input(Button button) {
+    if (state_.x.getOverflow()) {
+        if (button == Button::ce)
+            state_.x.setOverflow(false);
+
+        if (displayEventCallback_ != nullptr)
+            displayEventCallback_();
+        return;
+    }
+
     switch (button) {
         case Button::d0 ... Button::d9:
         case Button::point:
+        case Button::ce:
             // First digit or point after operation:
             if (!inNumber_) {
                 if (hasOperation_) {
