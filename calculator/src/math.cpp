@@ -110,7 +110,7 @@ void Math::doubleSizedRegisterToSingle(Register &r2, Register &r) {
         }
     }
     if (firstDigitIndex < pointPos)
-        firstDigitIndex++;
+        firstDigitIndex = pointPos;
 
     int8_t overflowPos = 0;
     while (firstDigitIndex >= size) {
@@ -294,7 +294,7 @@ void Math::div(Register &r1, Register &r2, Register &acc) {
 
     if (!acc.isZero()) { // (there is a remainder in acc)
         r1ex.setPointPos(0);
-        for (int8_t j = 0; j < size; j++) {
+        for (int8_t j = 0; j < size2; j++) {
             safeShiftLeft(acc, false);
 
             int8_t digit = 0;
