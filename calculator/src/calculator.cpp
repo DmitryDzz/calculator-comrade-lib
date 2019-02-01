@@ -25,7 +25,9 @@ State& Calculator::getState() {
 
 void Calculator::input(Button button) {
     if (state_.x.getOverflow()) {
-        if (button == Button::ce)
+        if (button == Button::ca)
+            clearAll();
+        else if (button == Button::ce)
             state_.x.setOverflow(false);
 
         if (displayEventCallback_ != nullptr)
@@ -57,9 +59,7 @@ void Calculator::input(Button button) {
         case Button::none:
             break;
         case Button::ca:
-            state_.clear();
-            hasOperation_ = false;
-            clearInput();
+            clearAll();
             break;
         case Button::ce:
             clearInput();
@@ -118,6 +118,12 @@ void Calculator::input(Button button) {
 
     if (displayEventCallback_ != nullptr)
         displayEventCallback_();
+}
+
+void Calculator::clearAll() {
+    state_.clear();
+    hasOperation_ = false;
+    clearInput();
 }
 
 void Calculator::clearInput() {
