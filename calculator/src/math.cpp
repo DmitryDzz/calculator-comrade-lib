@@ -271,12 +271,14 @@ void Math::div(Register &r1, Register &r2, Register &acc) {
     if (compareIgnoreSign(acc, r2ex) >= 0) {
         // Shift r2ex to the very right:
         int8_t lastIndex2 = size2 - S1;
+        int8_t shifts = 0;
         while (r2ex.getDigit(lastIndex2) == 0)
-            safeShiftLeft(r2ex, false);
+            if (safeShiftLeft(r2ex, false)) shifts++;
+            else break;
         acc.setPointPos(0);
         r2ex.setPointPos(0);
 
-        for (int8_t i = 0; i <= lastIndex2; i++) {
+        for (int8_t i = 0; i <= shifts; i++) {
             int8_t digit = 0;
             if (compareIgnoreSign(acc, r2ex) >= 0) {
                 while (compareIgnoreSign(acc, r2ex) >= 0) {
@@ -287,7 +289,7 @@ void Math::div(Register &r1, Register &r2, Register &acc) {
             safeShiftLeft(r1ex, false);
             r1ex.setDigit(0, digit);
 
-            if (i < lastIndex2)
+            if (i < shifts)
                 unsafeShiftRight(r2ex, false);
         }
     }

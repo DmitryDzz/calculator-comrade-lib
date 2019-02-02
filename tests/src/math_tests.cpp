@@ -581,6 +581,25 @@ TEST_MATH(DivReal6) {
     ASSERT_EQ(false, r1.getOverflow());
 }
 
+TEST_MATH(DivReal7) {
+    Register r1(3);
+    Register r2(3);
+    Register acc(6);
+
+    r1.setChangedCallback(on_r1_changed);
+    r2.setChangedCallback(on_r2_changed);
+    acc.setChangedCallback(on_rt_changed);
+
+    // 2.5 : 2 = 1.25
+    setValue(r1, 25, 1);
+    setValue(r2, 2);
+    Math::div(r1, r2, acc);
+    ASSERT_EQ(125, getAbsIntValue(r1));
+    ASSERT_EQ(2, r1.getPointPos());
+    ASSERT_EQ(false, r1.getNegative());
+    ASSERT_EQ(false, r1.getOverflow());
+}
+
 TEST_MATH(DivOverflow1) {
     Register r1(3);
     Register r2(3);
