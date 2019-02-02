@@ -30,6 +30,7 @@ void Calculator::input(Button button) {
         else if (button == Button::ce)
             state_.x.setOverflow(false);
 
+        lastButton_ = button;
         if (displayEventCallback_ != nullptr)
             displayEventCallback_();
         return;
@@ -82,13 +83,11 @@ void Calculator::input(Button button) {
             break;
         case Button::mul:
             calculateAddSubMulDiv();
-            state_.y.set(state_.x);
             state_.operation = Operation::mul;
             hasOperation_ = true;
             break;
         case Button::div:
             calculateAddSubMulDiv();
-            state_.y.setOne();
             state_.operation = Operation::div;
             hasOperation_ = true;
             break;
@@ -116,6 +115,7 @@ void Calculator::input(Button button) {
             break;
     }
 
+    lastButton_ = button;
     if (displayEventCallback_ != nullptr)
         displayEventCallback_();
 }
@@ -157,16 +157,37 @@ void Calculator::shiftLeftOnInput() {
 
 void Calculator::calculateEquals() {
     Operation op = state_.operation;
-    if (hasOperation_ && (op == Operation::add || op == Operation::sub || op == Operation::div)) {
-        state_.exchangeXY();
+    if (hasOperation_) {
+        if (op == Operation::add || op == Operation::sub || op == Operation::div) {
+            state_.exchangeXY();
+        }
+
+        if (lastButton_ == Button::mul)
+            state_.y.set(state_.x);
+        else if (lastButton_ == Button::div)
+            state_.x.setOne();
     }
+
     state_.calculate();
 }
 
 void Calculator::calculateAddSubMulDiv() {
     if (!hasOperation_) return;
-    calculateEquals();
-    state_.y.clear();
+
+    if (lastButton_ == Button::plus ||
+        lastButton_ == Button::minus ||
+        lastButton_ == Button::mul ||
+        lastButton_ == Button::div) return;
+
+    Operation op = state_.operation;
+    if (op == Operation::add || op == Operation::sub || op == Operation::div) {
+        state_.exchangeXY();
+    }
+
+    state_.calculate();
+
+    if (op == Operation::add || op == Operation::sub)
+        state_.y.clear();
 }
 
 void Calculator::calculatePercent() {

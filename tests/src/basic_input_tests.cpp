@@ -278,10 +278,10 @@ TEST_CALCULATOR_INPUT(SerialDiv) {
 
 TEST_CALCULATOR_INPUT(DoubleOperation) {
     Calculator c(4);
+    Register &x = c.getState().x;
     c.input(Button::d8);
     c.input(Button::div);
     c.input(Button::div);
-    Register &x = c.getState().x;
-    ASSERT_EQ(8, getAbsIntValue(x));
+    ASSERT_EQ(8, getIntValue(x));
     ASSERT_EQ(0, x.getPointPos());
 }

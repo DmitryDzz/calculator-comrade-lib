@@ -27,7 +27,7 @@ TEST(TestDiv, Div1) {
 
     calc.input(Button::div);
     setValue(expectedState.x, 10);
-    setValue(expectedState.y, 1);
+    setValue(expectedState.y, 0);
     expectedState.operation = Operation::div;
     ASSERT_EQ(expectedState, calc.getState());
 
@@ -58,7 +58,7 @@ TEST(TestDiv, Div2) {
 
     calc.input(Button::div);
     setValue(expectedState.x, 24);
-    setValue(expectedState.y, 1);
+    setValue(expectedState.y, 0);
     expectedState.operation = Operation::div;
     ASSERT_EQ(expectedState, calc.getState());
 
@@ -101,7 +101,7 @@ TEST(TestDiv, Div3) {
 
     calc.input(Button::div);
     setValue(expectedState.x, 27);
-    setValue(expectedState.y, 1);
+    setValue(expectedState.y, 0);
     expectedState.operation = Operation::div;
     ASSERT_EQ(expectedState, calc.getState());
 
@@ -126,7 +126,7 @@ TEST(TestDiv, Div3) {
 
     calc.input(Button::div);
     setValue(expectedState.x, 12);
-    setValue(expectedState.y, 1);
+    setValue(expectedState.y, 3);
     expectedState.operation = Operation::div;
     ASSERT_EQ(expectedState, calc.getState());
 
@@ -164,7 +164,7 @@ TEST(TestDiv, Div4) {
 
     calc.input(Button::div);
     setValue(expectedState.x, 120);
-    setValue(expectedState.y, 1);
+    setValue(expectedState.y, 0);
     expectedState.operation = Operation::div;
     ASSERT_EQ(expectedState, calc.getState());
 
@@ -176,7 +176,7 @@ TEST(TestDiv, Div4) {
 
     calc.input(Button::div);
     setValue(expectedState.x, 24);
-    setValue(expectedState.y, 1);
+    setValue(expectedState.y, 5);
     expectedState.operation = Operation::div;
     ASSERT_EQ(expectedState, calc.getState());
 
@@ -188,7 +188,7 @@ TEST(TestDiv, Div4) {
 
     calc.input(Button::div);
     setValue(expectedState.x, 8);
-    setValue(expectedState.y, 1);
+    setValue(expectedState.y, 3);
     expectedState.operation = Operation::div;
     ASSERT_EQ(expectedState, calc.getState());
 
@@ -231,7 +231,7 @@ TEST(TestDiv, Div5) {
 
     calc.input(Button::div);
     setValue(expectedState.x, 12);
-    setValue(expectedState.y, 1);
+    setValue(expectedState.y, 0);
     expectedState.operation = Operation::div;
     ASSERT_EQ(expectedState, calc.getState());
 
@@ -280,7 +280,7 @@ TEST(TestDiv, Div6) {
 
     calc.input(Button::div);
     setValue(expectedState.x, 40);
-    setValue(expectedState.y, 1);
+    setValue(expectedState.y, 0);
     expectedState.operation = Operation::div;
     ASSERT_EQ(expectedState, calc.getState());
 
@@ -298,7 +298,7 @@ TEST(TestDiv, Div6) {
 
     calc.input(Button::div);
     setValue(expectedState.x, 10);
-    setValue(expectedState.y, 1);
+    setValue(expectedState.y, 4);
     expectedState.operation = Operation::div;
     ASSERT_EQ(expectedState, calc.getState());
 
@@ -329,7 +329,7 @@ TEST(TestDiv, Div7) {
 
     calc.input(Button::div);
     setValue(expectedState.x, 40);
-    setValue(expectedState.y, 1);
+    setValue(expectedState.y, 0);
     expectedState.operation = Operation::div;
     ASSERT_EQ(expectedState, calc.getState());
 
@@ -341,7 +341,7 @@ TEST(TestDiv, Div7) {
 
     calc.input(Button::div);
     setValue(expectedState.x, 10);
-    setValue(expectedState.y, 1);
+    setValue(expectedState.y, 4);
     expectedState.operation = Operation::div;
     ASSERT_EQ(expectedState, calc.getState());
 

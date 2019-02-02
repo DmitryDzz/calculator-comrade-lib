@@ -14,6 +14,8 @@ namespace calculatorcomrade {
 
     int64_t getAbsIntValue(Register &r);
 
+    int64_t getIntValue(Register &r);
+
     void setValue(Register &r, int64_t value);
 
     void setValue(Register &r, int64_t value, int8_t digitsAfterPoint);

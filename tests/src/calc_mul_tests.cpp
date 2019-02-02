@@ -26,7 +26,7 @@ TEST(TestMul, Mul1) {
 
     calc.input(Button::mul);
     setValue(expectedState.x, 2);
-    setValue(expectedState.y, 2);
+    setValue(expectedState.y, 0);
     expectedState.operation = Operation::mul;
     ASSERT_EQ(expectedState, calc.getState());
 
@@ -56,7 +56,7 @@ TEST(TestMul, Mul2) {
 
     calc.input(Button::mul);
     setValue(expectedState.x, 2);
-    setValue(expectedState.y, 2);
+    setValue(expectedState.y, 0);
     expectedState.operation = Operation::mul;
     ASSERT_EQ(expectedState, calc.getState());
 
@@ -98,7 +98,7 @@ TEST(TestMul, Mul3) {
 
     calc.input(Button::mul);
     setValue(expectedState.x, 2);
-    setValue(expectedState.y, 2);
+    setValue(expectedState.y, 0);
     expectedState.operation = Operation::mul;
     ASSERT_EQ(expectedState, calc.getState());
 
@@ -122,7 +122,7 @@ TEST(TestMul, Mul3) {
 
     calc.input(Button::mul);
     setValue(expectedState.x, 4);
-    setValue(expectedState.y, 4);
+    setValue(expectedState.y, 2);
     expectedState.operation = Operation::mul;
     ASSERT_EQ(expectedState, calc.getState());
 
@@ -158,7 +158,7 @@ TEST(TestMul, Mul4) {
 
     calc.input(Button::mul);
     setValue(expectedState.x, 2);
-    setValue(expectedState.y, 2);
+    setValue(expectedState.y, 0);
     expectedState.operation = Operation::mul;
     ASSERT_EQ(expectedState, calc.getState());
 
@@ -170,7 +170,7 @@ TEST(TestMul, Mul4) {
 
     calc.input(Button::mul);
     setValue(expectedState.x, 6);
-    setValue(expectedState.y, 6);
+    setValue(expectedState.y, 2);
     expectedState.operation = Operation::mul;
     ASSERT_EQ(expectedState, calc.getState());
 
@@ -182,7 +182,7 @@ TEST(TestMul, Mul4) {
 
     calc.input(Button::mul);
     setValue(expectedState.x, 24);
-    setValue(expectedState.y, 24);
+    setValue(expectedState.y, 6);
     expectedState.operation = Operation::mul;
     ASSERT_EQ(expectedState, calc.getState());
 
@@ -224,7 +224,7 @@ TEST(TestMul, Mul5) {
 
     calc.input(Button::mul);
     setValue(expectedState.x, 2);
-    setValue(expectedState.y, 2);
+    setValue(expectedState.y, 0);
     expectedState.operation = Operation::mul;
     ASSERT_EQ(expectedState, calc.getState());
 
@@ -272,7 +272,7 @@ TEST(TestMul, Mul6) {
 
     calc.input(Button::mul);
     setValue(expectedState.x, 2);
-    setValue(expectedState.y, 2);
+    setValue(expectedState.y, 0);
     expectedState.operation = Operation::mul;
     ASSERT_EQ(expectedState, calc.getState());
 
@@ -290,7 +290,7 @@ TEST(TestMul, Mul6) {
 
     calc.input(Button::mul);
     setValue(expectedState.x, 6);
-    setValue(expectedState.y, 6);
+    setValue(expectedState.y, 2);
     expectedState.operation = Operation::mul;
     ASSERT_EQ(expectedState, calc.getState());
 
@@ -320,7 +320,7 @@ TEST(TestMul, Mul7) {
 
     calc.input(Button::mul);
     setValue(expectedState.x, 2);
-    setValue(expectedState.y, 2);
+    setValue(expectedState.y, 0);
     expectedState.operation = Operation::mul;
     ASSERT_EQ(expectedState, calc.getState());
 
@@ -332,7 +332,7 @@ TEST(TestMul, Mul7) {
 
     calc.input(Button::mul);
     setValue(expectedState.x, 6);
-    setValue(expectedState.y, 6);
+    setValue(expectedState.y, 2);
     expectedState.operation = Operation::mul;
     ASSERT_EQ(expectedState, calc.getState());
 

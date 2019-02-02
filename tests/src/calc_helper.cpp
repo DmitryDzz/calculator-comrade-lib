@@ -18,6 +18,10 @@ int64_t calculatorcomrade::getAbsIntValue(Register &r) {
     return result;
 }
 
+int64_t calculatorcomrade::getIntValue(Register &r) {
+    return r.getNegative() ? -getAbsIntValue(r) : getAbsIntValue(r);
+}
+
 void calculatorcomrade::setValue(Register &r, int64_t value) {
     setValue(r, value, 0);
 }

@@ -8,10 +8,7 @@
 #include "calculator/config.h"
 #include "calc_helper.h"
 
-using calculatorcomrade::Calculator;
-using calculatorcomrade::Button;
-using calculatorcomrade::State;
-using calculatorcomrade::Operation;
+using namespace calculatorcomrade;
 
 // Input: 2==
 TEST(TestAddSub, NoOperations) {
@@ -348,6 +345,8 @@ TEST(TestAddSub, ExtraTest1) {
 TEST(TestAddSub, ExtraTest2) {
     State expectedState(Config::DEFAULT_SIZE);
     Calculator calc(Config::DEFAULT_SIZE);
+    Register &x = calc.getState().x;
+    Register &y = calc.getState().y;
 
     calc.input(Button::d8);
     setValue(expectedState.x, 8);
@@ -380,10 +379,9 @@ TEST(TestAddSub, ExtraTest2) {
     ASSERT_EQ(expectedState, calc.getState());
 
     calc.input(Button::equals);
-    setValue(expectedState.x, -6);
-    setValue(expectedState.y, 7);
-    expectedState.operation = Operation::sub;
-    ASSERT_EQ(expectedState, calc.getState());
+    ASSERT_EQ(-6, getIntValue(x));
+    ASSERT_EQ(7, getIntValue(y));
+    ASSERT_EQ(Operation::sub, calc.getState().operation);
 
     calc.input(Button::equals);
     setValue(expectedState.x, -13);
