@@ -275,3 +275,13 @@ TEST_CALCULATOR_INPUT(SerialDiv) {
     ASSERT_EQ(3, state.x.getPointPos());
     ASSERT_EQ(10, getAbsIntValue(state.y)); // 2 in Y
 }
+
+TEST_CALCULATOR_INPUT(DoubleOperation) {
+    Calculator c(4);
+    c.input(Button::d8);
+    c.input(Button::div);
+    c.input(Button::div);
+    Register &x = c.getState().x;
+    ASSERT_EQ(8, getAbsIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+}

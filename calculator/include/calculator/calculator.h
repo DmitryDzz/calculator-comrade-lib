@@ -12,8 +12,6 @@
 
 namespace calculatorcomrade {
 
-//    typedef void(__stdcall * DisplayEventCallback)();
-//    typedef void (*DisplayEventCallback)();
     using DisplayEventCallback = void (*) ();
 
     class Calculator {
