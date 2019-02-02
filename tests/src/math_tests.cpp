@@ -698,3 +698,20 @@ TEST_MATH(PercentMul2) {
     ASSERT_EQ(false, r1.getNegative());
     ASSERT_EQ(false, r1.getOverflow());
 }
+
+TEST_MATH(PercentDiv) {
+    Register r1(8);
+    Register r2(8);
+
+    r1.setChangedCallback(on_r1_changed);
+    r2.setChangedCallback(on_r2_changed);
+
+    // 10 / 5 % => 200
+    setValue(r1, 10);
+    setValue(r2, 5);
+    Math::divPercent(r1, r2);
+    ASSERT_EQ(200, getIntValue(r1));
+    ASSERT_EQ(0, r1.getPointPos());
+    ASSERT_EQ(false, r1.getNegative());
+    ASSERT_EQ(false, r1.getOverflow());
+}
