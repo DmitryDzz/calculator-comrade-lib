@@ -174,6 +174,7 @@ void Calculator::calculateEquals() {
 void Calculator::calculateAddSubMulDiv() {
     if (!hasOperation_) return;
 
+    // Do nothing if it's just another arithmetic operation:
     if (lastButton_ == Button::plus ||
         lastButton_ == Button::minus ||
         lastButton_ == Button::mul ||

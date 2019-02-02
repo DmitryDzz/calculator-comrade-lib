@@ -7,6 +7,7 @@
 using calculatorcomrade::Math;
 
 #define S1 ((int8_t)1)
+#define S2 ((int8_t)2)
 
 void Math::calculate(Register &r1, Register &r2, const Operation &operation) {
     switch (operation) {
@@ -345,7 +346,33 @@ void Math::addPercent(Register &r1, Register &r2) {
 }
 
 void Math::mulPercent(Register &r1, Register &r2) {
+    int8_t size = r1.getSize();
+    int8_t size2 = size + size;
+    assert(size == r2.getSize());
 
+    bool negative = r1.getNegative() != r2.getNegative();
+
+    Register r1ex(size2);
+    Register r2ex(size2);
+    r1ex.setChangedCallback(r1.getChangedCallback());
+    r2ex.setChangedCallback(r2.getChangedCallback());
+    r1.setChangedCallback(nullptr);
+    r2.setChangedCallback(nullptr);
+    r1ex.set(r1);
+    r2ex.set(r2);
+
+    // r1ex / 100:
+    r1ex.setPointPos(r1ex.getPointPos() + S2);
+
+    mul(r1ex, r2ex);
+
+    r1ex.setNegative(negative);
+
+    r1.setChangedCallback(r1ex.getChangedCallback());
+    r2.setChangedCallback(r2ex.getChangedCallback());
+
+    doubleSizedRegisterToSingle(r1ex, r1);
+    truncRightZeros(r1);
 }
 
 void Math::divPercent(Register &r1, Register &r2) {

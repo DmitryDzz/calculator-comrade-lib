@@ -5,7 +5,6 @@
 #ifndef CALCULATORCOMRADE_CONFIG_H
 #define CALCULATORCOMRADE_CONFIG_H
 
-//#include <stdint-gcc.h>
 #include <stdint.h>
 
 class Config {

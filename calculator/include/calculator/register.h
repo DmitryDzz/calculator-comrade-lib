@@ -19,7 +19,6 @@ namespace calculatorcomrade {
         Register() = delete;
         explicit Register(int8_t size) : size_(size) {
             assert(size > 0);
-            assert(size <= Config::MAX_SIZE);
             data_ = new int8_t[size]();
             clearInternal();
         }

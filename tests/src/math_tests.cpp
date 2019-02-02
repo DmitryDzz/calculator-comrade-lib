@@ -637,3 +637,64 @@ TEST_MATH(DivOverflow2) {
     ASSERT_EQ(false, r1.getNegative());
     ASSERT_EQ(true, r1.getOverflow());
 }
+
+TEST_MATH(PercentMul1) {
+    Register r1(8);
+    Register r2(8);
+
+    r1.setChangedCallback(on_r1_changed);
+    r2.setChangedCallback(on_r2_changed);
+
+    // 99999999 * 5 % => 4999999.9
+    setValue(r1, 99999999);
+    setValue(r2, 5);
+    Math::mulPercent(r1, r2);
+    ASSERT_EQ(49999999, getIntValue(r1));
+    ASSERT_EQ(1, r1.getPointPos());
+    ASSERT_EQ(false, r1.getNegative());
+    ASSERT_EQ(false, r1.getOverflow());
+
+    // 99999999 * (-5) % => -4999999.9
+    setValue(r1, 99999999);
+    setValue(r2, -5);
+    Math::mulPercent(r1, r2);
+    ASSERT_EQ(-49999999, getIntValue(r1));
+    ASSERT_EQ(1, r1.getPointPos());
+    ASSERT_EQ(true, r1.getNegative());
+    ASSERT_EQ(false, r1.getOverflow());
+
+    // -99999999 * 5 % => -4999999.9
+    setValue(r1, -99999999);
+    setValue(r2, 5);
+    Math::mulPercent(r1, r2);
+    ASSERT_EQ(-49999999, getIntValue(r1));
+    ASSERT_EQ(1, r1.getPointPos());
+    ASSERT_EQ(true, r1.getNegative());
+    ASSERT_EQ(false, r1.getOverflow());
+
+    // -99999999 * (-5) % => 4999999.9
+    setValue(r1, -99999999);
+    setValue(r2, -5);
+    Math::mulPercent(r1, r2);
+    ASSERT_EQ(49999999, getIntValue(r1));
+    ASSERT_EQ(1, r1.getPointPos());
+    ASSERT_EQ(false, r1.getNegative());
+    ASSERT_EQ(false, r1.getOverflow());
+}
+
+TEST_MATH(PercentMul2) {
+    Register r1(8);
+    Register r2(8);
+
+    r1.setChangedCallback(on_r1_changed);
+    r2.setChangedCallback(on_r2_changed);
+
+    // 0.0000002 * 50 % => 0.0000001
+    setValue(r1, 2, 7);
+    setValue(r2, 50);
+    Math::mulPercent(r1, r2);
+    ASSERT_EQ(1, getIntValue(r1));
+    ASSERT_EQ(7, r1.getPointPos());
+    ASSERT_EQ(false, r1.getNegative());
+    ASSERT_EQ(false, r1.getOverflow());
+}
