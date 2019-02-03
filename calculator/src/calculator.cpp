@@ -100,8 +100,10 @@ void Calculator::input(Button button) {
             hasOperation_ = false;
             break;
         case Button::sqrt:
+            calculateSqrt();
             break;
         case Button::changeSign:
+            changeSign();
             break;
         case Button::memPlus:
             break;
@@ -193,5 +195,19 @@ void Calculator::calculateAddSubMulDiv() {
 
 void Calculator::calculatePercent() {
     if (!hasOperation_) return;
+
+    Operation op = state_.operation;
+    if (op == Operation::add || op == Operation::sub || op == Operation::div) {
+        state_.exchangeXY();
+    }
+
     state_.calculatePercent();
+}
+
+void Calculator::calculateSqrt() {
+    state_.calculateSqrt();
+}
+
+void Calculator::changeSign() {
+    state_.changeSign();
 }

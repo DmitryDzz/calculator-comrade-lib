@@ -348,15 +348,35 @@ void Math::calculatePercent(Register &r1, Register &r2, const Operation &operati
     }
 }
 
+void Math::addPercent(Register &r1ex, Register &r2ex, Register &accEx) {
+    bool negative = r1ex.getNegative() != r2ex.getNegative();
+
+    // Percent to acc:
+    // 1. r1ex copy to accEx
+    // 2. accEx = accEx / 100 * r2ex
+    accEx.set(r1ex);
+    accEx.setPointPos(r1ex.getPointPos() + S2);
+    mul(accEx, r2ex);
+    accEx.setNegative(negative);
+
+    // Source value (first operand) to r2ex:
+    r2ex.set(r1ex);
+    // Result to r1ex: percent + source value
+    r1ex.set(accEx);
+    add(r1ex, r2ex);
+
+    // Some white magic according to tests on real calculators:
+    r2ex.setNegative(negative);
+}
+
 void Math::addPercent(Register &r1, Register &r2) {
     int8_t size = r1.getSize();
     int8_t size2 = size + size;
     assert(size == r2.getSize());
 
-    bool negative = r1.getNegative() != r2.getNegative();
-
     Register r1ex(size2);
     Register r2ex(size2);
+    Register accEx(size2);
     r1ex.setChangedCallback(r1.getChangedCallback());
     r2ex.setChangedCallback(r2.getChangedCallback());
     r1.setChangedCallback(nullptr);
@@ -364,13 +384,11 @@ void Math::addPercent(Register &r1, Register &r2) {
     r1ex.set(r1);
     r2ex.set(r2);
 
-    // r1ex / 100 * r2ex:
-    r1ex.setPointPos(r1ex.getPointPos() + S2);
-    mul(r1ex, r2ex);
-    r1ex.setNegative(negative);
+    addPercent(r1ex, r2ex, accEx);
 
-    r2ex.set(r1);
-    add(r1ex, r2ex);
+    // Some white magic according to tests on real calculators:
+    r2.set(r1);
+    r2.setNegative(accEx.getNegative());
 
     r1.setChangedCallback(r1ex.getChangedCallback());
     r2.setChangedCallback(r2ex.getChangedCallback());
@@ -380,9 +398,32 @@ void Math::addPercent(Register &r1, Register &r2) {
 }
 
 void Math::subPercent(Register &r1, Register &r2) {
-    r2.switchNegative();
-    addPercent(r1, r2);
-    r2.switchNegative();
+    int8_t size = r1.getSize();
+    int8_t size2 = size + size;
+    assert(size == r2.getSize());
+
+    Register r1ex(size2);
+    Register r2ex(size2);
+    Register accEx(size2);
+    r1ex.setChangedCallback(r1.getChangedCallback());
+    r2ex.setChangedCallback(r2.getChangedCallback());
+    r1.setChangedCallback(nullptr);
+    r2.setChangedCallback(nullptr);
+    r1ex.set(r1);
+    r2ex.set(r2);
+
+    r2ex.switchNegative();
+    addPercent(r1ex, r2ex, accEx);
+
+    // Some white magic according to tests on real calculators:
+    r2.set(r1);
+    r2.setNegative(!accEx.getNegative());
+
+    r1.setChangedCallback(r1ex.getChangedCallback());
+    r2.setChangedCallback(r2ex.getChangedCallback());
+
+    doubleSizedRegisterToSingle(r1ex, r1);
+    truncRightZeros(r1);
 }
 
 void Math::mulPercent(Register &r1, Register &r2) {
@@ -448,4 +489,10 @@ void Math::divPercent(Register &r1, Register &r2) {
 
 void Math::sqrt(Register &r) {
     //TODO DZZ sqrt(99999998) = 9999.9998 (should be)
+    r.clear();
+    r.setDigit(0, 3);
+}
+
+void Math::changeSign(Register &r) {
+    r.switchNegative();
 }

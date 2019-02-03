@@ -54,6 +54,14 @@ namespace calculatorcomrade {
             Math::calculatePercent(x, y, operation);
         }
 
+        void calculateSqrt() {
+            Math::sqrt(x);
+        }
+
+        void changeSign() {
+            Math::changeSign(x);
+        }
+
         bool operator==(const State &other) {
             return isEqual(*this, other);
         }

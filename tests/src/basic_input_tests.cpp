@@ -285,3 +285,239 @@ TEST_CALCULATOR_INPUT(DoubleOperation) {
     ASSERT_EQ(8, getIntValue(x));
     ASSERT_EQ(0, x.getPointPos());
 }
+
+TEST_CALCULATOR_INPUT(AddPercent) {
+    Calculator c(8);
+    Register &x = c.getState().x;
+
+    c.input(Button::ca);
+    c.input(Button::d2);
+    c.input(Button::d0);
+    c.input(Button::d0);
+    c.input(Button::plus);
+    c.input(Button::d5);
+    c.input(Button::percent);
+    ASSERT_EQ(210, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    c.input(Button::equals);
+    ASSERT_EQ(410, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+
+    c.input(Button::ca);
+    c.input(Button::minus);
+    c.input(Button::d2);
+    c.input(Button::d0);
+    c.input(Button::d0);
+    c.input(Button::plus);
+    c.input(Button::d5);
+    c.input(Button::percent);
+    ASSERT_EQ(-210, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    c.input(Button::equals);
+    ASSERT_EQ(-410, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+
+    c.input(Button::ca);
+    c.input(Button::d2);
+    c.input(Button::d0);
+    c.input(Button::d0);
+    c.input(Button::plus);
+    c.input(Button::d5);
+    c.input(Button::changeSign);
+    c.input(Button::percent);
+    ASSERT_EQ(190, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    c.input(Button::equals);
+    ASSERT_EQ(-10, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+
+    c.input(Button::ca);
+    c.input(Button::minus);
+    c.input(Button::d2);
+    c.input(Button::d0);
+    c.input(Button::d0);
+    c.input(Button::plus);
+    c.input(Button::d5);
+    c.input(Button::changeSign);
+    c.input(Button::percent);
+    ASSERT_EQ(-190, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    c.input(Button::equals);
+    ASSERT_EQ(10, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+}
+
+TEST_CALCULATOR_INPUT(SubPercent) {
+    Calculator c(8);
+    Register &x = c.getState().x;
+
+    c.input(Button::ca);
+    c.input(Button::d2);
+    c.input(Button::d0);
+    c.input(Button::d0);
+    c.input(Button::minus);
+    c.input(Button::d5);
+    c.input(Button::percent);
+    ASSERT_EQ(190, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    c.input(Button::equals);
+    ASSERT_EQ(-10, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+
+    c.input(Button::ca);
+    c.input(Button::minus);
+    c.input(Button::d2);
+    c.input(Button::d0);
+    c.input(Button::d0);
+    c.input(Button::minus);
+    c.input(Button::d5);
+    c.input(Button::percent);
+    ASSERT_EQ(-190, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    c.input(Button::equals);
+    ASSERT_EQ(10, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+
+    c.input(Button::ca);
+    c.input(Button::d2);
+    c.input(Button::d0);
+    c.input(Button::d0);
+    c.input(Button::minus);
+    c.input(Button::d5);
+    c.input(Button::changeSign);
+    c.input(Button::percent);
+    ASSERT_EQ(210, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    c.input(Button::equals);
+    ASSERT_EQ(410, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+
+    c.input(Button::ca);
+    c.input(Button::minus);
+    c.input(Button::d2);
+    c.input(Button::d0);
+    c.input(Button::d0);
+    c.input(Button::minus);
+    c.input(Button::d5);
+    c.input(Button::changeSign);
+    c.input(Button::percent);
+    ASSERT_EQ(-210, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    c.input(Button::equals);
+    ASSERT_EQ(-410, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+}
+
+TEST_CALCULATOR_INPUT(MulPercent) {
+    Calculator c(8);
+    Register &x = c.getState().x;
+
+    c.input(Button::ca);
+    c.input(Button::d2);
+    c.input(Button::d0);
+    c.input(Button::d0);
+    c.input(Button::mul);
+    c.input(Button::d5);
+    c.input(Button::percent);
+    ASSERT_EQ(10, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    c.input(Button::equals);
+    ASSERT_EQ(2000, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+
+    c.input(Button::ca);
+    c.input(Button::minus);
+    c.input(Button::d2);
+    c.input(Button::d0);
+    c.input(Button::d0);
+    c.input(Button::mul);
+    c.input(Button::d5);
+    c.input(Button::percent);
+    ASSERT_EQ(-10, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    c.input(Button::equals);
+    ASSERT_EQ(2000, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+}
+
+TEST_CALCULATOR_INPUT(DivPercent) {
+    Calculator c(8);
+    Register &x = c.getState().x;
+
+    c.input(Button::ca);
+    c.input(Button::d2);
+    c.input(Button::d0);
+    c.input(Button::d0);
+    c.input(Button::div);
+    c.input(Button::d5);
+    c.input(Button::percent);
+    ASSERT_EQ(4000, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    c.input(Button::equals);
+    ASSERT_EQ(800, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+
+    c.input(Button::ca);
+    c.input(Button::minus);
+    c.input(Button::d2);
+    c.input(Button::d0);
+    c.input(Button::d0);
+    c.input(Button::div);
+    c.input(Button::d5);
+    c.input(Button::percent);
+    ASSERT_EQ(-4000, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    c.input(Button::equals);
+    ASSERT_EQ(-800, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+}
+
+TEST_CALCULATOR_INPUT(Sqrt) {
+    Calculator c(8);
+    Register &x = c.getState().x;
+
+    c.input(Button::ca);
+    c.input(Button::d9);
+    c.input(Button::sqrt);
+    ASSERT_EQ(3, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+
+    c.input(Button::ca);
+    c.input(Button::d2);
+    c.input(Button::plus);
+    c.input(Button::d9);
+    c.input(Button::sqrt);
+    ASSERT_EQ(3, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    c.input(Button::equals);
+    ASSERT_EQ(5, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+}
+
+TEST_CALCULATOR_INPUT(SqrtFakeNegative) {
+    Calculator c(8);
+    Register &x = c.getState().x;
+
+    c.input(Button::minus);
+    c.input(Button::d9);
+    c.input(Button::sqrt);
+    ASSERT_EQ(3, getIntValue(x));
+    c.input(Button::equals);
+    ASSERT_EQ(-3, getIntValue(x));
+    c.input(Button::equals);
+    ASSERT_EQ(-6, getIntValue(x));
+}
+
+TEST_CALCULATOR_INPUT(ChangeSign) {
+    Calculator c(8);
+    Register &x = c.getState().x;
+
+    c.input(Button::ca);
+    c.input(Button::d9);
+    c.input(Button::plus);
+    c.input(Button::d5);
+    c.input(Button::changeSign);
+    c.input(Button::equals);
+    ASSERT_EQ(4, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+}
