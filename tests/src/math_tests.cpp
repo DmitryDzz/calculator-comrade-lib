@@ -715,3 +715,83 @@ TEST_MATH(PercentDiv) {
     ASSERT_EQ(false, r1.getNegative());
     ASSERT_EQ(false, r1.getOverflow());
 }
+
+TEST_MATH(PercentAdd) {
+    Register r1(8);
+    Register r2(8);
+
+    r1.setChangedCallback(on_r1_changed);
+    r2.setChangedCallback(on_r2_changed);
+
+    // 200 + 5 % => 210
+    setValue(r1, 200);
+    setValue(r2, 5);
+    Math::addPercent(r1, r2);
+    ASSERT_EQ(210, getIntValue(r1));
+    ASSERT_EQ(0, r1.getPointPos());
+    ASSERT_EQ(false, r1.getOverflow());
+
+    // -200 + 5 % => -210
+    setValue(r1, -200);
+    setValue(r2, 5);
+    Math::addPercent(r1, r2);
+    ASSERT_EQ(-210, getIntValue(r1));
+    ASSERT_EQ(0, r1.getPointPos());
+    ASSERT_EQ(false, r1.getOverflow());
+
+    // -200 + (-5) % => -190
+    setValue(r1, -200);
+    setValue(r2, -5);
+    Math::addPercent(r1, r2);
+    ASSERT_EQ(-190, getIntValue(r1));
+    ASSERT_EQ(0, r1.getPointPos());
+    ASSERT_EQ(false, r1.getOverflow());
+
+    // 200 + (-5) % => 190
+    setValue(r1, 200);
+    setValue(r2, -5);
+    Math::addPercent(r1, r2);
+    ASSERT_EQ(190, getIntValue(r1));
+    ASSERT_EQ(0, r1.getPointPos());
+    ASSERT_EQ(false, r1.getOverflow());
+}
+
+TEST_MATH(PercentSub) {
+    Register r1(8);
+    Register r2(8);
+
+    r1.setChangedCallback(on_r1_changed);
+    r2.setChangedCallback(on_r2_changed);
+
+    // 200 - 5 % => 190
+    setValue(r1, 200);
+    setValue(r2, 5);
+    Math::subPercent(r1, r2);
+    ASSERT_EQ(190, getIntValue(r1));
+    ASSERT_EQ(0, r1.getPointPos());
+    ASSERT_EQ(false, r1.getOverflow());
+
+    // -200 - 5 % => -190
+    setValue(r1, -200);
+    setValue(r2, 5);
+    Math::subPercent(r1, r2);
+    ASSERT_EQ(-190, getIntValue(r1));
+    ASSERT_EQ(0, r1.getPointPos());
+    ASSERT_EQ(false, r1.getOverflow());
+
+    // -200 - (-5) % => -210
+    setValue(r1, -200);
+    setValue(r2, -5);
+    Math::subPercent(r1, r2);
+    ASSERT_EQ(-210, getIntValue(r1));
+    ASSERT_EQ(0, r1.getPointPos());
+    ASSERT_EQ(false, r1.getOverflow());
+
+    // 200 - (-5) % => 190
+    setValue(r1, 200);
+    setValue(r2, -5);
+    Math::subPercent(r1, r2);
+    ASSERT_EQ(210, getIntValue(r1));
+    ASSERT_EQ(0, r1.getPointPos());
+    ASSERT_EQ(false, r1.getOverflow());
+}

@@ -16,12 +16,14 @@ namespace calculatorcomrade {
         static void calculatePercent(Register &r1, Register &r2, const Operation &operation);
 
         static void add(Register &r1, Register &r2);
+        static void sub(Register &r1, Register &r2);
         static void mul(Register &r1, Register &r2);
         static void mul(Register &r1, Register &r2, Register &acc);
         static void div(Register &r1, Register &r2);
         static void div(Register &r1, Register &r2, Register &acc);
 
         static void addPercent(Register &r1, Register &r2);
+        static void subPercent(Register &r1, Register &r2);
         static void mulPercent(Register &r1, Register &r2);
         static void divPercent(Register &r1, Register &r2);
 
@@ -35,6 +37,7 @@ namespace calculatorcomrade {
         static void doubleSizedRegisterToSingle(Register &r2, Register &r);
 
         static void add(Register &r1, Register &r2, bool truncRightZeros);
+        static void sub(Register &r1, Register &r2, bool truncRightZeros);
     };
 };
 
