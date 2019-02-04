@@ -157,22 +157,6 @@ void Calculator::shiftLeftOnInput() {
     }
 }
 
-void Calculator::calculateEquals() {
-    Operation op = state_.operation;
-    if (hasOperation_) {
-        if (op == Operation::add || op == Operation::sub || op == Operation::div) {
-            state_.exchangeXY();
-        }
-
-        if (lastButton_ == Button::mul)
-            state_.y.set(state_.x);
-        else if (lastButton_ == Button::div)
-            state_.x.setOne();
-    }
-
-    state_.calculate();
-}
-
 void Calculator::calculateAddSubMulDiv() {
     if (!hasOperation_) return;
 
@@ -193,15 +177,35 @@ void Calculator::calculateAddSubMulDiv() {
         state_.y.clear();
 }
 
-void Calculator::calculatePercent() {
-    if (!hasOperation_) return;
+void Calculator::calculateEquals() {
+    if (hasOperation_) {
+        Operation op = state_.operation;
+        if (op == Operation::add || op == Operation::sub || op == Operation::div) {
+            state_.exchangeXY();
+        }
 
-    Operation op = state_.operation;
-    if (op == Operation::add || op == Operation::sub || op == Operation::div) {
-        state_.exchangeXY();
+        if (lastButton_ == Button::mul)
+            state_.y.set(state_.x);
+        else if (lastButton_ == Button::div)
+            state_.x.setOne();
     }
 
-    state_.calculatePercent();
+    state_.calculate();
+}
+
+void Calculator::calculatePercent() {
+    Operation op = state_.operation;
+    if (hasOperation_) {
+        if (op == Operation::add || op == Operation::sub || op == Operation::div) {
+            state_.exchangeXY();
+        }
+
+        state_.calculatePercent();
+    } else {
+        if (op == Operation::mul || op == Operation::div) {
+            state_.calculatePercent();
+        }
+    }
 }
 
 void Calculator::calculateSqrt() {

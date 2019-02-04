@@ -12,6 +12,7 @@ set(SOURCES
         src/calc_helper.cpp
         src/special_tests.cpp
         src/libcalc_tests.cpp
+        src/calc_percent_tests.cpp
 )
 
 set(TARGET tests)
