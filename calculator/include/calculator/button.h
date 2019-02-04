@@ -11,6 +11,7 @@ namespace calculatorcomrade {
         none,
         ca,         // clear all
         ce,         // clear entry
+        ceca,       // clear entry, clear all
         d0,
         d1,
         d2,

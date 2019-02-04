@@ -27,7 +27,7 @@ void Calculator::input(Button button) {
     if (state_.x.getOverflow()) {
         if (button == Button::ca)
             clearAll();
-        else if (button == Button::ce)
+        else if (button == Button::ce || button == Button::ceca)
             state_.x.setOverflow(false);
 
         lastButton_ = button;
@@ -36,12 +36,24 @@ void Calculator::input(Button button) {
         return;
     }
 
+    bool isNumberOrPoint;
+    switch (button) {
+        case Button::d0 ... Button::d9:
+        case Button::point:
+            isNumberOrPoint = true;
+            break;
+        default:
+            isNumberOrPoint = false;
+            break;
+    }
+
     switch (button) {
         case Button::d0 ... Button::d9:
         case Button::point:
         case Button::ce:
+        case Button::ceca:
             // First digit or point after operation:
-            if (!inNumber_) {
+            if (isNumberOrPoint && !inNumber_) {
                 if (hasOperation_) {
                     state_.y.set(state_.x);
                 }
@@ -64,6 +76,10 @@ void Calculator::input(Button button) {
             break;
         case Button::ce:
             clearInput();
+            break;
+        case Button::ceca:
+            if (button == lastButton_) clearAll();
+            else clearInput();
             break;
         case Button::d0 ... Button::d9:
             inputDigit((int8_t)button - (int8_t)Button::d0);

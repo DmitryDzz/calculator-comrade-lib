@@ -34,6 +34,99 @@ TEST_CALCULATOR_INPUT(ClearEntry2) {
     ASSERT_EQ(4, getAbsIntValue(calc.getState().x));
 }
 
+TEST_CALCULATOR_INPUT(CeAfterOverflow) {
+    Calculator c(8);
+    for (int8_t i = 0; i < 8; i++)
+        c.input(Button::d9);
+    c.input(Button::mul);
+    c.input(Button::d9);
+    c.input(Button::equals);
+    State &state = c.getState();
+    ASSERT_EQ(89999999, getAbsIntValue(state.x)); // 8.9999999 in X
+    ASSERT_EQ(7, state.x.getPointPos());
+    ASSERT_EQ(99999999, getAbsIntValue(state.y)); // 99999999 in Y
+    ASSERT_EQ(0, state.y.getPointPos());
+    ASSERT_EQ(true, state.x.getOverflow());
+
+    c.input(Button::ce);
+    ASSERT_EQ(89999999, getAbsIntValue(state.x)); // 8.9999999 in X
+    ASSERT_EQ(7, state.x.getPointPos());
+    ASSERT_EQ(99999999, getAbsIntValue(state.y)); // 99999999 in Y
+    ASSERT_EQ(0, state.y.getPointPos());
+    ASSERT_EQ(false, state.x.getOverflow());
+
+    c.input(Button::ce);
+    ASSERT_EQ(0, getAbsIntValue(state.x)); // 0 in X
+    ASSERT_EQ(0, state.x.getPointPos());
+    ASSERT_EQ(99999999, getAbsIntValue(state.y)); // 99999999 in Y
+    ASSERT_EQ(0, state.y.getPointPos());
+    ASSERT_EQ(false, state.x.getOverflow());
+}
+
+TEST_CALCULATOR_INPUT(ClearAll) {
+    Calculator c(8);
+    Register &x = c.getState().x;
+    Register &y = c.getState().y;
+
+
+    c.input(Button::minus);
+    for (int8_t i = 0; i < 8; i++)
+        c.input(Button::d9);
+    c.input(Button::mul);
+    c.input(Button::d9);
+    c.input(Button::equals);
+    ASSERT_EQ(-89999999, getIntValue(x)); // 8.9999999 in X
+    ASSERT_EQ(7, x.getPointPos());
+    ASSERT_EQ(-99999999, getIntValue(y)); // 99999999 in Y
+    ASSERT_EQ(0, y.getPointPos());
+    ASSERT_EQ(true, x.getNegative());
+    ASSERT_EQ(true, x.getOverflow());
+
+    c.input(Button::ca);
+    ASSERT_EQ(0, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_EQ(0, getIntValue(y));
+    ASSERT_EQ(0, y.getPointPos());
+    ASSERT_EQ(false, x.getNegative());
+    ASSERT_EQ(false, x.getOverflow());
+}
+
+TEST_CALCULATOR_INPUT(CeCa) {
+    Calculator c(8);
+    Register &x = c.getState().x;
+    Register &y = c.getState().y;
+
+
+    c.input(Button::minus);
+    for (int8_t i = 0; i < 8; i++)
+        c.input(Button::d9);
+    c.input(Button::mul);
+    c.input(Button::d9);
+    c.input(Button::equals);
+    ASSERT_EQ(-89999999, getIntValue(x)); // 8.9999999 in X
+    ASSERT_EQ(7, x.getPointPos());
+    ASSERT_EQ(-99999999, getIntValue(y)); // 99999999 in Y
+    ASSERT_EQ(0, y.getPointPos());
+    ASSERT_EQ(true, x.getNegative());
+    ASSERT_EQ(true, x.getOverflow());
+
+    c.input(Button::ceca);
+    ASSERT_EQ(-89999999, getIntValue(x)); // 8.9999999 in X
+    ASSERT_EQ(7, x.getPointPos());
+    ASSERT_EQ(-99999999, getIntValue(y)); // 99999999 in Y
+    ASSERT_EQ(0, y.getPointPos());
+    ASSERT_EQ(true, x.getNegative());
+    ASSERT_EQ(false, x.getOverflow());
+
+    c.input(Button::ceca);
+    ASSERT_EQ(0, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_EQ(0, getIntValue(y));
+    ASSERT_EQ(0, y.getPointPos());
+    ASSERT_EQ(false, x.getNegative());
+    ASSERT_EQ(false, x.getOverflow());
+}
+
 TEST_CALCULATOR_INPUT(ZeroTyping) {
     Calculator c(4);
     State defaultState(4);
@@ -173,35 +266,6 @@ TEST_CALCULATOR_INPUT(ZeroInHighDigit) {
     ASSERT_EQ(2, x.getDigit(1));
     ASSERT_EQ(3, x.getDigit(0));
     ASSERT_EQ(3, x.getPointPos());
-}
-
-TEST_CALCULATOR_INPUT(CeAfterOverflow) {
-    Calculator c(8);
-    for (int8_t i = 0; i < 8; i++)
-        c.input(Button::d9);
-    c.input(Button::mul);
-    c.input(Button::d9);
-    c.input(Button::equals);
-    State &state = c.getState();
-    ASSERT_EQ(89999999, getAbsIntValue(state.x)); // 8.9999999 in X
-    ASSERT_EQ(7, state.x.getPointPos());
-    ASSERT_EQ(99999999, getAbsIntValue(state.y)); // 99999999 in Y
-    ASSERT_EQ(0, state.y.getPointPos());
-    ASSERT_EQ(true, state.x.getOverflow());
-
-    c.input(Button::ce);
-    ASSERT_EQ(89999999, getAbsIntValue(state.x)); // 8.9999999 in X
-    ASSERT_EQ(7, state.x.getPointPos());
-    ASSERT_EQ(99999999, getAbsIntValue(state.y)); // 99999999 in Y
-    ASSERT_EQ(0, state.y.getPointPos());
-    ASSERT_EQ(false, state.x.getOverflow());
-
-    c.input(Button::ce);
-    ASSERT_EQ(0, getAbsIntValue(state.x)); // 0 in X
-    ASSERT_EQ(0, state.x.getPointPos());
-    ASSERT_EQ(99999999, getAbsIntValue(state.y)); // 99999999 in Y
-    ASSERT_EQ(0, state.y.getPointPos());
-    ASSERT_EQ(false, state.x.getOverflow());
 }
 
 TEST_CALCULATOR_INPUT(SerialSum) {
