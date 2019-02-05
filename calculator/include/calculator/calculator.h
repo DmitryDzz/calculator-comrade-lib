@@ -45,6 +45,7 @@ namespace calculatorcomrade {
         int8_t inputSize_;
         bool inputHasPoint_;
         void clearAll();
+        void clearEntry();
         void clearInput();
         void inputDigit(int8_t digit);
         void inputPoint();

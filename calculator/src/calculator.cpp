@@ -64,6 +64,8 @@ void Calculator::input(Button button) {
             inNumber_ = true;
             break;
         default:
+            inputSize_ = 0;
+            inputHasPoint_ = false;
             inNumber_ = false;
             break;
     }
@@ -75,11 +77,11 @@ void Calculator::input(Button button) {
             clearAll();
             break;
         case Button::ce:
-            clearInput();
+            clearEntry();
             break;
         case Button::ceca:
             if (button == lastButton_) clearAll();
-            else clearInput();
+            else clearEntry();
             break;
         case Button::d0 ... Button::d9:
             inputDigit((int8_t)button - (int8_t)Button::d0);
@@ -144,6 +146,13 @@ void Calculator::clearAll() {
     clearInput();
 }
 
+void Calculator::clearEntry() {
+    if (inputSize_ > 0 || inputHasPoint_)
+        clearInput();
+    else
+        clearAll();
+}
+
 void Calculator::clearInput() {
     state_.x.clear();
     inputSize_ = 0;
@@ -151,7 +160,7 @@ void Calculator::clearInput() {
 }
 
 void Calculator::inputDigit(int8_t digit) {
-    if (digit == 0 && inputSize_ == 0) return;
+    if (digit == 0 && !inputHasPoint_ && inputSize_ == 0) return;
     if (inputSize_ >= size_ || state_.x.getPointPos() == size_ - 1) return;
     shiftLeftOnInput();
     state_.x.setDigit(0, digit);

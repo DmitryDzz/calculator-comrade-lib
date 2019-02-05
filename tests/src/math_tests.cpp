@@ -110,6 +110,21 @@ TEST_MATH(AddOverflow) {
     ASSERT_EQ(true, r1.getOverflow());
 }
 
+TEST_MATH(AddNoOverflow) {
+    Register r1(8);
+    Register r2(8);
+
+    r1.setChangedCallback(on_r1_changed);
+    r2.setChangedCallback(on_r2_changed);
+
+    setValue(r1, 90000001, 7);
+    setValue(r2, 1);
+    Math::calculate(r1, r2, Operation::add);
+    ASSERT_FALSE(r1.getOverflow());
+    ASSERT_EQ(10, getIntValue(r1));
+    ASSERT_EQ(0, r1.getPointPos());
+}
+
 TEST_MATH(AddReal) {
     Register r1(8);
     Register r2(8);
