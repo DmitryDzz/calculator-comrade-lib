@@ -127,10 +127,32 @@ void Math::doubleSizedRegisterToSingle(Register &r2, Register &r) {
 }
 
 void Math::add(Register &r1, Register &r2) {
-    Math::add(r1, r2, true);
+    int8_t size = r1.getSize();
+    assert(size == r2.getSize());
+    int8_t size2 = size + size;
+
+    // This could be done (and it is) in addInternal() method.
+    // See TestSpecial.RegisterYChanged test for details.
+    normalizePointPositions(r1, r2);
+
+    Register r1ex(size2);
+    Register r2ex(size2);
+    r1ex.setChangedCallback(r1.getChangedCallback());
+    r2ex.setChangedCallback(r2.getChangedCallback());
+    r1ex.set(r1);
+    r2ex.set(r2);
+
+    Math::addInternal(r1ex, r2ex);
+
+    r1.setChangedCallback(r1ex.getChangedCallback());
+    r2.setChangedCallback(r2ex.getChangedCallback());
+    doubleSizedRegisterToSingle(r1ex, r1);
+    doubleSizedRegisterToSingle(r2ex, r2);
+    Math::truncRightZeros(r1);
+    Math::truncRightZeros(r2);
 }
 
-void Math::add(Register &r1, Register &r2, bool truncRightZeros) {
+void Math::addInternal(Register &r1, Register &r2) {
     int8_t size = r1.getSize();
     assert(size == r2.getSize());
 
@@ -185,20 +207,11 @@ void Math::add(Register &r1, Register &r2, bool truncRightZeros) {
             r1.clear();
         }
     }
-
-    if (truncRightZeros) {
-        Math::truncRightZeros(r1);
-        Math::truncRightZeros(r2);
-    }
 }
 
 void Math::sub(Register &r1, Register &r2) {
-    Math::sub(r1, r2, true);
-}
-
-void Math::sub(Register &r1, Register &r2, bool truncRightZeros) {
     r1.switchNegative();
-    add(r1, r2, truncRightZeros);
+    add(r1, r2);
     r1.switchNegative();
 }
 
@@ -225,7 +238,7 @@ void Math::mul(Register &r1, Register &r2, Register &acc) {
     for (int8_t i = lastRegIndex; i >= 0; i--) {
         int8_t digit = r1.getDigit(i);
         for (int8_t j = 0; j < digit; j++) {
-            Math::add(acc, r2ex, false);
+            Math::addInternal(acc, r2ex);
         }
         if (i > 0) {
             safeShiftLeft(acc, false);
@@ -291,7 +304,7 @@ void Math::div(Register &r1, Register &r2, Register &acc) {
             int8_t digit = 0;
             if (compareIgnoreSign(acc, r2ex) >= 0) {
                 while (compareIgnoreSign(acc, r2ex) >= 0) {
-                    add(acc, r2ex, false);
+                    addInternal(acc, r2ex);
                     digit++;
                 }
             }
@@ -311,7 +324,7 @@ void Math::div(Register &r1, Register &r2, Register &acc) {
             int8_t digit = 0;
             if (compareIgnoreSign(acc, r2ex) >= 0) {
                 while (compareIgnoreSign(acc, r2ex) >= 0) {
-                    add(acc, r2ex, false);
+                    addInternal(acc, r2ex);
                     digit++;
                 }
             }

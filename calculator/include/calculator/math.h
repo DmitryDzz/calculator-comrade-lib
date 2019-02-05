@@ -37,8 +37,7 @@ namespace calculatorcomrade {
         static void truncRightZeros(Register &r);
         static void doubleSizedRegisterToSingle(Register &r2, Register &r);
 
-        static void add(Register &r1, Register &r2, bool truncRightZeros);
-        static void sub(Register &r1, Register &r2, bool truncRightZeros);
+        static void addInternal(Register &r1, Register &r2);
         static void addPercent(Register &r1ex, Register &r2ex, Register &accEx);
     };
 };
