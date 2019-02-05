@@ -56,6 +56,11 @@ namespace calculatorcomrade {
         void calculatePercent();
         void calculateSqrt();
         void changeSign();
+
+        void memPlus();
+        void memMinus();
+        void memClear();
+        void memRestore();
     };
 };
 

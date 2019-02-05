@@ -124,14 +124,19 @@ void Calculator::input(Button button) {
             changeSign();
             break;
         case Button::memPlus:
+            memPlus();
             break;
         case Button::memMinus:
+            memMinus();
             break;
         case Button::memRC:
+            //TODO DZZ
             break;
         case Button::memR:
+            memRestore();
             break;
         case Button::memC:
+            memClear();
             break;
     }
 
@@ -239,4 +244,28 @@ void Calculator::calculateSqrt() {
 
 void Calculator::changeSign() {
     state_.changeSign();
+}
+
+void Calculator::memPlus()
+{
+    inNumber_ = false;
+    state_.memPlus();
+}
+
+void Calculator::memMinus()
+{
+    inNumber_ = false;
+    state_.memPlus();
+}
+
+void Calculator::memClear()
+{
+    inNumber_ = false;
+    state_.memClear();
+}
+
+void Calculator::memRestore()
+{
+    inNumber_ = false;
+    state_.memClear();
 }

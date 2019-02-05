@@ -18,11 +18,12 @@ namespace calculatorcomrade {
     public:
         Register x;
         Register y;
+        Register m;
         Operation operation;
 
         State() : State(Config::DEFAULT_SIZE) {}
 
-        explicit State(int8_t size) : size_(size), x(size), y(size), operation(Operation::add) {
+        explicit State(int8_t size) : size_(size), x(size), y(size), m(size), operation(Operation::add) {
             assert(size > 0);
             assert(size <= Config::MAX_SIZE);
         }
@@ -62,6 +63,22 @@ namespace calculatorcomrade {
             Math::changeSign(x);
         }
 
+        void memPlus() {
+            Math::add(m, x);
+        }
+
+        void memMinus() {
+            Math::sub(m, x);
+        }
+
+        void memClear() {
+            m.clear();
+        }
+
+        void memRestore() {
+            x.set(m);
+        }
+
         bool operator==(const State &other) {
             return isEqual(*this, other);
         }
@@ -73,6 +90,7 @@ namespace calculatorcomrade {
         static bool isEqual(const State &lhs, const State &rhs) {
             bool result = lhs.x == rhs.x &&
                           lhs.y == rhs.y &&
+                          lhs.m == rhs.m &&
                           lhs.operation == rhs.operation;
             return result;
         }
