@@ -118,9 +118,9 @@ void Math::doubleSizedRegisterToSingle(Register &r2, Register &r) {
         else pointPos--;
         firstDigitIndex--;
     }
-    r2.setOverflow(overflowPos > 0);
+    r2.setError(overflowPos > 0);
     r2.setPointPos(overflowPos > 0 ? size - overflowPos : pointPos);
-    if (r2.isZero())
+    if (r2.isZero(true))
         r2.setNegative(false);
 
     r.set(r2);
@@ -158,7 +158,7 @@ void Math::addInternal(Register &r1, Register &r2) {
 
     normalizePointPositions(r1, r2);
 
-    if (r1.getNegative() == r2.getNegative()) { // (same sign)
+    if (r1.isNegative() == r2.isNegative()) { // (same sign)
         bool extraDigit = false;
         for (int8_t i = 0; i < size; i++) {
             r1.setDigit(i, r1.getDigit(i) + r2.getDigit(i));
@@ -171,7 +171,7 @@ void Math::addInternal(Register &r1, Register &r2) {
         }
 
         if (extraDigit) {
-            r1.setOverflow(true);
+            r1.setError(true);
             unsafeShiftRight(r1, false);
             r1.setDigit(size - S1, 1);
             r1.setPointPos(size - S1);
@@ -202,7 +202,7 @@ void Math::addInternal(Register &r1, Register &r2) {
                     borrowedDigit = 0;
                 }
             }
-            r1.setNegative(r2.getNegative());
+            r1.setNegative(r2.isNegative());
         } else { // |r1|==|r2|
             r1.clear();
         }
@@ -246,7 +246,7 @@ void Math::mul(Register &r1, Register &r2, Register &acc) {
         }
     }
 
-    acc.setNegative(r1.getNegative() != r2.getNegative());
+    acc.setNegative(r1.isNegative() != r2.isNegative());
     acc.setPointPos(r1.getPointPos() + r2.getPointPos());
     doubleSizedRegisterToSingle(acc, r1);
     truncRightZeros(r1);
@@ -266,13 +266,13 @@ void Math::div(Register &r1, Register &r2, Register &acc) {
     assert(size == r2.getSize());
     assert(size2 == acc.getSize());
 
-    if (r2.isZero()) {
+    if (r2.isZero(true)) {
         r1.clear();
-        r1.setOverflow(true);
+        r1.setError(true);
         return;
     }
 
-    bool negative = r1.getNegative() != r2.getNegative();
+    bool negative = r1.isNegative() != r2.isNegative();
 
     acc.set(r1);
     acc.setNegative(false);
@@ -316,7 +316,7 @@ void Math::div(Register &r1, Register &r2, Register &acc) {
         }
     }
 
-    if (!acc.isZero()) { // (there is a remainder in acc)
+    if (!acc.isZero(true)) { // (there is a remainder in acc)
         r1ex.setPointPos(0);
         for (int8_t j = 0; j < size2; j++) {
             safeShiftLeft(acc, false);
@@ -362,7 +362,7 @@ void Math::calculatePercent(Register &r1, Register &r2, const Operation &operati
 }
 
 void Math::addPercent(Register &r1ex, Register &r2ex, Register &accEx) {
-    bool negative = r1ex.getNegative() != r2ex.getNegative();
+    bool negative = r1ex.isNegative() != r2ex.isNegative();
 
     // Percent to acc:
     // 1. r1ex copy to accEx
@@ -401,7 +401,7 @@ void Math::addPercent(Register &r1, Register &r2) {
 
     // Some white magic according to tests on real calculators:
     r2.set(r1);
-    r2.setNegative(accEx.getNegative());
+    r2.setNegative(accEx.isNegative());
 
     r1.setChangedCallback(r1ex.getChangedCallback());
     r2.setChangedCallback(r2ex.getChangedCallback());
@@ -430,7 +430,7 @@ void Math::subPercent(Register &r1, Register &r2) {
 
     // Some white magic according to tests on real calculators:
     r2.set(r1);
-    r2.setNegative(!accEx.getNegative());
+    r2.setNegative(!accEx.isNegative());
 
     r1.setChangedCallback(r1ex.getChangedCallback());
     r2.setChangedCallback(r2ex.getChangedCallback());
@@ -444,7 +444,7 @@ void Math::mulPercent(Register &r1, Register &r2) {
     int8_t size2 = size + size;
     assert(size == r2.getSize());
 
-    bool negative = r1.getNegative() != r2.getNegative();
+    bool negative = r1.isNegative() != r2.isNegative();
 
     Register r1ex(size2);
     Register r2ex(size2);
@@ -474,7 +474,7 @@ void Math::divPercent(Register &r1, Register &r2) {
     int8_t size2 = size + size;
     assert(size == r2.getSize());
 
-    bool negative = r1.getNegative() != r2.getNegative();
+    bool negative = r1.isNegative() != r2.isNegative();
 
     Register r1ex(size2);
     Register r2ex(size2);

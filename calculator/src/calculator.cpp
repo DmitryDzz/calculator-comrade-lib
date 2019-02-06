@@ -24,11 +24,11 @@ State& Calculator::getState() {
 }
 
 void Calculator::input(Button button) {
-    if (state_.x.getOverflow()) {
+    if (state_.x.hasError()) {
         if (button == Button::ca)
             clearAll();
         else if (button == Button::ce || button == Button::ceca)
-            state_.x.setOverflow(false);
+            state_.x.setError(false);
 
         lastButton_ = button;
         if (displayEventCallback_ != nullptr)

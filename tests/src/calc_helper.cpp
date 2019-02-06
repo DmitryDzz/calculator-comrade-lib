@@ -19,7 +19,7 @@ int64_t calculatorcomrade::getAbsIntValue(Register &r) {
 }
 
 int64_t calculatorcomrade::getIntValue(Register &r) {
-    return r.getNegative() ? -getAbsIntValue(r) : getAbsIntValue(r);
+    return r.isNegative() ? -getAbsIntValue(r) : getAbsIntValue(r);
 }
 
 void calculatorcomrade::setValue(Register &r, int64_t value) {
@@ -29,13 +29,13 @@ void calculatorcomrade::setValue(Register &r, int64_t value) {
 void calculatorcomrade::setValue(Register &r, int64_t value, int8_t digitsAfterPoint) {
     int8_t digits = r.getSize();
     r.setNegative(value < 0);
-    std::string text = std::to_string(r.getNegative() ? -value : value);
+    std::string text = std::to_string(r.isNegative() ? -value : value);
     auto totalDigits = (int8_t) text.size();
 
     if (digitsAfterPoint < totalDigits) {
         int8_t intDigits = totalDigits - digitsAfterPoint;
-        r.setOverflow(intDigits > digits);
-        if (r.getOverflow()) {
+        r.setError(intDigits > digits);
+        if (r.hasError()) {
             r.setPointPos(digits - (intDigits - digits));
             for (int16_t i = 0; i < digits; i++) {
                 char digitChar = text[digits - i - 1];
@@ -60,7 +60,7 @@ void calculatorcomrade::setValue(Register &r, int64_t value, int8_t digitsAfterP
             }
         }
     } else { // means: (digitsAfterPoint >= totalDigits)
-        r.setOverflow(false);
+        r.setError(false);
         int8_t newTotalDigits = digitsAfterPoint + S1;
         int16_t delta = newTotalDigits > digits ? newTotalDigits - digits : (int16_t) 0;
         if (newTotalDigits - totalDigits >= digits) {
@@ -88,9 +88,9 @@ void calculatorcomrade::evaluateText(Register &r, std::string *output) {
     auto digitsInGroup = static_cast<int8_t>(size == 6 ? 3 : 4);
 
     *output = "";
-    if (r.getOverflow())
+    if (r.hasError())
         *output += "[Err]";
-    if (r.getNegative())
+    if (r.isNegative())
         *output += "–";
     for (int8_t i = 0; i < size; i++) {
         if (i % digitsInGroup == 0 && i != 0)

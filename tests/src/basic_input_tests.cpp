@@ -62,21 +62,21 @@ TEST_CALCULATOR_INPUT(ClearEntryAfterOverflow) {
     ASSERT_EQ(7, state.x.getPointPos());
     ASSERT_EQ(99999999, getAbsIntValue(state.y)); // 99999999 in Y
     ASSERT_EQ(0, state.y.getPointPos());
-    ASSERT_EQ(true, state.x.getOverflow());
+    ASSERT_EQ(true, state.x.hasError());
 
     c.input(Button::ce);
     ASSERT_EQ(89999999, getAbsIntValue(state.x)); // 8.9999999 in X
     ASSERT_EQ(7, state.x.getPointPos());
     ASSERT_EQ(99999999, getAbsIntValue(state.y)); // 99999999 in Y
     ASSERT_EQ(0, state.y.getPointPos());
-    ASSERT_EQ(false, state.x.getOverflow());
+    ASSERT_EQ(false, state.x.hasError());
 
     c.input(Button::ce); // There's no input, so Button::ce works as Button::ca.
     ASSERT_EQ(0, getAbsIntValue(state.x)); // 0 in X
     ASSERT_EQ(0, state.x.getPointPos());
     ASSERT_EQ(0, getAbsIntValue(state.y)); // 0 in Y
     ASSERT_EQ(0, state.y.getPointPos());
-    ASSERT_EQ(false, state.x.getOverflow());
+    ASSERT_EQ(false, state.x.hasError());
 }
 
 TEST_CALCULATOR_INPUT(ClearAll) {
@@ -95,16 +95,16 @@ TEST_CALCULATOR_INPUT(ClearAll) {
     ASSERT_EQ(7, x.getPointPos());
     ASSERT_EQ(-99999999, getIntValue(y)); // 99999999 in Y
     ASSERT_EQ(0, y.getPointPos());
-    ASSERT_EQ(true, x.getNegative());
-    ASSERT_EQ(true, x.getOverflow());
+    ASSERT_EQ(true, x.isNegative());
+    ASSERT_EQ(true, x.hasError());
 
     c.input(Button::ca);
     ASSERT_EQ(0, getIntValue(x));
     ASSERT_EQ(0, x.getPointPos());
     ASSERT_EQ(0, getIntValue(y));
     ASSERT_EQ(0, y.getPointPos());
-    ASSERT_EQ(false, x.getNegative());
-    ASSERT_EQ(false, x.getOverflow());
+    ASSERT_EQ(false, x.isNegative());
+    ASSERT_EQ(false, x.hasError());
 }
 
 TEST_CALCULATOR_INPUT(CeCa) {
@@ -123,24 +123,24 @@ TEST_CALCULATOR_INPUT(CeCa) {
     ASSERT_EQ(7, x.getPointPos());
     ASSERT_EQ(-99999999, getIntValue(y)); // 99999999 in Y
     ASSERT_EQ(0, y.getPointPos());
-    ASSERT_EQ(true, x.getNegative());
-    ASSERT_EQ(true, x.getOverflow());
+    ASSERT_EQ(true, x.isNegative());
+    ASSERT_EQ(true, x.hasError());
 
     c.input(Button::ceca);
     ASSERT_EQ(-89999999, getIntValue(x)); // 8.9999999 in X
     ASSERT_EQ(7, x.getPointPos());
     ASSERT_EQ(-99999999, getIntValue(y)); // 99999999 in Y
     ASSERT_EQ(0, y.getPointPos());
-    ASSERT_EQ(true, x.getNegative());
-    ASSERT_EQ(false, x.getOverflow());
+    ASSERT_EQ(true, x.isNegative());
+    ASSERT_EQ(false, x.hasError());
 
     c.input(Button::ceca);
     ASSERT_EQ(0, getIntValue(x));
     ASSERT_EQ(0, x.getPointPos());
     ASSERT_EQ(0, getIntValue(y));
     ASSERT_EQ(0, y.getPointPos());
-    ASSERT_EQ(false, x.getNegative());
-    ASSERT_EQ(false, x.getOverflow());
+    ASSERT_EQ(false, x.isNegative());
+    ASSERT_EQ(false, x.hasError());
 }
 
 TEST_CALCULATOR_INPUT(ZeroTyping) {

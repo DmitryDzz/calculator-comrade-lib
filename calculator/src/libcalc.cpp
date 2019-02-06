@@ -79,15 +79,15 @@ extern "C" HRES GetNegative(const HCALC hCalc, bool *negative) {
     Calculator* calculator = findInstance(hCalc);
     if (calculator == nullptr)
         return HRES_ERR_NO_INSTANCE;
-    *negative = DISPLAY_REGISTER(calculator).getNegative();
+    *negative = DISPLAY_REGISTER(calculator).isNegative();
     return HRES_OK;
 }
 
-extern "C" HRES GetOverflow(const HCALC hCalc, bool *overflow) {
+extern "C" HRES GetError(const HCALC hCalc, bool *hasError) {
     Calculator* calculator = findInstance(hCalc);
     if (calculator == nullptr)
         return HRES_ERR_NO_INSTANCE;
-    *overflow = DISPLAY_REGISTER(calculator).getOverflow();
+    *hasError = DISPLAY_REGISTER(calculator).hasError();
     return HRES_OK;
 }
 

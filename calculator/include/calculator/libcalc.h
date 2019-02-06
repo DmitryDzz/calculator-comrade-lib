@@ -39,7 +39,7 @@ extern "C" HRES GetSize(HCALC hCalc, int8_t *size);
 
 extern "C" HRES GetNegative(HCALC hCalc, bool *negative);
 
-extern "C" HRES GetOverflow(HCALC hCalc, bool *overflow);
+extern "C" HRES GetError(HCALC hCalc, bool *hasError);
 
 extern "C" HRES GetPointPos(HCALC hCalc, int8_t *pointPos);
 

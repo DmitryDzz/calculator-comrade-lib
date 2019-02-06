@@ -41,32 +41,32 @@ TEST_MATH(AddInt) {
     Math::calculate(r1, r2, Operation::add);
     ASSERT_EQ(579, getAbsIntValue(r1));
     ASSERT_EQ(0, r1.getPointPos());
-    ASSERT_EQ(false, r1.getNegative());
-    ASSERT_EQ(false, r1.getOverflow());
+    ASSERT_EQ(false, r1.isNegative());
+    ASSERT_EQ(false, r1.hasError());
 
     setValue(r1, -123);
     setValue(r2, -456);
     Math::calculate(r1, r2, Operation::add);
     ASSERT_EQ(579, getAbsIntValue(r1));
     ASSERT_EQ(0, r1.getPointPos());
-    ASSERT_EQ(true, r1.getNegative());
-    ASSERT_EQ(false, r1.getOverflow());
+    ASSERT_EQ(true, r1.isNegative());
+    ASSERT_EQ(false, r1.hasError());
 
     setValue(r1, -123);
     setValue(r2, 456);
     Math::calculate(r1, r2, Operation::add);
     ASSERT_EQ(333, getAbsIntValue(r1));
     ASSERT_EQ(0, r1.getPointPos());
-    ASSERT_EQ(false, r1.getNegative());
-    ASSERT_EQ(false, r1.getOverflow());
+    ASSERT_EQ(false, r1.isNegative());
+    ASSERT_EQ(false, r1.hasError());
 
     setValue(r1, 123);
     setValue(r2, -456);
     Math::calculate(r1, r2, Operation::add);
     ASSERT_EQ(333, getAbsIntValue(r1));
     ASSERT_EQ(0, r1.getPointPos());
-    ASSERT_EQ(true, r1.getNegative());
-    ASSERT_EQ(false, r1.getOverflow());
+    ASSERT_EQ(true, r1.isNegative());
+    ASSERT_EQ(false, r1.hasError());
 }
 
 TEST_MATH(AddOverflow) {
@@ -79,8 +79,8 @@ TEST_MATH(AddOverflow) {
     ASSERT_EQ(1, getAbsIntValue(r1));
     ASSERT_EQ(1, r1.getDigit(0));
     ASSERT_EQ(0, r1.getPointPos());
-    ASSERT_EQ(false, r1.getNegative());
-    ASSERT_EQ(true, r1.getOverflow());
+    ASSERT_EQ(false, r1.isNegative());
+    ASSERT_EQ(true, r1.hasError());
 
     setValue(r1, -99999999);
     setValue(r2, -1);
@@ -88,8 +88,8 @@ TEST_MATH(AddOverflow) {
     ASSERT_EQ(1, getAbsIntValue(r1));
     ASSERT_EQ(1, r1.getDigit(0));
     ASSERT_EQ(0, r1.getPointPos());
-    ASSERT_EQ(true, r1.getNegative());
-    ASSERT_EQ(true, r1.getOverflow());
+    ASSERT_EQ(true, r1.isNegative());
+    ASSERT_EQ(true, r1.hasError());
 
     // There's no rounding on overflow (1):
     setValue(r1, 99999933);
@@ -97,8 +97,8 @@ TEST_MATH(AddOverflow) {
     Math::calculate(r1, r2, Operation::add);
     ASSERT_EQ(10000005, getAbsIntValue(r1));
     ASSERT_EQ(7, r1.getPointPos());
-    ASSERT_EQ(false, r1.getNegative());
-    ASSERT_EQ(true, r1.getOverflow());
+    ASSERT_EQ(false, r1.isNegative());
+    ASSERT_EQ(true, r1.hasError());
 
     // There's no rounding on overflow (2):
     setValue(r1, 99999933);
@@ -106,8 +106,8 @@ TEST_MATH(AddOverflow) {
     Math::calculate(r1, r2, Operation::add);
     ASSERT_EQ(10000005, getAbsIntValue(r1));
     ASSERT_EQ(7, r1.getPointPos());
-    ASSERT_EQ(false, r1.getNegative());
-    ASSERT_EQ(true, r1.getOverflow());
+    ASSERT_EQ(false, r1.isNegative());
+    ASSERT_EQ(true, r1.hasError());
 }
 
 TEST_MATH(AddNoOverflow) {
@@ -120,7 +120,7 @@ TEST_MATH(AddNoOverflow) {
     setValue(r1, 90000001, 7);
     setValue(r2, 1);
     Math::calculate(r1, r2, Operation::add);
-    ASSERT_FALSE(r1.getOverflow());
+    ASSERT_FALSE(r1.hasError());
     ASSERT_EQ(10, getIntValue(r1));
     ASSERT_EQ(0, r1.getPointPos());
 }
@@ -134,8 +134,8 @@ TEST_MATH(AddReal) {
     Math::calculate(r1, r2, Operation::add);
     ASSERT_EQ(124686, getAbsIntValue(r1));
     ASSERT_EQ(3, r1.getPointPos());
-    ASSERT_EQ(false, r1.getNegative());
-    ASSERT_EQ(false, r1.getOverflow());
+    ASSERT_EQ(false, r1.isNegative());
+    ASSERT_EQ(false, r1.hasError());
     ASSERT_EQ(123, getAbsIntValue(r2));
     ASSERT_EQ(2, r2.getPointPos());
 }
@@ -149,32 +149,32 @@ TEST_MATH(SubInt) {
     Math::calculate(r1, r2, Operation::sub);
     ASSERT_EQ(5556, getAbsIntValue(r1));
     ASSERT_EQ(0, r1.getPointPos());
-    ASSERT_EQ(false, r1.getNegative());
-    ASSERT_EQ(false, r1.getOverflow());
+    ASSERT_EQ(false, r1.isNegative());
+    ASSERT_EQ(false, r1.hasError());
 
     setValue(r1, -123);
     setValue(r2, -468);
     Math::calculate(r1, r2, Operation::sub);
     ASSERT_EQ(345, getAbsIntValue(r1));
     ASSERT_EQ(0, r1.getPointPos());
-    ASSERT_EQ(false, r1.getNegative());
-    ASSERT_EQ(false, r1.getOverflow());
+    ASSERT_EQ(false, r1.isNegative());
+    ASSERT_EQ(false, r1.hasError());
 
     setValue(r1, -123);
     setValue(r2, 468);
     Math::calculate(r1, r2, Operation::sub);
     ASSERT_EQ(591, getAbsIntValue(r1));
     ASSERT_EQ(0, r1.getPointPos());
-    ASSERT_EQ(true, r1.getNegative());
-    ASSERT_EQ(false, r1.getOverflow());
+    ASSERT_EQ(true, r1.isNegative());
+    ASSERT_EQ(false, r1.hasError());
 
     setValue(r1, 123);
     setValue(r2, -468);
     Math::calculate(r1, r2, Operation::sub);
     ASSERT_EQ(591, getAbsIntValue(r1));
     ASSERT_EQ(0, r1.getPointPos());
-    ASSERT_EQ(false, r1.getNegative());
-    ASSERT_EQ(false, r1.getOverflow());
+    ASSERT_EQ(false, r1.isNegative());
+    ASSERT_EQ(false, r1.hasError());
 }
 
 TEST_MATH(SubOverflow) {
@@ -187,8 +187,8 @@ TEST_MATH(SubOverflow) {
     ASSERT_EQ(1, getAbsIntValue(r1));
     ASSERT_EQ(1, r1.getDigit(0));
     ASSERT_EQ(0, r1.getPointPos());
-    ASSERT_EQ(true, r1.getNegative());
-    ASSERT_EQ(true, r1.getOverflow());
+    ASSERT_EQ(true, r1.isNegative());
+    ASSERT_EQ(true, r1.hasError());
 
     setValue(r1, 99999999);
     setValue(r2, -1);
@@ -196,8 +196,8 @@ TEST_MATH(SubOverflow) {
     ASSERT_EQ(1, getAbsIntValue(r1));
     ASSERT_EQ(1, r1.getDigit(0));
     ASSERT_EQ(0, r1.getPointPos());
-    ASSERT_EQ(false, r1.getNegative());
-    ASSERT_EQ(true, r1.getOverflow());
+    ASSERT_EQ(false, r1.isNegative());
+    ASSERT_EQ(true, r1.hasError());
 
     // There's no rounding on overflow (1):
     setValue(r1, -99999933);
@@ -205,8 +205,8 @@ TEST_MATH(SubOverflow) {
     Math::calculate(r1, r2, Operation::sub);
     ASSERT_EQ(10000005, getAbsIntValue(r1));
     ASSERT_EQ(7, r1.getPointPos());
-    ASSERT_EQ(true, r1.getNegative());
-    ASSERT_EQ(true, r1.getOverflow());
+    ASSERT_EQ(true, r1.isNegative());
+    ASSERT_EQ(true, r1.hasError());
 
     // There's no rounding on overflow (2):
     setValue(r1, -99999933);
@@ -214,8 +214,8 @@ TEST_MATH(SubOverflow) {
     Math::calculate(r1, r2, Operation::sub);
     ASSERT_EQ(10000005, getAbsIntValue(r1));
     ASSERT_EQ(7, r1.getPointPos());
-    ASSERT_EQ(true, r1.getNegative());
-    ASSERT_EQ(true, r1.getOverflow());
+    ASSERT_EQ(true, r1.isNegative());
+    ASSERT_EQ(true, r1.hasError());
 }
 
 TEST_MATH(SubReal) {
@@ -227,8 +227,8 @@ TEST_MATH(SubReal) {
     Math::calculate(r1, r2, Operation::sub);
     ASSERT_EQ(122226, getAbsIntValue(r1));
     ASSERT_EQ(3, r1.getPointPos());
-    ASSERT_EQ(false, r1.getNegative());
-    ASSERT_EQ(false, r1.getOverflow());
+    ASSERT_EQ(false, r1.isNegative());
+    ASSERT_EQ(false, r1.hasError());
     ASSERT_EQ(123, getAbsIntValue(r2));
     ASSERT_EQ(2, r2.getPointPos());
 }
@@ -249,8 +249,8 @@ TEST_MATH(NonNegativeZeroAfterSum) {
     }
     ASSERT_TRUE(zero);
     ASSERT_EQ(0, r1.getPointPos());
-    ASSERT_EQ(false, r1.getNegative());
-    ASSERT_EQ(false, r1.getOverflow());
+    ASSERT_EQ(false, r1.isNegative());
+    ASSERT_EQ(false, r1.hasError());
 }
 
 TEST_MATH(MulInt) {
@@ -262,16 +262,16 @@ TEST_MATH(MulInt) {
     Math::calculate(r1, r2, Operation::mul);
     ASSERT_EQ(408, getAbsIntValue(r1));
     ASSERT_EQ(0, r1.getPointPos());
-    ASSERT_EQ(false, r1.getNegative());
-    ASSERT_EQ(false, r1.getOverflow());
+    ASSERT_EQ(false, r1.isNegative());
+    ASSERT_EQ(false, r1.hasError());
 
     setValue(r1, 12);
     setValue(r2, -34);
     Math::calculate(r1, r2, Operation::mul);
     ASSERT_EQ(408, getAbsIntValue(r1));
     ASSERT_EQ(0, r1.getPointPos());
-    ASSERT_EQ(true, r1.getNegative());
-    ASSERT_EQ(false, r1.getOverflow());
+    ASSERT_EQ(true, r1.isNegative());
+    ASSERT_EQ(false, r1.hasError());
 }
 
 TEST_MATH(NonNegativeZeroAfterMul) {
@@ -282,9 +282,8 @@ TEST_MATH(NonNegativeZeroAfterMul) {
     setValue(r2, 0);
     Math::calculate(r1, r2, Operation::mul);
     ASSERT_TRUE(r1.isZero());
-    ASSERT_EQ(0, r1.getPointPos());
-    ASSERT_EQ(false, r1.getNegative());
-    ASSERT_EQ(false, r1.getOverflow());
+    ASSERT_EQ(false, r1.isNegative());
+    ASSERT_EQ(false, r1.hasError());
 }
 
 TEST_MATH(MulTruncAfterPoint1) {
@@ -296,8 +295,8 @@ TEST_MATH(MulTruncAfterPoint1) {
     Math::calculate(r1, r2, Operation::mul);
     ASSERT_EQ(469, getAbsIntValue(r1));
     ASSERT_EQ(1, r1.getPointPos());
-    ASSERT_EQ(false, r1.getNegative());
-    ASSERT_EQ(false, r1.getOverflow());
+    ASSERT_EQ(false, r1.isNegative());
+    ASSERT_EQ(false, r1.hasError());
 }
 
 TEST_MATH(MulTruncAfterPoint2) {
@@ -314,8 +313,8 @@ TEST_MATH(MulTruncAfterPoint2) {
     Math::mul(r1, r2, acc);
     ASSERT_EQ(627, getAbsIntValue(r1));
     ASSERT_EQ(2, r1.getPointPos());
-    ASSERT_EQ(false, r1.getNegative());
-    ASSERT_EQ(false, r1.getOverflow());
+    ASSERT_EQ(false, r1.isNegative());
+    ASSERT_EQ(false, r1.hasError());
 }
 
 TEST_MATH(MulOverflow) {
@@ -332,8 +331,8 @@ TEST_MATH(MulOverflow) {
     Math::mul(r1, r2, acc);
     ASSERT_EQ(645, getAbsIntValue(r1));
     ASSERT_EQ(2, r1.getPointPos());
-    ASSERT_EQ(false, r1.getNegative());
-    ASSERT_EQ(true, r1.getOverflow());
+    ASSERT_EQ(false, r1.isNegative());
+    ASSERT_EQ(true, r1.hasError());
 }
 
 TEST_MATH(MulReadOperations) {
@@ -350,56 +349,56 @@ TEST_MATH(MulReadOperations) {
     Math::mul(r1, r2, acc);
     ASSERT_EQ(11397531, getAbsIntValue(r1));
     ASSERT_EQ(7, r1.getPointPos());
-    ASSERT_EQ(false, r1.getNegative());
-    ASSERT_EQ(true, r1.getOverflow());
+    ASSERT_EQ(false, r1.isNegative());
+    ASSERT_EQ(true, r1.hasError());
 
     setValue(r1, 56987658, 0);
     setValue(r2, 32, 0);
     Math::mul(r1, r2, acc);
     ASSERT_EQ(1823605, getAbsIntValue(r1));
     ASSERT_EQ(5, r1.getPointPos());
-    ASSERT_EQ(false, r1.getNegative());
-    ASSERT_EQ(true, r1.getOverflow());
+    ASSERT_EQ(false, r1.isNegative());
+    ASSERT_EQ(true, r1.hasError());
 
     setValue(r1, 56987658, 0);
     setValue(r2, 232, 0);
     Math::mul(r1, r2, acc);
     ASSERT_EQ(13221136, getAbsIntValue(r1));
     ASSERT_EQ(5, r1.getPointPos());
-    ASSERT_EQ(false, r1.getNegative());
-    ASSERT_EQ(true, r1.getOverflow());
+    ASSERT_EQ(false, r1.isNegative());
+    ASSERT_EQ(true, r1.hasError());
 
     setValue(r1, 56987658, 0);
     setValue(r2, 5232, 0);
     Math::mul(r1, r2, acc);
     ASSERT_EQ(29815942, getAbsIntValue(r1));
     ASSERT_EQ(4, r1.getPointPos());
-    ASSERT_EQ(false, r1.getNegative());
-    ASSERT_EQ(true, r1.getOverflow());
+    ASSERT_EQ(false, r1.isNegative());
+    ASSERT_EQ(true, r1.hasError());
 
     setValue(r1, 56987658, 0);
     setValue(r2, 65232, 0);
     Math::mul(r1, r2, acc);
     ASSERT_EQ(37174189, getAbsIntValue(r1));
     ASSERT_EQ(3, r1.getPointPos());
-    ASSERT_EQ(false, r1.getNegative());
-    ASSERT_EQ(true, r1.getOverflow());
+    ASSERT_EQ(false, r1.isNegative());
+    ASSERT_EQ(true, r1.hasError());
 
     setValue(r1, 56987658, 0);
     setValue(r2, 8065232, 0);
     Math::mul(r1, r2, acc);
     ASSERT_EQ(45961868, getAbsIntValue(r1));
     ASSERT_EQ(1, r1.getPointPos());
-    ASSERT_EQ(false, r1.getNegative());
-    ASSERT_EQ(true, r1.getOverflow());
+    ASSERT_EQ(false, r1.isNegative());
+    ASSERT_EQ(true, r1.hasError());
 
     setValue(r1, 56987658, 0);
     setValue(r2, 98065232, 0);
     Math::mul(r1, r2, acc);
     ASSERT_EQ(55885079, getAbsIntValue(r1));
     ASSERT_EQ(0, r1.getPointPos());
-    ASSERT_EQ(false, r1.getNegative());
-    ASSERT_EQ(true, r1.getOverflow());
+    ASSERT_EQ(false, r1.isNegative());
+    ASSERT_EQ(true, r1.hasError());
 }
 
 TEST_MATH(DivInt1) {
@@ -417,8 +416,8 @@ TEST_MATH(DivInt1) {
     Math::div(r1, r2, acc);
     ASSERT_EQ(3, getAbsIntValue(r1));
     ASSERT_EQ(0, r1.getPointPos());
-    ASSERT_EQ(false, r1.getNegative());
-    ASSERT_EQ(false, r1.getOverflow());
+    ASSERT_EQ(false, r1.isNegative());
+    ASSERT_EQ(false, r1.hasError());
 
     // -15 : 5 = -3
     setValue(r1, -15);
@@ -426,8 +425,8 @@ TEST_MATH(DivInt1) {
     Math::div(r1, r2, acc);
     ASSERT_EQ(3, getAbsIntValue(r1));
     ASSERT_EQ(0, r1.getPointPos());
-    ASSERT_EQ(true, r1.getNegative());
-    ASSERT_EQ(false, r1.getOverflow());
+    ASSERT_EQ(true, r1.isNegative());
+    ASSERT_EQ(false, r1.hasError());
 
     // 15 : (-5) = -3
     setValue(r1, 15);
@@ -435,8 +434,8 @@ TEST_MATH(DivInt1) {
     Math::div(r1, r2, acc);
     ASSERT_EQ(3, getAbsIntValue(r1));
     ASSERT_EQ(0, r1.getPointPos());
-    ASSERT_EQ(true, r1.getNegative());
-    ASSERT_EQ(false, r1.getOverflow());
+    ASSERT_EQ(true, r1.isNegative());
+    ASSERT_EQ(false, r1.hasError());
 }
 
 TEST_MATH(DivInt2) {
@@ -454,8 +453,8 @@ TEST_MATH(DivInt2) {
     Math::div(r1, r2, acc);
     ASSERT_EQ(100, getAbsIntValue(r1));
     ASSERT_EQ(0, r1.getPointPos());
-    ASSERT_EQ(false, r1.getNegative());
-    ASSERT_EQ(false, r1.getOverflow());
+    ASSERT_EQ(false, r1.isNegative());
+    ASSERT_EQ(false, r1.hasError());
 }
 
 TEST_MATH(DivZero) {
@@ -467,19 +466,15 @@ TEST_MATH(DivZero) {
     setValue(r2, 0);
     Math::div(r1, r2);
     ASSERT_TRUE(r1.isZero());
-    ASSERT_EQ(0, getAbsIntValue(r1));
-    ASSERT_EQ(0, r1.getPointPos());
-    ASSERT_EQ(false, r1.getNegative());
-    ASSERT_EQ(true, r1.getOverflow());
+    ASSERT_EQ(false, r1.isNegative());
+    ASSERT_EQ(true, r1.hasError());
 
     setValue(r1, -15, 1); // r1 = -1.5
     setValue(r2, 0);
     Math::div(r1, r2);
     ASSERT_TRUE(r1.isZero());
-    ASSERT_EQ(0, getAbsIntValue(r1));
-    ASSERT_EQ(0, r1.getPointPos());
-    ASSERT_EQ(false, r1.getNegative());
-    ASSERT_EQ(true, r1.getOverflow());
+    ASSERT_EQ(false, r1.isNegative());
+    ASSERT_EQ(true, r1.hasError());
 }
 
 TEST_MATH(DivReal1) {
@@ -497,8 +492,8 @@ TEST_MATH(DivReal1) {
     Math::div(r1, r2, acc);
     ASSERT_EQ(25, getAbsIntValue(r1));
     ASSERT_EQ(1, r1.getPointPos());
-    ASSERT_EQ(false, r1.getNegative());
-    ASSERT_EQ(false, r1.getOverflow());
+    ASSERT_EQ(false, r1.isNegative());
+    ASSERT_EQ(false, r1.hasError());
 }
 
 TEST_MATH(DivReal2) {
@@ -516,8 +511,8 @@ TEST_MATH(DivReal2) {
     Math::div(r1, r2, acc);
     ASSERT_EQ(1666, getAbsIntValue(r1));
     ASSERT_EQ(3, r1.getPointPos());
-    ASSERT_EQ(false, r1.getNegative());
-    ASSERT_EQ(false, r1.getOverflow());
+    ASSERT_EQ(false, r1.isNegative());
+    ASSERT_EQ(false, r1.hasError());
 }
 
 TEST_MATH(DivReal3) {
@@ -535,8 +530,8 @@ TEST_MATH(DivReal3) {
     Math::div(r1, r2, acc);
     ASSERT_EQ(166, getAbsIntValue(r1));
     ASSERT_EQ(3, r1.getPointPos());
-    ASSERT_EQ(false, r1.getNegative());
-    ASSERT_EQ(false, r1.getOverflow());
+    ASSERT_EQ(false, r1.isNegative());
+    ASSERT_EQ(false, r1.hasError());
 }
 
 TEST_MATH(DivReal4) {
@@ -554,8 +549,8 @@ TEST_MATH(DivReal4) {
     Math::div(r1, r2, acc);
     ASSERT_EQ(576923, getAbsIntValue(r1));
     ASSERT_EQ(6, r1.getPointPos());
-    ASSERT_EQ(false, r1.getNegative());
-    ASSERT_EQ(false, r1.getOverflow());
+    ASSERT_EQ(false, r1.isNegative());
+    ASSERT_EQ(false, r1.hasError());
 }
 
 TEST_MATH(DivReal5) {
@@ -573,8 +568,8 @@ TEST_MATH(DivReal5) {
     Math::div(r1, r2, acc);
     ASSERT_EQ(19740, getAbsIntValue(r1));
     ASSERT_EQ(0, r1.getPointPos());
-    ASSERT_EQ(false, r1.getNegative());
-    ASSERT_EQ(false, r1.getOverflow());
+    ASSERT_EQ(false, r1.isNegative());
+    ASSERT_EQ(false, r1.hasError());
 }
 
 TEST_MATH(DivReal6) {
@@ -592,8 +587,8 @@ TEST_MATH(DivReal6) {
     Math::div(r1, r2, acc);
     ASSERT_EQ(416666, getAbsIntValue(r1));
     ASSERT_EQ(7, r1.getPointPos());
-    ASSERT_EQ(false, r1.getNegative());
-    ASSERT_EQ(false, r1.getOverflow());
+    ASSERT_EQ(false, r1.isNegative());
+    ASSERT_EQ(false, r1.hasError());
 }
 
 TEST_MATH(DivReal7) {
@@ -611,8 +606,8 @@ TEST_MATH(DivReal7) {
     Math::div(r1, r2, acc);
     ASSERT_EQ(125, getAbsIntValue(r1));
     ASSERT_EQ(2, r1.getPointPos());
-    ASSERT_EQ(false, r1.getNegative());
-    ASSERT_EQ(false, r1.getOverflow());
+    ASSERT_EQ(false, r1.isNegative());
+    ASSERT_EQ(false, r1.hasError());
 }
 
 TEST_MATH(DivOverflow1) {
@@ -630,8 +625,8 @@ TEST_MATH(DivOverflow1) {
     Math::div(r1, r2, acc);
     ASSERT_EQ(499, getAbsIntValue(r1));
     ASSERT_EQ(1, r1.getPointPos());
-    ASSERT_EQ(false, r1.getNegative());
-    ASSERT_EQ(true, r1.getOverflow());
+    ASSERT_EQ(false, r1.isNegative());
+    ASSERT_EQ(true, r1.hasError());
 }
 
 TEST_MATH(DivOverflow2) {
@@ -649,8 +644,8 @@ TEST_MATH(DivOverflow2) {
     Math::div(r1, r2, acc);
     ASSERT_EQ(49999999, getAbsIntValue(r1));
     ASSERT_EQ(6, r1.getPointPos());
-    ASSERT_EQ(false, r1.getNegative());
-    ASSERT_EQ(true, r1.getOverflow());
+    ASSERT_EQ(false, r1.isNegative());
+    ASSERT_EQ(true, r1.hasError());
 }
 
 TEST_MATH(PercentMul1) {
@@ -666,8 +661,8 @@ TEST_MATH(PercentMul1) {
     Math::mulPercent(r1, r2);
     ASSERT_EQ(49999999, getIntValue(r1));
     ASSERT_EQ(1, r1.getPointPos());
-    ASSERT_EQ(false, r1.getNegative());
-    ASSERT_EQ(false, r1.getOverflow());
+    ASSERT_EQ(false, r1.isNegative());
+    ASSERT_EQ(false, r1.hasError());
 
     // 99999999 * (-5) % => -4999999.9
     setValue(r1, -5);
@@ -675,8 +670,8 @@ TEST_MATH(PercentMul1) {
     Math::mulPercent(r1, r2);
     ASSERT_EQ(-49999999, getIntValue(r1));
     ASSERT_EQ(1, r1.getPointPos());
-    ASSERT_EQ(true, r1.getNegative());
-    ASSERT_EQ(false, r1.getOverflow());
+    ASSERT_EQ(true, r1.isNegative());
+    ASSERT_EQ(false, r1.hasError());
 
     // -99999999 * 5 % => -4999999.9
     setValue(r1, 5);
@@ -684,8 +679,8 @@ TEST_MATH(PercentMul1) {
     Math::mulPercent(r1, r2);
     ASSERT_EQ(-49999999, getIntValue(r1));
     ASSERT_EQ(1, r1.getPointPos());
-    ASSERT_EQ(true, r1.getNegative());
-    ASSERT_EQ(false, r1.getOverflow());
+    ASSERT_EQ(true, r1.isNegative());
+    ASSERT_EQ(false, r1.hasError());
 
     // -99999999 * (-5) % => 4999999.9
     setValue(r1, -5);
@@ -693,8 +688,8 @@ TEST_MATH(PercentMul1) {
     Math::mulPercent(r1, r2);
     ASSERT_EQ(49999999, getIntValue(r1));
     ASSERT_EQ(1, r1.getPointPos());
-    ASSERT_EQ(false, r1.getNegative());
-    ASSERT_EQ(false, r1.getOverflow());
+    ASSERT_EQ(false, r1.isNegative());
+    ASSERT_EQ(false, r1.hasError());
 }
 
 TEST_MATH(PercentMul2) {
@@ -710,8 +705,8 @@ TEST_MATH(PercentMul2) {
     Math::mulPercent(r1, r2);
     ASSERT_EQ(1, getIntValue(r1));
     ASSERT_EQ(7, r1.getPointPos());
-    ASSERT_EQ(false, r1.getNegative());
-    ASSERT_EQ(false, r1.getOverflow());
+    ASSERT_EQ(false, r1.isNegative());
+    ASSERT_EQ(false, r1.hasError());
 }
 
 TEST_MATH(PercentDiv) {
@@ -727,8 +722,8 @@ TEST_MATH(PercentDiv) {
     Math::divPercent(r1, r2);
     ASSERT_EQ(200, getIntValue(r1));
     ASSERT_EQ(0, r1.getPointPos());
-    ASSERT_EQ(false, r1.getNegative());
-    ASSERT_EQ(false, r1.getOverflow());
+    ASSERT_EQ(false, r1.isNegative());
+    ASSERT_EQ(false, r1.hasError());
 }
 
 TEST_MATH(PercentAdd) {
@@ -744,7 +739,7 @@ TEST_MATH(PercentAdd) {
     Math::addPercent(r1, r2);
     ASSERT_EQ(210, getIntValue(r1));
     ASSERT_EQ(0, r1.getPointPos());
-    ASSERT_EQ(false, r1.getOverflow());
+    ASSERT_EQ(false, r1.hasError());
 
     // -200 + 5 % => -210
     setValue(r1, -200);
@@ -752,7 +747,7 @@ TEST_MATH(PercentAdd) {
     Math::addPercent(r1, r2);
     ASSERT_EQ(-210, getIntValue(r1));
     ASSERT_EQ(0, r1.getPointPos());
-    ASSERT_EQ(false, r1.getOverflow());
+    ASSERT_EQ(false, r1.hasError());
 
     // -200 + (-5) % => -190
     setValue(r1, -200);
@@ -760,7 +755,7 @@ TEST_MATH(PercentAdd) {
     Math::addPercent(r1, r2);
     ASSERT_EQ(-190, getIntValue(r1));
     ASSERT_EQ(0, r1.getPointPos());
-    ASSERT_EQ(false, r1.getOverflow());
+    ASSERT_EQ(false, r1.hasError());
 
     // 200 + (-5) % => 190
     setValue(r1, 200);
@@ -768,7 +763,7 @@ TEST_MATH(PercentAdd) {
     Math::addPercent(r1, r2);
     ASSERT_EQ(190, getIntValue(r1));
     ASSERT_EQ(0, r1.getPointPos());
-    ASSERT_EQ(false, r1.getOverflow());
+    ASSERT_EQ(false, r1.hasError());
 }
 
 TEST_MATH(PercentSub) {
@@ -784,7 +779,7 @@ TEST_MATH(PercentSub) {
     Math::subPercent(r1, r2);
     ASSERT_EQ(190, getIntValue(r1));
     ASSERT_EQ(0, r1.getPointPos());
-    ASSERT_EQ(false, r1.getOverflow());
+    ASSERT_EQ(false, r1.hasError());
 
     // -200 - 5 % => -190
     setValue(r1, -200);
@@ -792,7 +787,7 @@ TEST_MATH(PercentSub) {
     Math::subPercent(r1, r2);
     ASSERT_EQ(-190, getIntValue(r1));
     ASSERT_EQ(0, r1.getPointPos());
-    ASSERT_EQ(false, r1.getOverflow());
+    ASSERT_EQ(false, r1.hasError());
 
     // -200 - (-5) % => -210
     setValue(r1, -200);
@@ -800,7 +795,7 @@ TEST_MATH(PercentSub) {
     Math::subPercent(r1, r2);
     ASSERT_EQ(-210, getIntValue(r1));
     ASSERT_EQ(0, r1.getPointPos());
-    ASSERT_EQ(false, r1.getOverflow());
+    ASSERT_EQ(false, r1.hasError());
 
     // 200 - (-5) % => 190
     setValue(r1, 200);
@@ -808,5 +803,5 @@ TEST_MATH(PercentSub) {
     Math::subPercent(r1, r2);
     ASSERT_EQ(210, getIntValue(r1));
     ASSERT_EQ(0, r1.getPointPos());
-    ASSERT_EQ(false, r1.getOverflow());
+    ASSERT_EQ(false, r1.hasError());
 }
