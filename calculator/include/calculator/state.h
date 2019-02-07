@@ -63,12 +63,40 @@ namespace calculatorcomrade {
             Math::changeSign(x);
         }
 
+        bool memHasValue() {
+            return !m.isZero();
+        }
+
         void memPlus() {
-            Math::add(m, x);
+            Register acc(m.getSize());
+            acc.set(m);
+
+            if (false) {
+                Register xT(x.getSize());
+                xT.set(x);
+                Math::calculate(acc, xT, Operation::add);
+            } else {
+                Math::calculate(acc, x, Operation::add);
+            }
+
+            if (acc.hasError()) {
+                x.clear();
+                x.setError(true);
+            } else {
+                m.set(acc);
+            }
         }
 
         void memMinus() {
-            Math::sub(m, x);
+            Register acc(m.getSize());
+            acc.set(m);
+            Math::sub(acc, x);
+            if (acc.hasError()) {
+                x.clear();
+                x.setError(true);
+            } else {
+                m.set(acc);
+            }
         }
 
         void memClear() {

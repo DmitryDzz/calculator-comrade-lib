@@ -255,7 +255,7 @@ void Calculator::memPlus()
 void Calculator::memMinus()
 {
     inNumber_ = false;
-    state_.memPlus();
+    state_.memMinus();
 }
 
 void Calculator::memClear()
@@ -267,5 +267,5 @@ void Calculator::memClear()
 void Calculator::memRestore()
 {
     inNumber_ = false;
-    state_.memClear();
+    state_.memRestore();
 }
