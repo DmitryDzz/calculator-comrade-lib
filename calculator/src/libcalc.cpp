@@ -26,11 +26,11 @@ Calculator* findInstance(HCALC hCalc) {
     return it->second;
 }
 
-extern "C" HRES CreateCalculator(const int8_t digits, HCALC *hcalc) {
+extern "C" HRES CreateCalculator(const int8_t digits, const uint8_t options, HCALC *hcalc) {
     if (g_calc_hnd == std::numeric_limits<HCALC>::max())
         return HRES_ERR_TOO_MANY_INSTANCES;
     *hcalc = ++g_calc_hnd;
-    g_instances[g_calc_hnd] = new Calculator(digits);
+    g_instances[g_calc_hnd] = new Calculator(digits, options);
     return HRES_OK;
 }
 

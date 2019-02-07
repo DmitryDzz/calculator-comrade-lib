@@ -8,10 +8,10 @@
 
 TEST(TestLibCalcApi, TwoCalculators) {
     HCALC calc1;
-    HRES hr = CreateCalculator(8, &calc1);
+    HRES hr = CreateCalculator(8, 0, &calc1);
     ASSERT_EQ(HRES_OK, hr);
     HCALC calc2;
-    hr = CreateCalculator(12, &calc2);
+    hr = CreateCalculator(12, 0, &calc2);
     ASSERT_EQ(HRES_OK, hr);
 
     int8_t size1;
@@ -33,11 +33,11 @@ TEST(TestLibCalcApi, ManyCalculators) {
     HCALC hcalc;
     HRES hr;
     for (uint16_t i = 0; i < 255; i++) {
-        hr = CreateCalculator(8, &hcalc);
+        hr = CreateCalculator(8, 0, &hcalc);
         ASSERT_EQ(HRES_OK, hr);
     }
 
-    hr = CreateCalculator(8, &hcalc);
+    hr = CreateCalculator(8, 0, &hcalc);
     ASSERT_EQ(HRES_ERR_TOO_MANY_INSTANCES, hr);
 
     DisposeAll();

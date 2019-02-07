@@ -159,10 +159,7 @@ TEST_MEM(MemOverflow) {
     ASSERT_TRUE(s.memHasValue());
 }
 
-//99999999 m+ 0.0000001 m+ => mem 0.0000001
-//mr => mem 99999999
-TEST_MEM(MemTrunc) {
-    Calculator c(8);
+void TestMemTrunc(Calculator &c) {
     State &s = c.getState();
 
     for (int8_t i = 0; i < 8; i++)
@@ -171,19 +168,18 @@ TEST_MEM(MemTrunc) {
     ASSERT_EQ(99999999, getIntValue(s.x));
     ASSERT_EQ(99999999, getIntValue(s.m));
     ASSERT_TRUE(s.memHasValue());
-    c.input(Button::d0);
     c.input(Button::point);
-    for (int8_t i = 0; i < 6; i++)
-        c.input(Button::d0);
     c.input(Button::d1);
     c.input(Button::memPlus);
     ASSERT_FALSE(s.x.hasError());
 
-    // CITIZEN:
-    ASSERT_TRUE(s.x.isZero());
-    // OTHER:
-//    ASSERT_EQ(1, getIntValue(s.x));
-//    ASSERT_EQ(7, s.x.getPointPos());
+    uint8_t options = c.getOptions();
+    if (options & Config::OPTION_CITIZEN_MEM_TRUNK) {
+        ASSERT_TRUE(s.x.isZero());
+    } else {
+        ASSERT_EQ(1, getIntValue(s.x));
+        ASSERT_EQ(1, s.x.getPointPos());
+    }
 
     ASSERT_EQ(99999999, getIntValue(s.m));
     ASSERT_TRUE(s.memHasValue());
@@ -192,4 +188,18 @@ TEST_MEM(MemTrunc) {
     ASSERT_EQ(99999999, getIntValue(s.x));
     ASSERT_EQ(99999999, getIntValue(s.m));
     ASSERT_TRUE(s.memHasValue());
+}
+
+//99999999 m+ 0.1 m+ => mem 0.0000001
+//mr => mem 99999999
+TEST_MEM(MemTruncCommon) {
+    Calculator c(8, 0);
+    TestMemTrunc(c);
+}
+
+//99999999 m+ 0.1 m+ => mem 0
+//mr => mem 99999999
+TEST_MEM(MemTruncCitizen) {
+    Calculator c(8, Config::OPTION_CITIZEN_MEM_TRUNK);
+    TestMemTrunc(c);
 }

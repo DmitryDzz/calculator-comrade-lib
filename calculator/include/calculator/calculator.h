@@ -16,9 +16,11 @@ namespace calculatorcomrade {
 
     class Calculator {
     public:
-        Calculator() : Calculator(Config::DEFAULT_SIZE) {};
-        explicit Calculator(int8_t size) :
-                state_(size),
+        explicit Calculator() : Calculator(Config::DEFAULT_SIZE, 0) {};
+        explicit Calculator(int8_t size) : Calculator(size, 0) {};
+        explicit Calculator(int8_t size, uint8_t options) :
+                options_(options),
+                state_(size, options),
                 size_(size),
                 lastButton_(Button::none),
                 hasOperation_(false),
@@ -31,10 +33,12 @@ namespace calculatorcomrade {
         };
 
         int8_t getSize() { return size_; }
+        uint8_t getOptions() { return options_; }
         void setDisplayEventCallback(DisplayEventCallback callback);
         State& getState();
         void input(Button button);
     private:
+        uint8_t options_;
         int8_t size_;
         State state_;
         Button lastButton_;

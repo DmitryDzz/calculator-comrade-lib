@@ -21,9 +21,15 @@ namespace calculatorcomrade {
         Register m;
         Operation operation;
 
-        State() : State(Config::DEFAULT_SIZE) {}
-
-        explicit State(int8_t size) : size_(size), x(size), y(size), m(size), operation(Operation::add) {
+        explicit State() : State(Config::DEFAULT_SIZE, 0) {}
+        explicit State(int8_t size) : State(size, 0) {}
+        explicit State(int8_t size, uint8_t options) :
+                options_(options),
+                size_(size),
+                x(size),
+                y(size),
+                m(size),
+                operation(Operation::add) {
             assert(size > 0);
             assert(size <= Config::MAX_SIZE);
         }
@@ -71,12 +77,12 @@ namespace calculatorcomrade {
             Register acc(m.getSize());
             acc.set(m);
 
-            if (false) {
+            if (options_ & Config::OPTION_CITIZEN_MEM_TRUNK) {
+                Math::calculate(acc, x, Operation::add);
+            } else {
                 Register xT(x.getSize());
                 xT.set(x);
                 Math::calculate(acc, xT, Operation::add);
-            } else {
-                Math::calculate(acc, x, Operation::add);
             }
 
             if (acc.hasError()) {
@@ -124,6 +130,7 @@ namespace calculatorcomrade {
         }
 
     private:
+        uint8_t options_;
         int8_t size_;
     };
 

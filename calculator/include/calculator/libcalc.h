@@ -25,7 +25,7 @@ typedef std::map<HCALC, Calculator*> InstancesMap;
 #define HRES_ERR_NO_INSTANCE ((HRES)-1)
 #define HRES_ERR_TOO_MANY_INSTANCES ((HRES)-2)
 
-extern "C" HRES CreateCalculator(int8_t digits, HCALC *hcalc);
+extern "C" HRES CreateCalculator(int8_t digits, uint8_t options, HCALC *hcalc);
 
 extern "C" HRES DisposeCalculator(HCALC hCalc);
 
