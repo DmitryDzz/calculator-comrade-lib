@@ -130,7 +130,8 @@ void Calculator::input(Button button) {
             memMinus();
             break;
         case Button::memRC:
-            //TODO DZZ
+            if (button == lastButton_) memClear();
+            else memRestore();
             break;
         case Button::memR:
             memRestore();

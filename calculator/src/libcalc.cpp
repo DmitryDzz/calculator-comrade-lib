@@ -91,6 +91,14 @@ extern "C" HRES GetError(const HCALC hCalc, bool *hasError) {
     return HRES_OK;
 }
 
+extern "C" HRES GetMemory(const HCALC hCalc, bool *memoryHasValue) {
+    Calculator* calculator = findInstance(hCalc);
+    if (calculator == nullptr)
+        return HRES_ERR_NO_INSTANCE;
+    *memoryHasValue = calculator->getState().memHasValue();
+    return HRES_OK;
+}
+
 extern "C" HRES GetPointPos(const HCALC hCalc, int8_t *pointPos) {
     Calculator* calculator = findInstance(hCalc);
     if (calculator == nullptr)
