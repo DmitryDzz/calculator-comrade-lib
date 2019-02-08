@@ -32,6 +32,8 @@ TEST_CALCULATOR_INPUT(ClearEntry2) {
     calc.input(Button::d3);
     calc.input(Button::equals);
     ASSERT_EQ(4, getAbsIntValue(calc.getState().x));
+    calc.input(Button::ce);
+    ASSERT_EQ(4, getAbsIntValue(calc.getState().x));
 }
 
 TEST_CALCULATOR_INPUT(ClearEntry3) {
@@ -46,8 +48,21 @@ TEST_CALCULATOR_INPUT(ClearEntry3) {
     ASSERT_EQ(4, getIntValue(x));
     ASSERT_EQ(2, getIntValue(y));
     c.input(Button::ce);
-    ASSERT_EQ(0, getIntValue(x));
-    ASSERT_EQ(0, getIntValue(y));
+    ASSERT_EQ(4, getIntValue(x));
+    ASSERT_EQ(2, getIntValue(y));
+}
+
+TEST_CALCULATOR_INPUT(ClearEntry4) {
+    Calculator c;
+    Register &x = c.getState().x;
+    Register &y = c.getState().y;
+
+    c.input(Button::d3);
+    c.input(Button::mul);
+    c.input(Button::ce);
+    c.input(Button::equals);
+    ASSERT_EQ(9, getIntValue(x));
+    ASSERT_EQ(3, getIntValue(y));
 }
 
 TEST_CALCULATOR_INPUT(ClearEntryAfterOverflow) {
@@ -72,9 +87,9 @@ TEST_CALCULATOR_INPUT(ClearEntryAfterOverflow) {
     ASSERT_EQ(false, state.x.hasError());
 
     c.input(Button::ce); // There's no input, so Button::ce works as Button::ca.
-    ASSERT_EQ(0, getAbsIntValue(state.x)); // 0 in X
-    ASSERT_EQ(0, state.x.getPointPos());
-    ASSERT_EQ(0, getAbsIntValue(state.y)); // 0 in Y
+    ASSERT_EQ(89999999, getAbsIntValue(state.x)); // 8.9999999 in X
+    ASSERT_EQ(7, state.x.getPointPos());
+    ASSERT_EQ(99999999, getAbsIntValue(state.y)); // 99999999 in Y
     ASSERT_EQ(0, state.y.getPointPos());
     ASSERT_EQ(false, state.x.hasError());
 }

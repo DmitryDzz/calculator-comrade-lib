@@ -54,6 +54,7 @@ namespace calculatorcomrade {
         void inputDigit(int8_t digit);
         void inputPoint();
         void shiftLeftOnInput();
+        void saveButton(Button button);
 
         void calculateEquals();
         void calculateAddSubMulDiv();

@@ -30,7 +30,7 @@ void Calculator::input(Button button) {
         else if (button == Button::ce || button == Button::ceca)
             state_.x.setError(false);
 
-        lastButton_ = button;
+        saveButton(button);
         if (displayEventCallback_ != nullptr)
             displayEventCallback_();
         return;
@@ -60,8 +60,8 @@ void Calculator::input(Button button) {
                 state_.x.clear();
                 inputSize_ = 0;
                 inputHasPoint_ = false;
+                inNumber_ = true;
             }
-            inNumber_ = true;
             break;
         default:
             inputSize_ = 0;
@@ -141,7 +141,7 @@ void Calculator::input(Button button) {
             break;
     }
 
-    lastButton_ = button;
+    saveButton(button);
     if (displayEventCallback_ != nullptr)
         displayEventCallback_();
 }
@@ -155,8 +155,6 @@ void Calculator::clearAll() {
 void Calculator::clearEntry() {
     if (inputSize_ > 0 || inputHasPoint_)
         clearInput();
-    else
-        clearAll();
 }
 
 void Calculator::clearInput() {
@@ -185,6 +183,26 @@ void Calculator::shiftLeftOnInput() {
         for (int8_t i = 0; i < inputSize_; i++)
             state_.x.setDigit(inputSize_ - i, state_.x.getDigit(inputSize_ - i - S1));
         state_.x.setDigit(0, 0);
+    }
+}
+
+void Calculator::saveButton(const Button button) {
+    switch (button) {
+        case Button::ceca:
+        case Button::memRC:
+        case Button::plus:
+        case Button::minus:
+        case Button::mul:
+        case Button::div:
+            lastButton_ = button;
+            break;
+        case Button::ce:
+            // This is a patch fo test ClearEntry4: "3 * ce =" => 9
+            //TODO DZZ Check it on another calculator with CE button.
+            break;
+        default:
+            lastButton_ = Button::none;
+            break;
     }
 }
 
