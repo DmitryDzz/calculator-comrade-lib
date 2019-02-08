@@ -114,13 +114,12 @@ namespace calculatorcomrade {
         }
 
         inline void setNegative(const bool value) {
-            negative_ = value;
+            negative_ = isZero(true) ? false : value;
             notify();
         }
 
         inline void switchNegative() {
-            negative_ = !negative_;
-            notify();
+            setNegative(!negative_);
         }
 
         inline bool hasError() {

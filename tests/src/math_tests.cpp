@@ -144,6 +144,14 @@ TEST_MATH(SubInt) {
     Register r1(8);
     Register r2(8);
 
+    setValue(r1, 2);
+    setValue(r2, 2);
+    Math::calculate(r1, r2, Operation::sub);
+    ASSERT_EQ(0, getAbsIntValue(r1));
+    ASSERT_EQ(0, r1.getPointPos());
+    ASSERT_EQ(false, r1.isNegative());
+    ASSERT_EQ(false, r1.hasError());
+
     setValue(r1, 12345);
     setValue(r2, 6789);
     Math::calculate(r1, r2, Operation::sub);

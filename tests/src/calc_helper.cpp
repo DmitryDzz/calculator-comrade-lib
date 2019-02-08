@@ -28,8 +28,8 @@ void calculatorcomrade::setValue(Register &r, int64_t value) {
 
 void calculatorcomrade::setValue(Register &r, int64_t value, int8_t digitsAfterPoint) {
     int8_t digits = r.getSize();
-    r.setNegative(value < 0);
-    std::string text = std::to_string(r.isNegative() ? -value : value);
+    bool isNegative = value < 0;
+    std::string text = std::to_string(isNegative ? -value : value);
     auto totalDigits = (int8_t) text.size();
 
     if (digitsAfterPoint < totalDigits) {
@@ -75,6 +75,7 @@ void calculatorcomrade::setValue(Register &r, int64_t value, int8_t digitsAfterP
             r.setDigit((int8_t)i, (int8_t)std::stoi(digitText));
         }
     }
+    r.setNegative(isNegative);
 }
 
 void calculatorcomrade::evaluateText(Register &r, std::string *output) {

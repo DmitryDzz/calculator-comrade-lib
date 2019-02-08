@@ -198,7 +198,6 @@ TEST_CALCULATOR_INPUT(PositiveInt) {
     ASSERT_EQ(expected, c.getState());
 }
 
-
 TEST_CALCULATOR_INPUT(NegativeInt) {
     Calculator c(4);
     State expected(4);
@@ -414,11 +413,10 @@ TEST_CALCULATOR_INPUT(SqrtFakeNegative) {
     ASSERT_EQ(-6, getIntValue(x));
 }
 
-TEST_CALCULATOR_INPUT(ChangeSign) {
+TEST_CALCULATOR_INPUT(ChangeSign1) {
     Calculator c(8);
     Register &x = c.getState().x;
 
-    c.input(Button::ca);
     c.input(Button::d9);
     c.input(Button::plus);
     c.input(Button::d5);
@@ -426,4 +424,15 @@ TEST_CALCULATOR_INPUT(ChangeSign) {
     c.input(Button::equals);
     ASSERT_EQ(4, getIntValue(x));
     ASSERT_EQ(0, x.getPointPos());
+}
+
+TEST_CALCULATOR_INPUT(ChangeSign2) {
+    Calculator c(8);
+    Register &x = c.getState().x;
+
+    c.input(Button::d0);
+    c.input(Button::changeSign);
+    ASSERT_EQ(0, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_FALSE(x.isNegative());
 }
