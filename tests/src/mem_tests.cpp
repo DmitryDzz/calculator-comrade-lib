@@ -46,6 +46,7 @@ TEST_MEM(PlusInput) {
 //mr => mem 2
 //mc => 2
 //mc => 2
+//TODO DZZ Check it on hardware.
 TEST_MEM(MemClear) {
     Calculator c;
     State &s = c.getState();
@@ -69,6 +70,39 @@ TEST_MEM(MemClear) {
     ASSERT_EQ(0, getIntValue(s.m));
     ASSERT_FALSE(s.memHasValue());
     c.input(Button::memC);
+    ASSERT_EQ(2, getIntValue(s.x));
+    ASSERT_EQ(0, getIntValue(s.m));
+    ASSERT_FALSE(s.memHasValue());
+}
+
+//2 m+ => mem 2
+//3 => mem 3
+//mrc => mem 2
+//mrc => 2
+//mrc => 2
+TEST_MEM(MemRC) {
+    Calculator c;
+    State &s = c.getState();
+
+    ASSERT_FALSE(s.memHasValue());
+    c.input(Button::d2);
+    c.input(Button::memPlus);
+    ASSERT_EQ(2, getIntValue(s.x));
+    ASSERT_EQ(2, getIntValue(s.m));
+    ASSERT_TRUE(s.memHasValue());
+    c.input(Button::d3);
+    ASSERT_EQ(3, getIntValue(s.x));
+    ASSERT_EQ(2, getIntValue(s.m));
+    ASSERT_TRUE(s.memHasValue());
+    c.input(Button::memRC);
+    ASSERT_EQ(2, getIntValue(s.x));
+    ASSERT_EQ(2, getIntValue(s.m));
+    ASSERT_TRUE(s.memHasValue());
+    c.input(Button::memRC);
+    ASSERT_EQ(2, getIntValue(s.x));
+    ASSERT_EQ(0, getIntValue(s.m));
+    ASSERT_FALSE(s.memHasValue());
+    c.input(Button::memRC);
     ASSERT_EQ(2, getIntValue(s.x));
     ASSERT_EQ(0, getIntValue(s.m));
     ASSERT_FALSE(s.memHasValue());
