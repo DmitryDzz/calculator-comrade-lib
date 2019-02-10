@@ -23,6 +23,7 @@ namespace calculatorcomrade {
                 state_(size),
                 size_(size),
                 lastButton_(Button::none),
+                lastButtonWasCe_(false),
                 hasOperation_(false),
                 inNumber_(false),
                 displayEventCallback_(nullptr),
@@ -43,6 +44,7 @@ namespace calculatorcomrade {
         int8_t size_;
         State state_;
         Button lastButton_;
+        bool lastButtonWasCe_;
         bool hasOperation_;
         bool inNumber_;
         DisplayEventCallback displayEventCallback_;

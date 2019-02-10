@@ -17,6 +17,8 @@ using calculatorcomrade::Register;
 using calculatorcomrade::Math;
 using calculatorcomrade::Operation;
 
+#define TEST_SPECIAL(test_name) TEST(TestSpecial, test_name)
+
 /*
  * WARNING!
  *     1234.5678 (r1)
@@ -31,7 +33,7 @@ using calculatorcomrade::Operation;
  * That means that in the second subtraction r2 equals to 100.1234.
  * The lowest digit was lost in case of pointPos's normalization during the first subtraction.
  */
-TEST(TestSpecial, RegisterYChanged) {
+TEST_SPECIAL(RegisterYChanged) {
     Calculator calc(8);
     calc.input(Button::d1);
     calc.input(Button::d2);
@@ -75,4 +77,23 @@ TEST(TestSpecial, RegisterYChanged) {
 
     ASSERT_EQ(1001234, getAbsIntValue(calc.getState().y));
     ASSERT_EQ(4, calc.getState().y.getPointPos());
+}
+
+TEST_SPECIAL(CeAndCeCaCompatibility) {
+    Calculator c(8);
+    Register &x = c.getState().x;
+
+    for (int8_t i = 0; i < 8; i++)
+        c.input(Button::d9);
+    c.input(Button::plus);
+    c.input(Button::d1);
+    c.input(Button::equals);
+    ASSERT_FALSE(x.isZero());
+    ASSERT_TRUE(x.hasError());
+    c.input(Button::ce);
+    ASSERT_FALSE(x.isZero());
+    ASSERT_FALSE(x.hasError());
+    c.input(Button::ceca);
+    ASSERT_TRUE(x.isZero());
+    ASSERT_FALSE(x.hasError());
 }

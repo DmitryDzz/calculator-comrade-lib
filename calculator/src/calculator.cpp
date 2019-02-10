@@ -81,7 +81,7 @@ void Calculator::input(Button button) {
             clearEntry();
             break;
         case Button::ceca:
-            if (button == lastButton_) clearAll();
+            if (button == lastButton_ || lastButtonWasCe_) clearAll();
             else clearEntry();
             break;
         case Button::d0 ... Button::d9:
@@ -188,6 +188,7 @@ void Calculator::shiftLeftOnInput() {
 }
 
 void Calculator::saveButton(const Button button) {
+    lastButtonWasCe_ = false;
     switch (button) {
         case Button::ceca:
         case Button::memRC:
@@ -198,8 +199,9 @@ void Calculator::saveButton(const Button button) {
             lastButton_ = button;
             break;
         case Button::ce:
-            // This is a patch fo test ClearEntry4: "3 * ce =" => 9
+            // This is a patch for test ClearEntry4: "3 * ce =" => 9
             //TODO DZZ Check it on another calculator with CE button.
+            lastButtonWasCe_ = true;
             break;
         default:
             lastButton_ = Button::none;
