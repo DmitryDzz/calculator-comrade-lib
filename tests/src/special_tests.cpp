@@ -6,6 +6,7 @@
 #include <calculator/calculator.h>
 
 #include "calculator/state.h"
+#include "calculator/math.h"
 #include "calculator/register.h"
 #include "calc_helper.h"
 

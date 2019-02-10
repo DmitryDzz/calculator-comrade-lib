@@ -7,6 +7,7 @@
 #include <locale>
 
 #include "calculator/calculator.h"
+#include "calculator/math.h"
 
 #define S1 ((int8_t)1)
 
@@ -220,7 +221,7 @@ void Calculator::calculateAddSubMulDiv() {
         state_.exchangeXY();
     }
 
-    state_.calculate();
+    Math::calculate(state_.x, state_.y, state_.operation);
 
     if (op == Operation::add || op == Operation::sub)
         state_.y.clear();
@@ -239,7 +240,7 @@ void Calculator::calculateEquals() {
             state_.x.setOne();
     }
 
-    state_.calculate();
+    Math::calculate(state_.x, state_.y, state_.operation);
 }
 
 void Calculator::calculatePercent() {
@@ -249,20 +250,20 @@ void Calculator::calculatePercent() {
             state_.exchangeXY();
         }
 
-        state_.calculatePercent();
+        Math::calculatePercent(state_.x, state_.y, state_.operation);
     } else {
         if (op == Operation::mul || op == Operation::div) {
-            state_.calculatePercent();
+            Math::calculatePercent(state_.x, state_.y, state_.operation);
         }
     }
 }
 
 void Calculator::calculateSqrt() {
-    state_.calculateSqrt();
+    Math::sqrt(state_.x);
 }
 
 void Calculator::changeSign() {
-    state_.changeSign();
+    Math::changeSign(state_.x);
 }
 
 void Calculator::memPlusOrMinus(const Operation memOperation) {

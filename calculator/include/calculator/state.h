@@ -10,7 +10,6 @@
 #include "calculator/config.h"
 #include "calculator/operation.h"
 #include "calculator/register.h"
-#include "calculator/math.h"
 
 namespace calculatorcomrade {
 
@@ -46,25 +45,6 @@ namespace calculatorcomrade {
             tmp.set(x);
             x.set(y);
             y.set(tmp);
-        }
-
-        /**
-         * Calculates "x operation y". The result is placed to register X.
-         */
-        void calculate() {
-            Math::calculate(x, y, operation);
-        }
-
-        void calculatePercent() {
-            Math::calculatePercent(x, y, operation);
-        }
-
-        void calculateSqrt() {
-            Math::sqrt(x);
-        }
-
-        void changeSign() {
-            Math::changeSign(x);
         }
 
         bool memHasValue() {
