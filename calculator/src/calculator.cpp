@@ -124,10 +124,10 @@ void Calculator::input(Button button) {
             changeSign();
             break;
         case Button::memPlus:
-            memPlus();
+            memPlusOrMinus(Operation::add);
             break;
         case Button::memMinus:
-            memMinus();
+            memPlusOrMinus(Operation::sub);
             break;
         case Button::memRC:
             if (button == lastButton_) memClear();
@@ -265,16 +265,37 @@ void Calculator::changeSign() {
     state_.changeSign();
 }
 
-void Calculator::memPlus()
-{
+void Calculator::memPlusOrMinus(const Operation memOperation) {
+    assert(memOperation == Operation::add || memOperation == Operation::sub);
     inNumber_ = false;
-    state_.memPlus();
-}
 
-void Calculator::memMinus()
-{
-    inNumber_ = false;
-    state_.memMinus();
+    Register &x = state_.x;
+    Register &y = state_.y;
+    Register &m = state_.m;
+
+    if (hasOperation_) {
+        calculateEquals();
+        y.clear();
+        state_.operation = Operation::add;
+        hasOperation_ = false;
+        if (x.hasError()) return;
+    }
+
+    Register acc(m.getSize());
+    acc.set(m);
+    if (options_ & Config::OPTION_MEM_CAN_TRUNC_X) {
+        Math::calculate(acc, x, memOperation);
+    } else {
+        Register xT(x.getSize());
+        xT.set(x);
+        Math::calculate(acc, xT, memOperation);
+    }
+    if (acc.hasError()) {
+        x.clear();
+        x.setError(true);
+    } else {
+        m.set(acc);
+    }
 }
 
 void Calculator::memClear()

@@ -73,38 +73,6 @@ namespace calculatorcomrade {
             return !m.isZero();
         }
 
-        void memPlus() {
-            Register acc(m.getSize());
-            acc.set(m);
-
-            if (options_ & Config::OPTION_MEM_CAN_TRUNC_X) {
-                Math::calculate(acc, x, Operation::add);
-            } else {
-                Register xT(x.getSize());
-                xT.set(x);
-                Math::calculate(acc, xT, Operation::add);
-            }
-
-            if (acc.hasError()) {
-                x.clear();
-                x.setError(true);
-            } else {
-                m.set(acc);
-            }
-        }
-
-        void memMinus() {
-            Register acc(m.getSize());
-            acc.set(m);
-            Math::sub(acc, x);
-            if (acc.hasError()) {
-                x.clear();
-                x.setError(true);
-            } else {
-                m.set(acc);
-            }
-        }
-
         void memClear() {
             m.clear();
         }

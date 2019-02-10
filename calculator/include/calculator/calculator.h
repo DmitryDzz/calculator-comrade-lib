@@ -62,8 +62,7 @@ namespace calculatorcomrade {
         void calculateSqrt();
         void changeSign();
 
-        void memPlus();
-        void memMinus();
+        void memPlusOrMinus(Operation memOperation);
         void memClear();
         void memRestore();
     };
