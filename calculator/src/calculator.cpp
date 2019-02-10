@@ -221,7 +221,7 @@ void Calculator::calculateAddSubMulDiv() {
         state_.exchangeXY();
     }
 
-    Math::calculate(state_.x, state_.y, state_.operation);
+    Math::calculate(state_.x, state_.y, state_.operation, options_);
 
     if (op == Operation::add || op == Operation::sub)
         state_.y.clear();
@@ -240,7 +240,7 @@ void Calculator::calculateEquals() {
             state_.x.setOne();
     }
 
-    Math::calculate(state_.x, state_.y, state_.operation);
+    Math::calculate(state_.x, state_.y, state_.operation, options_);
 }
 
 void Calculator::calculatePercent() {
@@ -250,10 +250,10 @@ void Calculator::calculatePercent() {
             state_.exchangeXY();
         }
 
-        Math::calculatePercent(state_.x, state_.y, state_.operation);
+        Math::calculatePercent(state_.x, state_.y, state_.operation, options_);
     } else {
         if (op == Operation::mul || op == Operation::div) {
-            Math::calculatePercent(state_.x, state_.y, state_.operation);
+            Math::calculatePercent(state_.x, state_.y, state_.operation, options_);
         }
     }
 }
@@ -285,11 +285,11 @@ void Calculator::memPlusOrMinus(const Operation memOperation) {
     Register acc(m.getSize());
     acc.set(m);
     if (options_ & Config::OPTION_MEM_CAN_TRUNC_X) {
-        Math::calculate(acc, x, memOperation);
+        Math::calculate(acc, x, memOperation, options_);
     } else {
         Register xT(x.getSize());
         xT.set(x);
-        Math::calculate(acc, xT, memOperation);
+        Math::calculate(acc, xT, memOperation, options_);
     }
     if (acc.hasError()) {
         x.clear();

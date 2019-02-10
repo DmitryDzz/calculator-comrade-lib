@@ -12,8 +12,8 @@ namespace calculatorcomrade {
 
     class Math {
     public:
-        static void calculate(Register &r1, Register &r2, const Operation &operation);
-        static void calculatePercent(Register &r1, Register &r2, const Operation &operation);
+        static void calculate(Register &r1, Register &r2, const Operation &operation, uint8_t options);
+        static void calculatePercent(Register &r1, Register &r2, const Operation &operation, uint8_t options);
 
         static void add(Register &r1, Register &r2);
         static void sub(Register &r1, Register &r2);
@@ -36,6 +36,7 @@ namespace calculatorcomrade {
         static void normalizePointPositions(Register &r1, Register &r2);
         static void truncRightZeros(Register &r);
         static void doubleSizedRegisterToSingle(Register &r2, Register &r);
+        static void appendZerosOnOverflow(Register &r, uint8_t options);
 
         static void addInternal(Register &r1, Register &r2);
         static void addPercent(Register &r1ex, Register &r2ex, Register &accEx);

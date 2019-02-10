@@ -9,7 +9,7 @@ using calculatorcomrade::Math;
 #define S1 ((int8_t)1)
 #define S2 ((int8_t)2)
 
-void Math::calculate(Register &r1, Register &r2, const Operation &operation) {
+void Math::calculate(Register &r1, Register &r2, const Operation &operation, uint8_t options) {
     switch (operation) {
         case Operation::add:
             add(r1, r2);
@@ -24,6 +24,8 @@ void Math::calculate(Register &r1, Register &r2, const Operation &operation) {
             div(r1, r2);
             break;
     }
+
+    appendZerosOnOverflow(r1, options);
 }
 
 // "unsafe" means that right shift will be performed
@@ -38,8 +40,8 @@ void Math::unsafeShiftRight(Register &r, const bool updatePointPos) {
         r.incPointPos(-1);
 }
 
-// "safe" means that left shift will be performed
-// until there is a non-zero value in the highest digit.
+// "safe" means that left shift will be performed until there is a
+// non-zero value in the highest digit or a decimal point after it.
 bool Math::safeShiftLeft(Register &r, const bool updatePointPos) {
     int8_t size = r.getSize();
     int8_t lastIndex = size - S1;
@@ -124,6 +126,12 @@ void Math::doubleSizedRegisterToSingle(Register &r2, Register &r) {
         r2.setNegative(false);
 
     r.set(r2);
+}
+
+void Math::appendZerosOnOverflow(Register &r, uint8_t options) {
+    if (!r.hasError()) return;
+    if (options & Config::OPTION_TRUNC_ZEROS_ON_OVERFLOW) return;
+    while (safeShiftLeft(r, true)) {}
 }
 
 void Math::add(Register &r1, Register &r2) {
@@ -344,7 +352,7 @@ void Math::div(Register &r1, Register &r2, Register &acc) {
     truncRightZeros(r1);
 }
 
-void Math::calculatePercent(Register &r1, Register &r2, const Operation &operation) {
+void Math::calculatePercent(Register &r1, Register &r2, const Operation &operation, uint8_t options) {
     switch (operation) {
         case Operation::add:
             addPercent(r1, r2);
@@ -359,6 +367,8 @@ void Math::calculatePercent(Register &r1, Register &r2, const Operation &operati
             divPercent(r1, r2);
             break;
     }
+
+    appendZerosOnOverflow(r1, options);
 }
 
 void Math::addPercent(Register &r1ex, Register &r2ex, Register &accEx) {

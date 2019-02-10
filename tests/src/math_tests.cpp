@@ -38,7 +38,7 @@ TEST_MATH(AddInt) {
 
     setValue(r1, 123);
     setValue(r2, 456);
-    Math::calculate(r1, r2, Operation::add);
+    Math::calculate(r1, r2, Operation::add, Config::OPTIONS_DEFAULT);
     ASSERT_EQ(579, getAbsIntValue(r1));
     ASSERT_EQ(0, r1.getPointPos());
     ASSERT_EQ(false, r1.isNegative());
@@ -46,7 +46,7 @@ TEST_MATH(AddInt) {
 
     setValue(r1, -123);
     setValue(r2, -456);
-    Math::calculate(r1, r2, Operation::add);
+    Math::calculate(r1, r2, Operation::add, Config::OPTIONS_DEFAULT);
     ASSERT_EQ(579, getAbsIntValue(r1));
     ASSERT_EQ(0, r1.getPointPos());
     ASSERT_EQ(true, r1.isNegative());
@@ -54,7 +54,7 @@ TEST_MATH(AddInt) {
 
     setValue(r1, -123);
     setValue(r2, 456);
-    Math::calculate(r1, r2, Operation::add);
+    Math::calculate(r1, r2, Operation::add, Config::OPTIONS_DEFAULT);
     ASSERT_EQ(333, getAbsIntValue(r1));
     ASSERT_EQ(0, r1.getPointPos());
     ASSERT_EQ(false, r1.isNegative());
@@ -62,39 +62,63 @@ TEST_MATH(AddInt) {
 
     setValue(r1, 123);
     setValue(r2, -456);
-    Math::calculate(r1, r2, Operation::add);
+    Math::calculate(r1, r2, Operation::add, Config::OPTIONS_DEFAULT);
     ASSERT_EQ(333, getAbsIntValue(r1));
     ASSERT_EQ(0, r1.getPointPos());
     ASSERT_EQ(true, r1.isNegative());
     ASSERT_EQ(false, r1.hasError());
 }
 
-TEST_MATH(AddOverflow) {
+TEST_MATH(AddOverflowTruncZeros) {
     Register r1(8);
     Register r2(8);
 
+    uint8_t options = Config::OPTIONS_DEFAULT | Config::OPTION_TRUNC_ZEROS_ON_OVERFLOW;
+
     setValue(r1, 99999999);
     setValue(r2, 1);
-    Math::calculate(r1, r2, Operation::add);
-    ASSERT_EQ(1, getAbsIntValue(r1));
-    ASSERT_EQ(1, r1.getDigit(0));
+    Math::calculate(r1, r2, Operation::add, options);
+    ASSERT_EQ(1, getIntValue(r1));
     ASSERT_EQ(0, r1.getPointPos());
-    ASSERT_EQ(false, r1.isNegative());
     ASSERT_EQ(true, r1.hasError());
 
     setValue(r1, -99999999);
     setValue(r2, -1);
-    Math::calculate(r1, r2, Operation::add);
-    ASSERT_EQ(1, getAbsIntValue(r1));
-    ASSERT_EQ(1, r1.getDigit(0));
+    Math::calculate(r1, r2, Operation::add, options);
+    ASSERT_EQ(-1, getIntValue(r1));
     ASSERT_EQ(0, r1.getPointPos());
-    ASSERT_EQ(true, r1.isNegative());
     ASSERT_EQ(true, r1.hasError());
+}
+
+TEST_MATH(AddOverflowDoNotTruncZeros) {
+    Register r1(8);
+    Register r2(8);
+
+    uint8_t options = Config::OPTIONS_DEFAULT & (~Config::OPTION_TRUNC_ZEROS_ON_OVERFLOW);
+
+    setValue(r1, 99999999);
+    setValue(r2, 1);
+    Math::calculate(r1, r2, Operation::add, options);
+    ASSERT_EQ(10000000, getIntValue(r1));
+    ASSERT_EQ(7, r1.getPointPos());
+    ASSERT_EQ(true, r1.hasError());
+
+    setValue(r1, -99999999);
+    setValue(r2, -1);
+    Math::calculate(r1, r2, Operation::add, options);
+    ASSERT_EQ(-10000000, getIntValue(r1));
+    ASSERT_EQ(7, r1.getPointPos());
+    ASSERT_EQ(true, r1.hasError());
+}
+
+TEST_MATH(AddOverflowNoRound) {
+    Register r1(8);
+    Register r2(8);
 
     // There's no rounding on overflow (1):
     setValue(r1, 99999933);
     setValue(r2, 121); // The result in 9 digits is 10000005[4]
-    Math::calculate(r1, r2, Operation::add);
+    Math::calculate(r1, r2, Operation::add, Config::OPTIONS_DEFAULT);
     ASSERT_EQ(10000005, getAbsIntValue(r1));
     ASSERT_EQ(7, r1.getPointPos());
     ASSERT_EQ(false, r1.isNegative());
@@ -103,7 +127,7 @@ TEST_MATH(AddOverflow) {
     // There's no rounding on overflow (2):
     setValue(r1, 99999933);
     setValue(r2, 126); // The result in 9 digits is 10000005[9]
-    Math::calculate(r1, r2, Operation::add);
+    Math::calculate(r1, r2, Operation::add, Config::OPTIONS_DEFAULT);
     ASSERT_EQ(10000005, getAbsIntValue(r1));
     ASSERT_EQ(7, r1.getPointPos());
     ASSERT_EQ(false, r1.isNegative());
@@ -119,7 +143,7 @@ TEST_MATH(AddNoOverflow) {
 
     setValue(r1, 90000001, 7);
     setValue(r2, 1);
-    Math::calculate(r1, r2, Operation::add);
+    Math::calculate(r1, r2, Operation::add, Config::OPTIONS_DEFAULT);
     ASSERT_FALSE(r1.hasError());
     ASSERT_EQ(10, getIntValue(r1));
     ASSERT_EQ(0, r1.getPointPos());
@@ -131,7 +155,7 @@ TEST_MATH(AddReal) {
 
     setValue(r1, 123456, 3); // 123.456
     setValue(r2, 123, 2);    //   1.23
-    Math::calculate(r1, r2, Operation::add);
+    Math::calculate(r1, r2, Operation::add, Config::OPTIONS_DEFAULT);
     ASSERT_EQ(124686, getAbsIntValue(r1));
     ASSERT_EQ(3, r1.getPointPos());
     ASSERT_EQ(false, r1.isNegative());
@@ -146,7 +170,7 @@ TEST_MATH(SubInt) {
 
     setValue(r1, 2);
     setValue(r2, 2);
-    Math::calculate(r1, r2, Operation::sub);
+    Math::calculate(r1, r2, Operation::sub, Config::OPTIONS_DEFAULT);
     ASSERT_EQ(0, getAbsIntValue(r1));
     ASSERT_EQ(0, r1.getPointPos());
     ASSERT_EQ(false, r1.isNegative());
@@ -154,7 +178,7 @@ TEST_MATH(SubInt) {
 
     setValue(r1, 12345);
     setValue(r2, 6789);
-    Math::calculate(r1, r2, Operation::sub);
+    Math::calculate(r1, r2, Operation::sub, Config::OPTIONS_DEFAULT);
     ASSERT_EQ(5556, getAbsIntValue(r1));
     ASSERT_EQ(0, r1.getPointPos());
     ASSERT_EQ(false, r1.isNegative());
@@ -162,7 +186,7 @@ TEST_MATH(SubInt) {
 
     setValue(r1, -123);
     setValue(r2, -468);
-    Math::calculate(r1, r2, Operation::sub);
+    Math::calculate(r1, r2, Operation::sub, Config::OPTIONS_DEFAULT);
     ASSERT_EQ(345, getAbsIntValue(r1));
     ASSERT_EQ(0, r1.getPointPos());
     ASSERT_EQ(false, r1.isNegative());
@@ -170,7 +194,7 @@ TEST_MATH(SubInt) {
 
     setValue(r1, -123);
     setValue(r2, 468);
-    Math::calculate(r1, r2, Operation::sub);
+    Math::calculate(r1, r2, Operation::sub, Config::OPTIONS_DEFAULT);
     ASSERT_EQ(591, getAbsIntValue(r1));
     ASSERT_EQ(0, r1.getPointPos());
     ASSERT_EQ(true, r1.isNegative());
@@ -178,39 +202,63 @@ TEST_MATH(SubInt) {
 
     setValue(r1, 123);
     setValue(r2, -468);
-    Math::calculate(r1, r2, Operation::sub);
+    Math::calculate(r1, r2, Operation::sub, Config::OPTIONS_DEFAULT);
     ASSERT_EQ(591, getAbsIntValue(r1));
     ASSERT_EQ(0, r1.getPointPos());
     ASSERT_EQ(false, r1.isNegative());
     ASSERT_EQ(false, r1.hasError());
 }
 
-TEST_MATH(SubOverflow) {
+TEST_MATH(SubOverflowTruncZeros) {
     Register r1(8);
     Register r2(8);
 
+    uint8_t options = Config::OPTIONS_DEFAULT | Config::OPTION_TRUNC_ZEROS_ON_OVERFLOW;
+
     setValue(r1, -99999999);
     setValue(r2, 1);
-    Math::calculate(r1, r2, Operation::sub);
-    ASSERT_EQ(1, getAbsIntValue(r1));
-    ASSERT_EQ(1, r1.getDigit(0));
+    Math::calculate(r1, r2, Operation::sub, options);
+    ASSERT_EQ(-1, getIntValue(r1));
     ASSERT_EQ(0, r1.getPointPos());
-    ASSERT_EQ(true, r1.isNegative());
     ASSERT_EQ(true, r1.hasError());
 
     setValue(r1, 99999999);
     setValue(r2, -1);
-    Math::calculate(r1, r2, Operation::sub);
-    ASSERT_EQ(1, getAbsIntValue(r1));
-    ASSERT_EQ(1, r1.getDigit(0));
+    Math::calculate(r1, r2, Operation::sub, options);
+    ASSERT_EQ(1, getIntValue(r1));
     ASSERT_EQ(0, r1.getPointPos());
-    ASSERT_EQ(false, r1.isNegative());
     ASSERT_EQ(true, r1.hasError());
+}
+
+TEST_MATH(SubOverflowDoNotTruncZeros) {
+    Register r1(8);
+    Register r2(8);
+
+    uint8_t options = Config::OPTIONS_DEFAULT & (~Config::OPTION_TRUNC_ZEROS_ON_OVERFLOW);
+
+    setValue(r1, -99999999);
+    setValue(r2, 1);
+    Math::calculate(r1, r2, Operation::sub, options);
+    ASSERT_EQ(-10000000, getIntValue(r1));
+    ASSERT_EQ(7, r1.getPointPos());
+    ASSERT_EQ(true, r1.hasError());
+
+    setValue(r1, 99999999);
+    setValue(r2, -1);
+    Math::calculate(r1, r2, Operation::sub, options);
+    ASSERT_EQ(10000000, getIntValue(r1));
+    ASSERT_EQ(7, r1.getPointPos());
+    ASSERT_EQ(true, r1.hasError());
+}
+
+TEST_MATH(SubOverflowNoRound) {
+    Register r1(8);
+    Register r2(8);
 
     // There's no rounding on overflow (1):
     setValue(r1, -99999933);
     setValue(r2, 121); // The result in 9 digits is 100000054
-    Math::calculate(r1, r2, Operation::sub);
+    Math::calculate(r1, r2, Operation::sub, Config::OPTIONS_DEFAULT);
     ASSERT_EQ(10000005, getAbsIntValue(r1));
     ASSERT_EQ(7, r1.getPointPos());
     ASSERT_EQ(true, r1.isNegative());
@@ -219,7 +267,7 @@ TEST_MATH(SubOverflow) {
     // There's no rounding on overflow (2):
     setValue(r1, -99999933);
     setValue(r2, 126); // The result in 9 digits is 100000059
-    Math::calculate(r1, r2, Operation::sub);
+    Math::calculate(r1, r2, Operation::sub, Config::OPTIONS_DEFAULT);
     ASSERT_EQ(10000005, getAbsIntValue(r1));
     ASSERT_EQ(7, r1.getPointPos());
     ASSERT_EQ(true, r1.isNegative());
@@ -232,7 +280,7 @@ TEST_MATH(SubReal) {
 
     setValue(r1, 123456, 3); // 123.456
     setValue(r2, 123, 2);    //   1.23
-    Math::calculate(r1, r2, Operation::sub);
+    Math::calculate(r1, r2, Operation::sub, Config::OPTIONS_DEFAULT);
     ASSERT_EQ(122226, getAbsIntValue(r1));
     ASSERT_EQ(3, r1.getPointPos());
     ASSERT_EQ(false, r1.isNegative());
@@ -247,7 +295,7 @@ TEST_MATH(NonNegativeZeroAfterSum) {
 
     setValue(r1, -1974);
     setValue(r2, 1974);
-    Math::calculate(r1, r2, Operation::add);
+    Math::calculate(r1, r2, Operation::add, Config::OPTIONS_DEFAULT);
     bool zero = true;
     for (int8_t i = 0; i < 8; i++) {
         if (r1.getDigit(i) > 0) {
@@ -267,7 +315,7 @@ TEST_MATH(MulInt) {
 
     setValue(r1, 12);
     setValue(r2, 34);
-    Math::calculate(r1, r2, Operation::mul);
+    Math::calculate(r1, r2, Operation::mul, Config::OPTIONS_DEFAULT);
     ASSERT_EQ(408, getAbsIntValue(r1));
     ASSERT_EQ(0, r1.getPointPos());
     ASSERT_EQ(false, r1.isNegative());
@@ -275,7 +323,7 @@ TEST_MATH(MulInt) {
 
     setValue(r1, 12);
     setValue(r2, -34);
-    Math::calculate(r1, r2, Operation::mul);
+    Math::calculate(r1, r2, Operation::mul, Config::OPTIONS_DEFAULT);
     ASSERT_EQ(408, getAbsIntValue(r1));
     ASSERT_EQ(0, r1.getPointPos());
     ASSERT_EQ(true, r1.isNegative());
@@ -288,7 +336,7 @@ TEST_MATH(NonNegativeZeroAfterMul) {
 
     setValue(r1, -1974);
     setValue(r2, 0);
-    Math::calculate(r1, r2, Operation::mul);
+    Math::calculate(r1, r2, Operation::mul, Config::OPTIONS_DEFAULT);
     ASSERT_TRUE(r1.isZero());
     ASSERT_EQ(false, r1.isNegative());
     ASSERT_EQ(false, r1.hasError());
@@ -300,7 +348,7 @@ TEST_MATH(MulTruncAfterPoint1) {
 
     setValue(r1, 87, 1); // 8.7
     setValue(r2, 54, 1); // 5.4
-    Math::calculate(r1, r2, Operation::mul);
+    Math::calculate(r1, r2, Operation::mul, Config::OPTIONS_DEFAULT);
     ASSERT_EQ(469, getAbsIntValue(r1));
     ASSERT_EQ(1, r1.getPointPos());
     ASSERT_EQ(false, r1.isNegative());
