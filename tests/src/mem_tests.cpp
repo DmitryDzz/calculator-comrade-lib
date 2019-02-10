@@ -26,21 +26,6 @@ TEST_MEM(Plus) {
     ASSERT_EQ(5, getIntValue(m));
 }
 
-TEST_MEM(PlusInput) {
-    Calculator c;
-    Register &x = c.getState().x;
-    Register &m = c.getState().m;
-
-    c.input(Button::d2);
-    c.input(Button::memPlus);
-    ASSERT_EQ(2, getIntValue(x));
-    ASSERT_EQ(2, getIntValue(m));
-    c.input(Button::d3);
-    c.input(Button::memPlus);
-    ASSERT_EQ(3, getIntValue(x));
-    ASSERT_EQ(5, getIntValue(m));
-}
-
 //2 m+ => mem 2
 //3 => mem 3
 //mr => mem 2
@@ -157,6 +142,153 @@ TEST_MEM(MemAndRegisterY) {
     ASSERT_TRUE(s.memHasValue());
 }
 
+TEST_MEM(MemPlusSpecial1) {
+    Calculator c;
+    State &s = c.getState();
+
+    c.input(Button::d2);
+    c.input(Button::plus);
+    c.input(Button::d3);
+    c.input(Button::memPlus);
+    ASSERT_EQ(5, getIntValue(s.x));
+    ASSERT_EQ(0, getIntValue(s.y));
+    ASSERT_EQ(Operation::add, s.operation);
+    ASSERT_EQ(5, getIntValue(s.m));
+    c.input(Button::equals);
+    ASSERT_EQ(5, getIntValue(s.x));
+    ASSERT_EQ(0, getIntValue(s.y));
+    ASSERT_EQ(Operation::add, s.operation);
+    ASSERT_EQ(5, getIntValue(s.m));
+}
+
+TEST_MEM(MemPlusSpecial2) {
+    Calculator c;
+    State &s = c.getState();
+
+    c.input(Button::d2);
+    c.input(Button::mul);
+    c.input(Button::d3);
+    c.input(Button::memPlus);
+    ASSERT_EQ(6, getIntValue(s.x));
+    ASSERT_EQ(0, getIntValue(s.y));
+    ASSERT_EQ(Operation::add, s.operation);
+    ASSERT_EQ(6, getIntValue(s.m));
+    c.input(Button::equals);
+    ASSERT_EQ(6, getIntValue(s.x));
+    ASSERT_EQ(0, getIntValue(s.y));
+    ASSERT_EQ(Operation::add, s.operation);
+    ASSERT_EQ(6, getIntValue(s.m));
+}
+
+TEST_MEM(MemPlusSpecial3) {
+    Calculator c;
+    State &s = c.getState();
+
+    c.input(Button::d2);
+    c.input(Button::plus);
+    c.input(Button::memPlus);
+    ASSERT_EQ(2, getIntValue(s.x));
+    ASSERT_EQ(0, getIntValue(s.y));
+    ASSERT_EQ(Operation::add, s.operation);
+    ASSERT_EQ(2, getIntValue(s.m));
+    c.input(Button::equals);
+    ASSERT_EQ(2, getIntValue(s.x));
+    ASSERT_EQ(0, getIntValue(s.y));
+    ASSERT_EQ(Operation::add, s.operation);
+    ASSERT_EQ(2, getIntValue(s.m));
+}
+
+TEST_MEM(MemPlusSpecial4) {
+    Calculator c;
+    State &s = c.getState();
+
+    c.input(Button::d3);
+    c.input(Button::mul);
+    c.input(Button::memPlus);
+    ASSERT_EQ(9, getIntValue(s.x));
+    ASSERT_EQ(0, getIntValue(s.y));
+    ASSERT_EQ(Operation::add, s.operation);
+    ASSERT_EQ(9, getIntValue(s.m));
+    c.input(Button::equals);
+    ASSERT_EQ(9, getIntValue(s.x));
+    ASSERT_EQ(0, getIntValue(s.y));
+    ASSERT_EQ(Operation::add, s.operation);
+    ASSERT_EQ(9, getIntValue(s.m));
+}
+
+TEST_MEM(MemPlusSpecial5) {
+    Calculator c;
+    State &s = c.getState();
+
+    c.input(Button::d2);
+    c.input(Button::plus);
+    c.input(Button::d3);
+    c.input(Button::equals);
+    ASSERT_EQ(5, getIntValue(s.x));
+    ASSERT_EQ(3, getIntValue(s.y));
+    ASSERT_EQ(Operation::add, s.operation);
+    ASSERT_EQ(0, getIntValue(s.m));
+    c.input(Button::memPlus);
+    ASSERT_EQ(5, getIntValue(s.x));
+    ASSERT_EQ(3, getIntValue(s.y));
+    ASSERT_EQ(Operation::add, s.operation);
+    ASSERT_EQ(5, getIntValue(s.m));
+    c.input(Button::equals);
+    ASSERT_EQ(8, getIntValue(s.x));
+    ASSERT_EQ(3, getIntValue(s.y));
+    ASSERT_EQ(Operation::add, s.operation);
+    ASSERT_EQ(5, getIntValue(s.m));
+}
+
+TEST_MEM(MemPlusSpecial6) {
+    Calculator c;
+    State &s = c.getState();
+
+    c.input(Button::d2);
+    c.input(Button::mul);
+    c.input(Button::d3);
+    c.input(Button::equals);
+    ASSERT_EQ(6, getIntValue(s.x));
+    ASSERT_EQ(2, getIntValue(s.y));
+    ASSERT_EQ(Operation::mul, s.operation);
+    ASSERT_EQ(0, getIntValue(s.m));
+    c.input(Button::memPlus);
+    ASSERT_EQ(6, getIntValue(s.x));
+    ASSERT_EQ(2, getIntValue(s.y));
+    ASSERT_EQ(Operation::mul, s.operation);
+    ASSERT_EQ(6, getIntValue(s.m));
+    c.input(Button::equals);
+    ASSERT_EQ(12, getIntValue(s.x));
+    ASSERT_EQ(2, getIntValue(s.y));
+    ASSERT_EQ(Operation::mul, s.operation);
+    ASSERT_EQ(6, getIntValue(s.m));
+}
+
+//99 * 99999999 m+ => err 98.999999
+TEST_MEM(NoMemOnOverflow) {
+    Calculator c(8);
+    State &s = c.getState();
+
+    c.input(Button::d9);
+    c.input(Button::d9);
+    c.input(Button::mul);
+    for (int8_t i = 0; i < 8; i++)
+        c.input(Button::d9);
+    c.input(Button::memPlus);
+    ASSERT_EQ(98999999, getIntValue(s.x));
+    ASSERT_EQ(6, s.x.getPointPos());
+    ASSERT_TRUE(s.x.hasError());
+    ASSERT_TRUE(s.y.isZero());
+    ASSERT_FALSE(s.memHasValue());
+    c.input(Button::ce);
+    c.input(Button::equals);
+    ASSERT_EQ(98999999, getIntValue(s.x));
+    ASSERT_EQ(6, s.x.getPointPos());
+    ASSERT_FALSE(s.x.hasError());
+    ASSERT_TRUE(s.y.isZero());
+    ASSERT_FALSE(s.memHasValue());
+}
+
 //99999999 m+ 9 m+ => err mem 0
 //mr, mc, 1 => err mem 0
 //ce => mem 0
@@ -208,7 +340,7 @@ void TestMemTrunc(Calculator &c) {
     ASSERT_FALSE(s.x.hasError());
 
     uint8_t options = c.getOptions();
-    if (options & Config::OPTION_CITIZEN_MEM_TRUNK) {
+    if (options & Config::OPTION_MEM_CAN_TRUNC_X) {
         ASSERT_TRUE(s.x.isZero());
     } else {
         ASSERT_EQ(1, getIntValue(s.x));
@@ -226,7 +358,7 @@ void TestMemTrunc(Calculator &c) {
 
 //99999999 m+ 0.1 m+ => mem 0.0000001
 //mr => mem 99999999
-TEST_MEM(MemTruncCommon) {
+TEST_MEM(MemTruncRegular) {
     Calculator c(8, 0);
     TestMemTrunc(c);
 }
@@ -234,6 +366,6 @@ TEST_MEM(MemTruncCommon) {
 //99999999 m+ 0.1 m+ => mem 0
 //mr => mem 99999999
 TEST_MEM(MemTruncCitizen) {
-    Calculator c(8, Config::OPTION_CITIZEN_MEM_TRUNK);
+    Calculator c(8, Config::OPTION_MEM_CAN_TRUNC_X);
     TestMemTrunc(c);
 }

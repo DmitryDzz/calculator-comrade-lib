@@ -77,7 +77,7 @@ namespace calculatorcomrade {
             Register acc(m.getSize());
             acc.set(m);
 
-            if (options_ & Config::OPTION_CITIZEN_MEM_TRUNK) {
+            if (options_ & Config::OPTION_MEM_CAN_TRUNC_X) {
                 Math::calculate(acc, x, Operation::add);
             } else {
                 Register xT(x.getSize());
