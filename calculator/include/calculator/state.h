@@ -21,10 +21,8 @@ namespace calculatorcomrade {
         Register m;
         Operation operation;
 
-        explicit State() : State(Config::DEFAULT_SIZE, 0) {}
-        explicit State(int8_t size) : State(size, 0) {}
-        explicit State(int8_t size, uint8_t options) :
-                options_(options),
+        explicit State() : State(Config::DEFAULT_SIZE) {}
+        explicit State(int8_t size) :
                 size_(size),
                 x(size),
                 y(size),
@@ -98,7 +96,6 @@ namespace calculatorcomrade {
         }
 
     private:
-        uint8_t options_;
         int8_t size_;
     };
 

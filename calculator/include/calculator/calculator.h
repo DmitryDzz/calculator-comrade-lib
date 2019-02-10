@@ -20,7 +20,7 @@ namespace calculatorcomrade {
         explicit Calculator(int8_t size) : Calculator(size, 0) {};
         explicit Calculator(int8_t size, uint8_t options) :
                 options_(options),
-                state_(size, options),
+                state_(size),
                 size_(size),
                 lastButton_(Button::none),
                 hasOperation_(false),
@@ -34,6 +34,7 @@ namespace calculatorcomrade {
 
         int8_t getSize() { return size_; }
         uint8_t getOptions() { return options_; }
+        void setOptions(uint8_t options) { options_ = options; }
         void setDisplayEventCallback(DisplayEventCallback callback);
         State& getState();
         void input(Button button);

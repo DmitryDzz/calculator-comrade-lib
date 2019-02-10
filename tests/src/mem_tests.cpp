@@ -448,9 +448,11 @@ TEST_MEM(MemOverflow) {
     ASSERT_TRUE(s.memHasValue());
 }
 
-void TestMemTrunc(Calculator &c) {
+void TestMemTruncatesX(Calculator &c) {
     State &s = c.getState();
 
+    c.input(Button::memC);
+    c.input(Button::ca);
     for (int8_t i = 0; i < 8; i++)
         c.input(Button::d9);
     c.input(Button::memPlus);
@@ -479,16 +481,22 @@ void TestMemTrunc(Calculator &c) {
     ASSERT_TRUE(s.memHasValue());
 }
 
-//99999999 m+ 0.1 m+ => mem 0.0000001
-//mr => mem 99999999
-TEST_MEM(MemTruncRegular) {
-    Calculator c(8, 0);
-    TestMemTrunc(c);
-}
+//  I found two types of acting for different calculators in this test:
+//  Citizen calculators (I'm not sure that all of them) act this way:
+//      99999999 m+ 0.1 m+ => mem 0
+//      mr => mem 99999999
+//  While other calculators I've tested act in the other way:
+//      99999999 m+ 0.1 m+ => mem 0.0000001
+//      mr => mem 99999999
+TEST_MEM(MemTruncsX) {
+    Calculator c(8);
+    uint8_t options = c.getOptions();
 
-//99999999 m+ 0.1 m+ => mem 0
-//mr => mem 99999999
-TEST_MEM(MemTruncCitizen) {
-    Calculator c(8, Config::OPTION_MEM_CAN_TRUNC_X);
-    TestMemTrunc(c);
+    options |= Config::OPTION_MEM_CAN_TRUNC_X;
+    c.setOptions(options);
+    TestMemTruncatesX(c);
+
+    options &= ~Config::OPTION_MEM_CAN_TRUNC_X;
+    c.setOptions(options);
+    TestMemTruncatesX(c);
 }
