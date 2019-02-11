@@ -41,6 +41,7 @@ void Calculator::input(Button button) {
     switch (button) {
         case Button::d0 ... Button::d9:
         case Button::point:
+        case Button::sqrt:
             isNumberOrPoint = true;
             break;
         default:
@@ -51,6 +52,7 @@ void Calculator::input(Button button) {
     switch (button) {
         case Button::d0 ... Button::d9:
         case Button::point:
+        case Button::sqrt:
         case Button::ce:
         case Button::ceca:
             // First digit or point after operation:
@@ -58,7 +60,9 @@ void Calculator::input(Button button) {
                 if (hasOperation_) {
                     state_.y.set(state_.x);
                 }
-                state_.x.clear();
+                if (button != Button::sqrt) {
+                    state_.x.clear();
+                }
                 inputSize_ = 0;
                 inputHasPoint_ = false;
                 inNumber_ = true;

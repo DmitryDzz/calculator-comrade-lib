@@ -8,7 +8,7 @@
 
 using namespace calculatorcomrade;
 
-#define TEST_CALCULATOR_INPUT(test_name) TEST(CalculatorInput, test_name)
+#define TEST_CALCULATOR_INPUT(test_name) TEST(BasicInput, test_name)
 
 TEST_CALCULATOR_INPUT(ClearEntry1) {
     Calculator calc;
@@ -390,42 +390,6 @@ TEST_CALCULATOR_INPUT(DoubleOperation) {
     c.input(Button::div);
     ASSERT_EQ(8, getIntValue(x));
     ASSERT_EQ(0, x.getPointPos());
-}
-
-TEST_CALCULATOR_INPUT(Sqrt) {
-    Calculator c(8);
-    Register &x = c.getState().x;
-
-    c.input(Button::ca);
-    c.input(Button::d9);
-    c.input(Button::sqrt);
-    ASSERT_EQ(3, getIntValue(x));
-    ASSERT_EQ(0, x.getPointPos());
-
-    c.input(Button::ca);
-    c.input(Button::d2);
-    c.input(Button::plus);
-    c.input(Button::d9);
-    c.input(Button::sqrt);
-    ASSERT_EQ(3, getIntValue(x));
-    ASSERT_EQ(0, x.getPointPos());
-    c.input(Button::equals);
-    ASSERT_EQ(5, getIntValue(x));
-    ASSERT_EQ(0, x.getPointPos());
-}
-
-TEST_CALCULATOR_INPUT(SqrtFakeNegative) {
-    Calculator c(8);
-    Register &x = c.getState().x;
-
-    c.input(Button::minus);
-    c.input(Button::d9);
-    c.input(Button::sqrt);
-    ASSERT_EQ(3, getIntValue(x));
-    c.input(Button::equals);
-    ASSERT_EQ(-3, getIntValue(x));
-    c.input(Button::equals);
-    ASSERT_EQ(-6, getIntValue(x));
 }
 
 TEST_CALCULATOR_INPUT(ChangeSign1) {

@@ -14,6 +14,7 @@ set(SOURCES
         src/libcalc_tests.cpp
         src/calc_percent_tests.cpp
         src/mem_tests.cpp
+        src/sqrt_tests.cpp
 )
 
 set(TARGET tests)

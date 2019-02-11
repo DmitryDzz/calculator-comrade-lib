@@ -861,3 +861,34 @@ TEST_MATH(PercentSub) {
     ASSERT_EQ(0, r1.getPointPos());
     ASSERT_EQ(false, r1.hasError());
 }
+
+TEST_MATH(SqrtInt) {
+    Register r(8);
+
+    r.setChangedCallback(on_r1_changed);
+
+    setValue(r, 9);
+    Math::sqrt(r);
+    ASSERT_EQ(3, getIntValue(r));
+    ASSERT_FALSE(r.hasError());
+
+    setValue(r, 4);
+    Math::sqrt(r);
+    ASSERT_EQ(2, getIntValue(r));
+    ASSERT_FALSE(r.hasError());
+
+    setValue(r, 0);
+    Math::sqrt(r);
+    ASSERT_EQ(0, getIntValue(r));
+    ASSERT_FALSE(r.hasError());
+
+    setValue(r, -4);
+    Math::sqrt(r);
+    ASSERT_EQ(2, getIntValue(r));
+    ASSERT_TRUE(r.hasError());
+
+    setValue(r, -9);
+    Math::sqrt(r);
+    ASSERT_EQ(3, getIntValue(r));
+    ASSERT_TRUE(r.hasError());
+}
