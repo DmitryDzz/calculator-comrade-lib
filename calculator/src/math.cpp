@@ -512,8 +512,36 @@ void Math::divPercent(Register &r1, Register &r2) {
 
 void Math::sqrt(Register &r) {
     //TODO DZZ sqrt(99999998) = 9999.9998 (should be)
+
+    int8_t result = 0;
+    int8_t size = r.getSize();
+    bool isValidFakeValue = size > 0 &&
+            (r.getDigit(0) == 0 || r.getDigit(0) == 4 || r.getDigit(0) == 9);
+    if (isValidFakeValue) {
+        for (int8_t i = 1; i < size; i++) {
+            if (r.getDigit(i) != 0) {
+                isValidFakeValue = false;
+                break;
+            }
+        }
+    }
+    if (isValidFakeValue) {
+        switch (r.getDigit(0)) {
+            case 4:
+                result = 2;
+                break;
+            case 9:
+                result = 3;
+                break;
+            default:
+                break;
+        }
+    }
+
+    bool negative = r.isNegative();
     r.clear();
-    r.setDigit(0, 3);
+    r.setDigit(0, result);
+    r.setError(negative);
 }
 
 void Math::changeSign(Register &r) {
