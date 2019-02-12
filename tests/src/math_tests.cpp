@@ -15,7 +15,7 @@ using calculatorcomrade::Operation;
 
 std::string r1_text;
 std::string r2_text;
-std::string acc_text;
+std::string r3_text;
 
 void on_r1_changed(Register &r) {
     calculatorcomrade::evaluateText(r, &r1_text);
@@ -27,9 +27,9 @@ void on_r2_changed(Register &r) {
 //    r2_text = r2_text;
 }
 
-void on_rt_changed(Register &r) {
-    calculatorcomrade::evaluateText(r, &acc_text);
-//    acc_text = acc_text;
+void on_r3_changed(Register &r) {
+    calculatorcomrade::evaluateText(r, &r3_text);
+//    r3_text = r3_text;
 }
 
 TEST_MATH(AddInt) {
@@ -362,7 +362,7 @@ TEST_MATH(MulTruncAfterPoint2) {
 
     r1.setChangedCallback(on_r1_changed);
     r2.setChangedCallback(on_r2_changed);
-    acc.setChangedCallback(on_rt_changed);
+    acc.setChangedCallback(on_r3_changed);
 
     setValue(r1, 12, 1); // 1.2
     setValue(r2, 523, 2); // 5.23
@@ -380,7 +380,7 @@ TEST_MATH(MulOverflow) {
 
     r1.setChangedCallback(on_r1_changed);
     r2.setChangedCallback(on_r2_changed);
-    acc.setChangedCallback(on_rt_changed);
+    acc.setChangedCallback(on_r3_changed);
 
     setValue(r1, 987, 1); // 98.7
     setValue(r2, 654, 1); // 65.4
@@ -398,7 +398,7 @@ TEST_MATH(MulReadOperations) {
 
     r1.setChangedCallback(on_r1_changed);
     r2.setChangedCallback(on_r2_changed);
-    acc.setChangedCallback(on_rt_changed);
+    acc.setChangedCallback(on_r3_changed);
 
     setValue(r1, 56987658, 0);
     setValue(r2, 2, 0);
@@ -464,7 +464,7 @@ TEST_MATH(DivInt1) {
 
     r1.setChangedCallback(on_r1_changed);
     r2.setChangedCallback(on_r2_changed);
-    acc.setChangedCallback(on_rt_changed);
+    acc.setChangedCallback(on_r3_changed);
 
     // 15 : 5 = 3
     setValue(r1, 15);
@@ -501,7 +501,7 @@ TEST_MATH(DivInt2) {
 
     r1.setChangedCallback(on_r1_changed);
     r2.setChangedCallback(on_r2_changed);
-    acc.setChangedCallback(on_rt_changed);
+    acc.setChangedCallback(on_r3_changed);
 
     // 500 : 5 = 100
     setValue(r1, 500);
@@ -540,7 +540,7 @@ TEST_MATH(DivReal1) {
 
     r1.setChangedCallback(on_r1_changed);
     r2.setChangedCallback(on_r2_changed);
-    acc.setChangedCallback(on_rt_changed);
+    acc.setChangedCallback(on_r3_changed);
 
     // 5 : 2 = 2.5
     setValue(r1, 5);
@@ -559,7 +559,7 @@ TEST_MATH(DivReal2) {
 
     r1.setChangedCallback(on_r1_changed);
     r2.setChangedCallback(on_r2_changed);
-    acc.setChangedCallback(on_rt_changed);
+    acc.setChangedCallback(on_r3_changed);
 
     // 10 : 6 = 1.666
     setValue(r1, 10);
@@ -578,7 +578,7 @@ TEST_MATH(DivReal3) {
 
     r1.setChangedCallback(on_r1_changed);
     r2.setChangedCallback(on_r2_changed);
-    acc.setChangedCallback(on_rt_changed);
+    acc.setChangedCallback(on_r3_changed);
 
     // 1 : 6 = 0.166
     setValue(r1, 1);
@@ -597,7 +597,7 @@ TEST_MATH(DivReal4) {
 
     r1.setChangedCallback(on_r1_changed);
     r2.setChangedCallback(on_r2_changed);
-    acc.setChangedCallback(on_rt_changed);
+    acc.setChangedCallback(on_r3_changed);
 
     // 15 : 26 = 0.576923
     setValue(r1, 15);
@@ -616,7 +616,7 @@ TEST_MATH(DivReal5) {
 
     r1.setChangedCallback(on_r1_changed);
     r2.setChangedCallback(on_r2_changed);
-    acc.setChangedCallback(on_rt_changed);
+    acc.setChangedCallback(on_r3_changed);
 
     // 197.4 : 0.01 = 19740
     setValue(r1, 1974, 1);
@@ -635,7 +635,7 @@ TEST_MATH(DivReal6) {
 
     r1.setChangedCallback(on_r1_changed);
     r2.setChangedCallback(on_r2_changed);
-    acc.setChangedCallback(on_rt_changed);
+    acc.setChangedCallback(on_r3_changed);
 
     // 1 : 24 = 0.0416666
     setValue(r1, 1);
@@ -654,7 +654,7 @@ TEST_MATH(DivReal7) {
 
     r1.setChangedCallback(on_r1_changed);
     r2.setChangedCallback(on_r2_changed);
-    acc.setChangedCallback(on_rt_changed);
+    acc.setChangedCallback(on_r3_changed);
 
     // 2.5 : 2 = 1.25
     setValue(r1, 25, 1);
@@ -673,7 +673,7 @@ TEST_MATH(DivOverflow1) {
 
     r1.setChangedCallback(on_r1_changed);
     r2.setChangedCallback(on_r2_changed);
-    acc.setChangedCallback(on_rt_changed);
+    acc.setChangedCallback(on_r3_changed);
 
     // 999 : 0.02 = [Err]49.9 (=49950)
     setValue(r1, 999);
@@ -692,7 +692,7 @@ TEST_MATH(DivOverflow2) {
 
     r1.setChangedCallback(on_r1_changed);
     r2.setChangedCallback(on_r2_changed);
-    acc.setChangedCallback(on_rt_changed);
+    acc.setChangedCallback(on_r3_changed);
 
     // 99999999 : 0.02 = [Err]49.999999
     setValue(r1, 99999999);
@@ -891,4 +891,30 @@ TEST_MATH(SqrtInt) {
     Math::sqrt(r);
     ASSERT_EQ(3, getIntValue(r));
     ASSERT_TRUE(r.hasError());
+}
+
+TEST_MATH(Sqrt) {
+    Register r(8);
+    Register h(16);
+    Register g(16);
+
+    r.setChangedCallback(on_r1_changed);
+    h.setChangedCallback(on_r2_changed);
+    g.setChangedCallback(on_r3_changed);
+
+    // √4 = 2
+//    setValue(r, 4);
+//    Math::sqrt(r, h, g);
+//    ASSERT_EQ(2, getIntValue(r));
+//    ASSERT_EQ(0, r.getPointPos());
+//    ASSERT_FALSE(r.isNegative());
+//    ASSERT_FALSE(r.hasError());
+
+    // √99999998 = 9999.9998
+    setValue(r, 99999998);
+    Math::sqrt(r, h, g);
+    ASSERT_EQ(99999998, getIntValue(r));
+    ASSERT_EQ(4, r.getPointPos());
+    ASSERT_FALSE(r.isNegative());
+    ASSERT_FALSE(r.hasError());
 }

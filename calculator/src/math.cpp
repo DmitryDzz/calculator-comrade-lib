@@ -510,6 +510,10 @@ void Math::divPercent(Register &r1, Register &r2) {
     truncRightZeros(r1);
 }
 
+void Math::changeSign(Register &r) {
+    r.switchNegative();
+}
+
 void Math::sqrt(Register &r) {
     //TODO DZZ sqrt(99999998) = 9999.9998 (should be)
 
@@ -544,6 +548,38 @@ void Math::sqrt(Register &r) {
     r.setError(negative);
 }
 
-void Math::changeSign(Register &r) {
-    r.switchNegative();
+void Math::sqrt(Register &r, Register &h, Register &g) {
+    int8_t size = r.getSize();
+//    assert(size == h.getSize());
+//    assert(size == g.getSize());
+
+    bool isNegative = r.isNegative();
+    if (isNegative)
+        r.setNegative(false);
+
+    Register two(h.getSize());
+    two.setDigit(0, 2);
+
+    // h = 0
+    h.clear();
+
+    // g = 10
+    g.clear();
+    g.setDigit(0, 1);
+    safeShiftLeft(g, false);
+
+    int8_t counter = 0;
+    int8_t maxCount = 100;
+    while (compareIgnoreSign(h, g) != 0 && counter++ < maxCount) {
+        // h = r / g
+        h.set(r);
+        div(h, g);
+
+        // g = (g + h) / 2
+        add(g, h);
+        div(g, two);
+    }
+
+    r.set(g);
+    r.setError(isNegative);
 }
