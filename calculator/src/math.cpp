@@ -6,6 +6,7 @@
 
 using calculatorcomrade::Math;
 
+#define S0 ((int8_t)0)
 #define S1 ((int8_t)1)
 #define S2 ((int8_t)2)
 
@@ -55,7 +56,53 @@ bool Math::safeShiftLeft(Register &r, const bool updatePointPos) {
     return true;
 }
 
-int8_t Math::compareIgnoreSign(const Register &r1, const Register &r2) {
+int8_t Math::compare(const Register &r1, const Register &r2) {
+    compare(r1, r2, false);
+}
+
+int8_t Math::compare(const Register &r1, const Register &r2, const bool ignoreSign) {
+    int8_t size = r1.getSize();
+    assert(size == r2.getSize());
+
+    if (!ignoreSign && r1.isNegative() != r2.isNegative())
+        return r1.isNegative() ? -S1 : S1;
+
+    int8_t result = 0;
+
+    int8_t r1p = r1.getPointPos();
+    int8_t r2p = r2.getPointPos();
+
+    // Integer part:
+    int8_t intSize1 = size - r1p;
+    int8_t intSize2 = size - r2p;
+    int8_t intSize = intSize1 > intSize2 ? intSize1 : intSize2;
+    for (int8_t i1 = r1p + intSize - S1, i2 = r2p + intSize - S1; i1 >= r1p; i1--, i2--) {
+        int8_t d1 = i1 < size ? r1.getDigit(i1) : S0;
+        int8_t d2 = i2 < size ? r2.getDigit(i2) : S0;
+        if (d1 == d2) continue;
+        result = d1 > d2 ? S1 : -S1;
+        break;
+    }
+
+    // Fraction part:
+    int8_t fracSize1 = size - intSize1;
+    int8_t fracSize2 = size - intSize2;
+    int8_t fracSize = fracSize1 > fracSize2 ? fracSize1 : fracSize2;
+    for (int8_t f1 = r1p - S1, f2 = r2p - S1, i = 0; i < fracSize; f1--, f2--, i++) {
+        int8_t d1 = f1 < S0 ? S0 : r1.getDigit(f1);
+        int8_t d2 = f2 < S0 ? S0 : r2.getDigit(f2);
+        if (d1 == d2) continue;
+        result = d1 > d2 ? S1 : -S1;
+        break;
+    }
+
+    if (!ignoreSign && r1.isNegative())
+        result = -result;
+    return result;
+}
+
+
+int8_t Math::compareDigitsIgnoreSign(const Register &r1, const Register &r2) {
     int8_t size = r1.getSize();
     if (size != r2.getSize()) return 0;
     for (int8_t i = 0; i < size; i++) {
@@ -185,7 +232,7 @@ void Math::addInternal(Register &r1, Register &r2) {
             r1.setPointPos(size - S1);
         }
     } else { // (different signs)
-        int8_t comparision = compareIgnoreSign(r1, r2);
+        int8_t comparision = compareDigitsIgnoreSign(r1, r2);
         int8_t borrowedDigit = 0;
         int8_t srcDigit;
         if (comparision == 1) { // |r1| > |r2|
@@ -298,7 +345,7 @@ void Math::div(Register &r1, Register &r2, Register &acc) {
     r1ex.setChangedCallback(r1.getChangedCallback());
     r1.setChangedCallback(nullptr);
 
-    if (compareIgnoreSign(acc, r2ex) >= 0) {
+    if (compareDigitsIgnoreSign(acc, r2ex) >= 0) {
         // Shift r2ex to the very right:
         int8_t lastIndex2 = size2 - S1;
         int8_t shifts = 0;
@@ -310,8 +357,8 @@ void Math::div(Register &r1, Register &r2, Register &acc) {
 
         for (int8_t i = 0; i <= shifts; i++) {
             int8_t digit = 0;
-            if (compareIgnoreSign(acc, r2ex) >= 0) {
-                while (compareIgnoreSign(acc, r2ex) >= 0) {
+            if (compareDigitsIgnoreSign(acc, r2ex) >= 0) {
+                while (compareDigitsIgnoreSign(acc, r2ex) >= 0) {
                     addInternal(acc, r2ex);
                     digit++;
                 }
@@ -330,8 +377,8 @@ void Math::div(Register &r1, Register &r2, Register &acc) {
             safeShiftLeft(acc, false);
 
             int8_t digit = 0;
-            if (compareIgnoreSign(acc, r2ex) >= 0) {
-                while (compareIgnoreSign(acc, r2ex) >= 0) {
+            if (compareDigitsIgnoreSign(acc, r2ex) >= 0) {
+                while (compareDigitsIgnoreSign(acc, r2ex) >= 0) {
                     addInternal(acc, r2ex);
                     digit++;
                 }
@@ -550,15 +597,23 @@ void Math::sqrt(Register &r) {
 
 void Math::sqrt(Register &r, Register &h, Register &g) {
     int8_t size = r.getSize();
-//    assert(size == h.getSize());
-//    assert(size == g.getSize());
+    int8_t size2 = size + size;
+    assert(size2 == h.getSize());
+    assert(size2 == g.getSize());
 
     bool isNegative = r.isNegative();
     if (isNegative)
         r.setNegative(false);
 
-    Register two(h.getSize());
+    Register two(size2);
     two.setDigit(0, 2);
+
+    Register h1(size);
+    Register g1(size);
+
+//    Register epsilon(size2);
+//    epsilon.setDigit(0, 1);
+//    epsilon.setPointPos(size - S1);
 
     // h = 0
     h.clear();
@@ -570,7 +625,7 @@ void Math::sqrt(Register &r, Register &h, Register &g) {
 
     int8_t counter = 0;
     int8_t maxCount = 100;
-    while (compareIgnoreSign(h, g) != 0 && counter++ < maxCount) {
+    while (counter++ < maxCount) {
         // h = r / g
         h.set(r);
         div(h, g);
@@ -578,6 +633,19 @@ void Math::sqrt(Register &r, Register &h, Register &g) {
         // g = (g + h) / 2
         add(g, h);
         div(g, two);
+
+//        int8_t hpp = h.getPointPos();
+//        int8_t gpp = g.getPointPos();
+//        int8_t epp = hpp > gpp ? hpp : gpp;
+//        epsilon.setPointPos(epp >= size2 ? size2 - S1 : epp);
+//
+//        // Getting delta: h = h - g.
+//        // If |h| < epsilon then g is the square root of r.
+//        sub(h, g);
+//        if (compare(h, epsilon, true) < 0) break;
+        h1.set(h);
+        g1.set(g);
+        if (compare(h1, g1, true) == 0) break;
     }
 
     r.set(g);

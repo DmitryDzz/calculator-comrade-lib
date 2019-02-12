@@ -15,6 +15,9 @@ namespace calculatorcomrade {
         static void calculate(Register &r1, Register &r2, const Operation &operation, uint8_t options);
         static void calculatePercent(Register &r1, Register &r2, const Operation &operation, uint8_t options);
 
+        static int8_t compare(const Register &r1, const Register &r2);
+        static int8_t compare(const Register &r1, const Register &r2, bool ignoreSign);
+
         static void add(Register &r1, Register &r2);
         static void sub(Register &r1, Register &r2);
         static void mul(Register &r1, Register &r2);
@@ -33,7 +36,7 @@ namespace calculatorcomrade {
     private:
         static void unsafeShiftRight(Register &r, bool updatePointPos);
         static bool safeShiftLeft(Register &r, bool updatePointPos);
-        static int8_t compareIgnoreSign(const Register &r1, const Register &r2);
+        static int8_t compareDigitsIgnoreSign(const Register &r1, const Register &r2);
         static void normalizePointPositions(Register &r1, Register &r2);
         static void truncRightZeros(Register &r);
         static void doubleSizedRegisterToSingle(Register &r2, Register &r);

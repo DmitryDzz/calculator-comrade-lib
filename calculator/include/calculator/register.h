@@ -34,7 +34,7 @@ namespace calculatorcomrade {
 
         void set(const Register& rhs) {
             clearInternal();
-            int8_t size = size_ >= rhs.getSize() ? rhs.size_ : size_;
+            int8_t size = size_ >= rhs.size_ ? rhs.size_ : size_;
             assert(size > 0);
             for (int8_t i = 0; i < size; i++)
                 data_[i] = rhs.data_[i];
@@ -54,15 +54,15 @@ namespace calculatorcomrade {
             changedCallback_ = changedCallback;
         }
 
-        RegisterChangedCallback getChangedCallback() {
+        RegisterChangedCallback getChangedCallback() const {
             return changedCallback_;
         }
 
-        bool isZero() {
+        bool isZero() const {
             return isZero(false);
         }
 
-        bool isZero(bool ignorePointPos) {
+        bool isZero(bool ignorePointPos) const {
             for (int8_t i = 0; i < size_; i++)
                 if (data_[i] > 0)
                     return false;
@@ -96,7 +96,7 @@ namespace calculatorcomrade {
             setDigit(index, digit);
         }
 
-        inline int8_t getPointPos() {
+        inline int8_t getPointPos() const {
             return pointPos_;
         }
 
@@ -109,7 +109,7 @@ namespace calculatorcomrade {
             setPointPos(pointPos_ + delta);
         }
 
-        inline bool isNegative() {
+        inline bool isNegative() const {
             return negative_;
         }
 
@@ -122,7 +122,7 @@ namespace calculatorcomrade {
             setNegative(!negative_);
         }
 
-        inline bool hasError() {
+        inline bool hasError() const {
             return hasError_;
         }
 

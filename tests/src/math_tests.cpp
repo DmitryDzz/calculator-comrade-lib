@@ -32,6 +32,67 @@ void on_r3_changed(Register &r) {
 //    r3_text = r3_text;
 }
 
+TEST_MATH(Compare) {
+    Register r1(8);
+    Register r2(8);
+
+    setValue(r1, 0);
+    setValue(r2, 0);
+    ASSERT_EQ(0, Math::compare(r1, r2));
+
+    setValue(r1, 5);
+    setValue(r2, 10);
+    ASSERT_EQ(-1, Math::compare(r1, r2));
+
+    setValue(r1, 10);
+    setValue(r2, 5);
+    ASSERT_EQ(1, Math::compare(r1, r2));
+
+    setValue(r1, -5);
+    setValue(r2, -10);
+    ASSERT_EQ(1, Math::compare(r1, r2));
+
+    setValue(r1, -10);
+    setValue(r2, -5);
+    ASSERT_EQ(-1, Math::compare(r1, r2));
+
+    setValue(r1, -5);
+    setValue(r2, 10);
+    ASSERT_EQ(-1, Math::compare(r1, r2));
+
+    setValue(r1, 10);
+    setValue(r2, -5);
+    ASSERT_EQ(1, Math::compare(r1, r2));
+
+    setValue(r1, 5);
+    setValue(r2, -10);
+    ASSERT_EQ(1, Math::compare(r1, r2));
+
+    setValue(r1, -10);
+    setValue(r2, 5);
+    ASSERT_EQ(-1, Math::compare(r1, r2));
+
+    setValue(r1, 123, 2);
+    setValue(r2, 12345, 3);
+    ASSERT_EQ(-1, Math::compare(r1, r2));
+
+    setValue(r1, 123, 0);
+    setValue(r2, 12345, 3);
+    ASSERT_EQ(-1, Math::compare(r1, r2));
+
+    setValue(r1, 123, 4);
+    setValue(r2, 12345, 6);
+    ASSERT_EQ(-1, Math::compare(r1, r2));
+
+    setValue(r1, 123, 4);
+    setValue(r2, 12345, 7);
+    ASSERT_EQ(1, Math::compare(r1, r2));
+
+    setValue(r1, 12345, 6);
+    setValue(r2, 12345, 6);
+    ASSERT_EQ(0, Math::compare(r1, r2));
+}
+
 TEST_MATH(AddInt) {
     Register r1(8);
     Register r2(8);
