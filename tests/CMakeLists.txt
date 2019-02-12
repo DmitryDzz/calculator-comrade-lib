@@ -5,16 +5,16 @@ set(SOURCES
         src/register_tests.cpp
         src/state_tests.cpp
         #src/state_tests_json.cpp  #TODO DZZ Rename it to "complex_json_tests.cpp"
-        src/calc_add_sub_tests.cpp
-        src/calc_mul_tests.cpp
-        src/calc_div_tests.cpp
+        src/add_sub_input_tests.cpp
+        src/mul_input_tests.cpp
+        src/div_input_tests.cpp
         src/math_tests.cpp
         src/calc_helper.cpp
         src/special_tests.cpp
         src/libcalc_tests.cpp
-        src/calc_percent_tests.cpp
-        src/mem_tests.cpp
-        src/sqrt_tests.cpp
+        src/percent_input_tests.cpp
+        src/mem_input_tests.cpp
+        src/sqrt_input_tests.cpp
 )
 
 set(TARGET tests)
