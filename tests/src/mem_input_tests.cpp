@@ -500,3 +500,53 @@ TEST_MEM(MemTruncsX) {
     c.setOptions(options);
     TestMemTruncatesX(c);
 }
+
+TEST_MEM(DivMemRestore) {
+    Calculator c(8);
+    State &s = c.getState();
+
+    c.input(Button::d2);
+    c.input(Button::memPlus);
+    c.input(Button::d8);
+    c.input(Button::div);
+    ASSERT_EQ(8, getIntValue(s.x));
+    ASSERT_EQ(0, getIntValue(s.y));
+    ASSERT_EQ(2, getIntValue(s.m));
+    c.input(Button::memR);
+    ASSERT_EQ(2, getIntValue(s.x));
+    ASSERT_EQ(8, getIntValue(s.y));
+    ASSERT_EQ(2, getIntValue(s.m));
+    c.input(Button::equals);
+    ASSERT_EQ(4, getIntValue(s.x));
+    ASSERT_EQ(2, getIntValue(s.y));
+    ASSERT_EQ(2, getIntValue(s.m));
+    c.input(Button::equals);
+    ASSERT_EQ(2, getIntValue(s.x));
+    ASSERT_EQ(2, getIntValue(s.y));
+    ASSERT_EQ(2, getIntValue(s.m));
+}
+
+TEST_MEM(MulMemRestore) {
+    Calculator c(8);
+    State &s = c.getState();
+
+    c.input(Button::d2);
+    c.input(Button::memPlus);
+    c.input(Button::d3);
+    ASSERT_EQ(3, getIntValue(s.x));
+    ASSERT_EQ(0, getIntValue(s.y));
+    ASSERT_EQ(2, getIntValue(s.m));
+    c.input(Button::mul);
+    c.input(Button::memR);
+    ASSERT_EQ(2, getIntValue(s.x));
+    ASSERT_EQ(3, getIntValue(s.y));
+    ASSERT_EQ(2, getIntValue(s.m));
+    c.input(Button::equals);
+    ASSERT_EQ(6, getIntValue(s.x));
+    ASSERT_EQ(3, getIntValue(s.y));
+    ASSERT_EQ(2, getIntValue(s.m));
+    c.input(Button::equals);
+    ASSERT_EQ(18, getIntValue(s.x));
+    ASSERT_EQ(3, getIntValue(s.y));
+    ASSERT_EQ(2, getIntValue(s.m));
+}

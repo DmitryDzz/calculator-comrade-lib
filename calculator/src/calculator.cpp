@@ -37,12 +37,14 @@ void Calculator::input(Button button) {
         return;
     }
 
-    bool isNumberOrPoint;
+    bool isNumberOrPoint = false;
     switch (button) {
         case Button::d0 ... Button::d9:
         case Button::point:
+        case Button::memR:
+        case Button::memRC:
         case Button::sqrt:
-            isNumberOrPoint = true;
+            if (lastButton_ != Button::memRC) isNumberOrPoint = true;
             break;
         default:
             isNumberOrPoint = false;
@@ -52,6 +54,8 @@ void Calculator::input(Button button) {
     switch (button) {
         case Button::d0 ... Button::d9:
         case Button::point:
+        case Button::memR:
+        case Button::memRC:
         case Button::sqrt:
         case Button::ce:
         case Button::ceca:
