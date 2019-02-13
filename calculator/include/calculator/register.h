@@ -9,6 +9,8 @@
 
 #include "calculator/config.h"
 
+#define S1 ((int8_t)1)
+
 namespace calculatorcomrade {
     class Register;
 
@@ -41,6 +43,53 @@ namespace calculatorcomrade {
             pointPos_ = rhs.pointPos_;
             negative_ = rhs.negative_;
             hasError_ = rhs.hasError_;
+            notify();
+        }
+
+        void setSafe(const Register& rhs) {
+            assert(size_ + size_ >= rhs.size_);
+            assert(rhs.hasError_ == false); // there's no overflow
+            clearInternal();
+            if (size_ < rhs.size_) {
+                int8_t firstSrcIndex = 0;
+                for (int8_t i = rhs.size_ - S1; i >= 0; i--) {
+                    if (rhs.data_[i] != 0) {
+                        firstSrcIndex = i;
+                        break;
+                    }
+                }
+                int8_t srcPointPos = rhs.pointPos_;
+                if (srcPointPos > firstSrcIndex)
+                    firstSrcIndex = srcPointPos;
+
+                int8_t firstDstIndex = firstSrcIndex < size_ ? firstSrcIndex : size_ - S1;
+                int8_t srcIndex = firstSrcIndex;
+                int8_t dstIndex = firstDstIndex;
+                int8_t dstPointPos = -S1;
+                for (int8_t i = 0; i < size_; i++) { // (maximum size_ iterations)
+                    data_[dstIndex] = rhs.data_[srcIndex];
+                    if (srcPointPos == srcIndex) {
+                        pointPos_ = dstIndex;
+                        dstPointPos = dstIndex;
+                    }
+                    if (srcIndex == 0) break;
+                    srcIndex--;
+                    if (dstIndex == 0) break;
+                    dstIndex--;
+                }
+                if (dstPointPos < 0) {
+                    setPointPos(size_ - (srcIndex - srcPointPos + S1));
+                    hasError_ = true; // (overflow)
+                }
+                negative_ = rhs.negative_;
+            } else {
+                int8_t size = rhs.size_;
+                for (int8_t i = 0; i < size; i++)
+                    data_[i] = rhs.data_[i];
+                pointPos_ = rhs.pointPos_;
+                negative_ = rhs.negative_;
+                hasError_ = rhs.hasError_;
+            }
             notify();
         }
 

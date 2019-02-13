@@ -40,16 +40,95 @@ TEST(TestRegister, SetNegativeValue) {
     ASSERT_EQ(false, reg.hasError());
 }
 
-TEST(TestRegister, Assigning) {
+TEST(TestRegister, SetSameSize) {
     Register regA(8);
     setValue(regA, -1234567890);
 
     Register regB(8);
     regB.set(regA);
-    ASSERT_EQ(12345678, getAbsIntValue(regB));
+    ASSERT_EQ(-12345678, getIntValue(regB));
     ASSERT_EQ(6, regB.getPointPos());
-    ASSERT_EQ(true, regB.isNegative());
     ASSERT_EQ(true, regB.hasError());
+}
+
+TEST(TestRegister, SetSmallToBig) {
+    Register regS(4);
+    setValue(regS, -1234, 2);
+
+    Register regB(8);
+    regB.set(regS);
+    ASSERT_EQ(-1234, getIntValue(regB));
+    ASSERT_EQ(2, regB.getPointPos());
+    ASSERT_EQ(false, regB.hasError());
+}
+
+TEST(TestRegister, SetSafeSameSize) {
+    Register regA(8);
+    setValue(regA, -12345678, 6);
+
+    Register regB(8);
+    regB.setSafe(regA);
+    ASSERT_EQ(-12345678, getIntValue(regB));
+    ASSERT_EQ(6, regB.getPointPos());
+    ASSERT_EQ(false, regB.hasError());
+}
+
+TEST(TestRegister, SetSafeSmallToBig) {
+    Register regS(4);
+    setValue(regS, -1234, 2);
+
+    Register regB(8);
+    regB.setSafe(regS);
+    ASSERT_EQ(-1234, getIntValue(regB));
+    ASSERT_EQ(2, regB.getPointPos());
+    ASSERT_EQ(false, regB.hasError());
+}
+
+TEST(TestRegister, SetSafeBigToSmall) {
+    Register regB(8);
+    Register regS(4);
+
+    setValue(regB, -12345678);
+    regS.setSafe(regB);
+    ASSERT_EQ(-1234, getIntValue(regS));
+    ASSERT_EQ(0, regS.getPointPos());
+    ASSERT_EQ(true, regS.hasError());
+
+    setValue(regB, -12345678, 2);
+    regS.setSafe(regB);
+    ASSERT_EQ(-1234, getIntValue(regS));
+    ASSERT_EQ(2, regS.getPointPos());
+    ASSERT_EQ(true, regS.hasError());
+
+    setValue(regB, -12345678, 4);
+    regS.setSafe(regB);
+    ASSERT_EQ(-1234, getIntValue(regS));
+    ASSERT_EQ(0, regS.getPointPos());
+    ASSERT_EQ(false, regS.hasError());
+
+    setValue(regB, -12345678, 6);
+    regS.setSafe(regB);
+    ASSERT_EQ(-1234, getIntValue(regS));
+    ASSERT_EQ(2, regS.getPointPos());
+    ASSERT_EQ(false, regS.hasError());
+
+    setValue(regB, -1234567, 7);
+    regS.setSafe(regB);
+    ASSERT_EQ(-123, getIntValue(regS));
+    ASSERT_EQ(3, regS.getPointPos());
+    ASSERT_EQ(false, regS.hasError());
+
+    setValue(regB, -123456, 7);
+    regS.setSafe(regB);
+    ASSERT_EQ(-12, getIntValue(regS));
+    ASSERT_EQ(3, regS.getPointPos());
+    ASSERT_EQ(false, regS.hasError());
+
+    setValue(regB, -12, 1);
+    regS.setSafe(regB);
+    ASSERT_EQ(-12, getIntValue(regS));
+    ASSERT_EQ(1, regS.getPointPos());
+    ASSERT_EQ(false, regS.hasError());
 }
 
 TEST(TestRegister, SetPositiveOverflowValue) {

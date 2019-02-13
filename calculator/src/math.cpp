@@ -595,11 +595,11 @@ void Math::sqrt(Register &r) {
     r.setError(negative);
 }
 
-void Math::sqrt(Register &r, Register &h, Register &g) {
+void Math::sqrt(Register &r, Register &h2, Register &g2) {
     int8_t size = r.getSize();
     int8_t size2 = size + size;
-    assert(size2 == h.getSize());
-    assert(size2 == g.getSize());
+    assert(size2 == h2.getSize());
+    assert(size2 == g2.getSize());
 
     bool isNegative = r.isNegative();
     if (isNegative)
@@ -608,44 +608,31 @@ void Math::sqrt(Register &r, Register &h, Register &g) {
     Register two(size2);
     two.setDigit(0, 2);
 
-    Register h1(size);
-    Register g1(size);
+    Register h(size);
+    Register g(size);
 
-//    Register epsilon(size2);
-//    epsilon.setDigit(0, 1);
-//    epsilon.setPointPos(size - S1);
+    // h2 = 0
+    h2.clear();
 
-    // h = 0
-    h.clear();
-
-    // g = 10
-    g.clear();
-    g.setDigit(0, 1);
-    safeShiftLeft(g, false);
+    // g2 = 10
+    g2.clear();
+    g2.setDigit(0, 1);
+    safeShiftLeft(g2, false);
 
     int8_t counter = 0;
     int8_t maxCount = 100;
     while (counter++ < maxCount) {
-        // h = r / g
-        h.set(r);
-        div(h, g);
+        // h2 = r / g2
+        h2.set(r);
+        div(h2, g2);
 
-        // g = (g + h) / 2
-        add(g, h);
-        div(g, two);
+        // g2 = (g2 + h2) / 2
+        add(g2, h2);
+        div(g2, two);
 
-//        int8_t hpp = h.getPointPos();
-//        int8_t gpp = g.getPointPos();
-//        int8_t epp = hpp > gpp ? hpp : gpp;
-//        epsilon.setPointPos(epp >= size2 ? size2 - S1 : epp);
-//
-//        // Getting delta: h = h - g.
-//        // If |h| < epsilon then g is the square root of r.
-//        sub(h, g);
-//        if (compare(h, epsilon, true) < 0) break;
-        h1.set(h);
-        g1.set(g);
-        if (compare(h1, g1, true) == 0) break;
+        h.setSafe(h2);
+        g.setSafe(g2);
+        if (compare(h, g, true) == 0) break;
     }
 
     r.set(g);
