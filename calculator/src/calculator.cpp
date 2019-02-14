@@ -269,6 +269,7 @@ void Calculator::calculatePercent() {
 }
 
 void Calculator::calculateSqrt() {
+    inNumber_ = false;
     Math::sqrt(state_.x);
 }
 

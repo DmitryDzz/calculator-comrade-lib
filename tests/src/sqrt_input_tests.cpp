@@ -248,3 +248,23 @@ TEST_SQRT(SqrtAfterOperation) {
     ASSERT_EQ(1, getIntValue(x));
     ASSERT_EQ(0, x.getPointPos());
 }
+
+TEST_SQRT(AfterSqrt) {
+    Calculator c(8);
+    Register &x = c.getState().x;
+    Register &y = c.getState().y;
+
+    c.input(Button::d4);
+    c.input(Button::sqrt);
+    ASSERT_EQ(2, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_TRUE(y.isZero());
+    c.input(Button::d1);
+    ASSERT_EQ(1, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_TRUE(y.isZero());
+    c.input(Button::equals);
+    ASSERT_EQ(1, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_TRUE(y.isZero());
+}

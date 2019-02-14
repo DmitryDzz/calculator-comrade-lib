@@ -57,7 +57,7 @@ bool Math::safeShiftLeft(Register &r, const bool updatePointPos) {
 }
 
 int8_t Math::compare(const Register &r1, const Register &r2) {
-    compare(r1, r2, false);
+    return compare(r1, r2, false);
 }
 
 int8_t Math::compare(const Register &r1, const Register &r2, const bool ignoreSign) {
@@ -562,37 +562,11 @@ void Math::changeSign(Register &r) {
 }
 
 void Math::sqrt(Register &r) {
-    //TODO DZZ sqrt(99999998) = 9999.9998 (should be)
-
-    int8_t result = 0;
     int8_t size = r.getSize();
-    bool isValidFakeValue = size > 0 &&
-            (r.getDigit(0) == 0 || r.getDigit(0) == 4 || r.getDigit(0) == 9);
-    if (isValidFakeValue) {
-        for (int8_t i = 1; i < size; i++) {
-            if (r.getDigit(i) != 0) {
-                isValidFakeValue = false;
-                break;
-            }
-        }
-    }
-    if (isValidFakeValue) {
-        switch (r.getDigit(0)) {
-            case 4:
-                result = 2;
-                break;
-            case 9:
-                result = 3;
-                break;
-            default:
-                break;
-        }
-    }
-
-    bool negative = r.isNegative();
-    r.clear();
-    r.setDigit(0, result);
-    r.setError(negative);
+    int8_t size2 = size + size;
+    Register h2(size2);
+    Register g2(size2);
+    sqrt(r, h2, g2);
 }
 
 void Math::sqrt(Register &r, Register &h2, Register &g2) {
@@ -636,5 +610,6 @@ void Math::sqrt(Register &r, Register &h2, Register &g2) {
     }
 
     r.set(g);
+    truncRightZeros(r);
     r.setError(isNegative);
 }

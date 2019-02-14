@@ -964,18 +964,44 @@ TEST_MATH(Sqrt) {
     g.setChangedCallback(on_r3_changed);
 
     // √4 = 2
-//    setValue(r, 4);
-//    Math::sqrt(r, h, g);
-//    ASSERT_EQ(2, getIntValue(r));
-//    ASSERT_EQ(0, r.getPointPos());
-//    ASSERT_FALSE(r.isNegative());
-//    ASSERT_FALSE(r.hasError());
+    // √2 = 1.4142135
+    setValue(r, 4);
+    Math::sqrt(r, h, g);
+    ASSERT_EQ(2, getIntValue(r));
+    ASSERT_EQ(0, r.getPointPos());
+    ASSERT_FALSE(r.isNegative());
+    ASSERT_FALSE(r.hasError());
+    Math::sqrt(r, h, g);
+    ASSERT_EQ(14142135, getIntValue(r));
+    ASSERT_EQ(7, r.getPointPos());
+    ASSERT_FALSE(r.isNegative());
+    ASSERT_FALSE(r.hasError());
 
     // √99999998 = 9999.9998
+    // √9999.9998 = 99.999998
     setValue(r, 99999998);
     Math::sqrt(r, h, g);
     ASSERT_EQ(99999998, getIntValue(r));
     ASSERT_EQ(4, r.getPointPos());
+    ASSERT_FALSE(r.isNegative());
+    ASSERT_FALSE(r.hasError());
+    Math::sqrt(r, h, g);
+    ASSERT_EQ(99999998, getIntValue(r));
+    ASSERT_EQ(6, r.getPointPos());
+    ASSERT_FALSE(r.isNegative());
+    ASSERT_FALSE(r.hasError());
+
+    // √1.0000003 = 1.0000001
+    // √1.0000001 = 1.
+    setValue(r, 10000003, 7);
+    Math::sqrt(r, h, g);
+    ASSERT_EQ(10000001, getIntValue(r));
+    ASSERT_EQ(7, r.getPointPos());
+    ASSERT_FALSE(r.isNegative());
+    ASSERT_FALSE(r.hasError());
+    Math::sqrt(r, h, g);
+    ASSERT_EQ(1, getIntValue(r));
+    ASSERT_EQ(0, r.getPointPos());
     ASSERT_FALSE(r.isNegative());
     ASSERT_FALSE(r.hasError());
 }
