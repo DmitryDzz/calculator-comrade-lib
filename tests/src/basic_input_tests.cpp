@@ -65,35 +65,6 @@ TEST_CALCULATOR_INPUT(ClearEntry4) {
     ASSERT_EQ(3, getIntValue(y));
 }
 
-TEST_CALCULATOR_INPUT(ClearEntryAfterOverflow) {
-    Calculator c(8);
-    for (int8_t i = 0; i < 8; i++)
-        c.input(Button::d9);
-    c.input(Button::mul);
-    c.input(Button::d9);
-    c.input(Button::equals);
-    State &state = c.getState();
-    ASSERT_EQ(89999999, getAbsIntValue(state.x)); // 8.9999999 in X
-    ASSERT_EQ(7, state.x.getPointPos());
-    ASSERT_EQ(99999999, getAbsIntValue(state.y)); // 99999999 in Y
-    ASSERT_EQ(0, state.y.getPointPos());
-    ASSERT_EQ(true, state.x.hasError());
-
-    c.input(Button::ce);
-    ASSERT_EQ(89999999, getAbsIntValue(state.x)); // 8.9999999 in X
-    ASSERT_EQ(7, state.x.getPointPos());
-    ASSERT_EQ(99999999, getAbsIntValue(state.y)); // 99999999 in Y
-    ASSERT_EQ(0, state.y.getPointPos());
-    ASSERT_EQ(false, state.x.hasError());
-
-    c.input(Button::ce); // There's no input, so Button::ce works as Button::ca.
-    ASSERT_EQ(89999999, getAbsIntValue(state.x)); // 8.9999999 in X
-    ASSERT_EQ(7, state.x.getPointPos());
-    ASSERT_EQ(99999999, getAbsIntValue(state.y)); // 99999999 in Y
-    ASSERT_EQ(0, state.y.getPointPos());
-    ASSERT_EQ(false, state.x.hasError());
-}
-
 TEST_CALCULATOR_INPUT(ClearAll) {
     Calculator c(8);
     Register &x = c.getState().x;
@@ -110,19 +81,53 @@ TEST_CALCULATOR_INPUT(ClearAll) {
     ASSERT_EQ(7, x.getPointPos());
     ASSERT_EQ(-99999999, getIntValue(y)); // 99999999 in Y
     ASSERT_EQ(0, y.getPointPos());
-    ASSERT_EQ(true, x.isNegative());
-    ASSERT_EQ(true, x.hasError());
+    ASSERT_TRUE(x.isNegative());
+    ASSERT_TRUE(x.hasError());
+    ASSERT_TRUE(x.hasOverflow());
 
     c.input(Button::ca);
     ASSERT_EQ(0, getIntValue(x));
     ASSERT_EQ(0, x.getPointPos());
     ASSERT_EQ(0, getIntValue(y));
     ASSERT_EQ(0, y.getPointPos());
-    ASSERT_EQ(false, x.isNegative());
-    ASSERT_EQ(false, x.hasError());
+    ASSERT_FALSE(x.isNegative());
+    ASSERT_FALSE(x.hasError());
+    ASSERT_FALSE(x.hasOverflow());
 }
 
-TEST_CALCULATOR_INPUT(CeCa) {
+TEST_CALCULATOR_INPUT(CeAfterOverflow) {
+    Calculator c(8);
+    for (int8_t i = 0; i < 8; i++)
+        c.input(Button::d9);
+    c.input(Button::mul);
+    c.input(Button::d9);
+    c.input(Button::equals);
+    State &state = c.getState();
+    ASSERT_EQ(89999999, getIntValue(state.x)); // 8.9999999 in X
+    ASSERT_EQ(7, state.x.getPointPos());
+    ASSERT_EQ(99999999, getIntValue(state.y)); // 99999999 in Y
+    ASSERT_EQ(0, state.y.getPointPos());
+    ASSERT_TRUE(state.x.hasError());
+    ASSERT_TRUE(state.x.hasOverflow());
+
+    c.input(Button::ce);
+    ASSERT_EQ(89999999, getIntValue(state.x)); // 8.9999999 in X
+    ASSERT_EQ(7, state.x.getPointPos());
+    ASSERT_EQ(99999999, getIntValue(state.y)); // 99999999 in Y
+    ASSERT_EQ(0, state.y.getPointPos());
+    ASSERT_FALSE(state.x.hasError());
+    ASSERT_FALSE(state.x.hasOverflow());
+
+    c.input(Button::ce);
+    ASSERT_EQ(89999999, getIntValue(state.x)); // 8.9999999 in X
+    ASSERT_EQ(7, state.x.getPointPos());
+    ASSERT_EQ(99999999, getIntValue(state.y)); // 99999999 in Y
+    ASSERT_EQ(0, state.y.getPointPos());
+    ASSERT_FALSE(state.x.hasError());
+    ASSERT_FALSE(state.x.hasOverflow());
+}
+
+TEST_CALCULATOR_INPUT(CeCaAfterOverflow) {
     Calculator c(8);
     Register &x = c.getState().x;
     Register &y = c.getState().y;
@@ -138,24 +143,75 @@ TEST_CALCULATOR_INPUT(CeCa) {
     ASSERT_EQ(7, x.getPointPos());
     ASSERT_EQ(-99999999, getIntValue(y)); // 99999999 in Y
     ASSERT_EQ(0, y.getPointPos());
-    ASSERT_EQ(true, x.isNegative());
-    ASSERT_EQ(true, x.hasError());
+    ASSERT_TRUE(x.isNegative());
+    ASSERT_TRUE(x.hasError());
+    ASSERT_TRUE(x.hasOverflow());
 
     c.input(Button::ceca);
     ASSERT_EQ(-89999999, getIntValue(x)); // 8.9999999 in X
     ASSERT_EQ(7, x.getPointPos());
     ASSERT_EQ(-99999999, getIntValue(y)); // 99999999 in Y
     ASSERT_EQ(0, y.getPointPos());
-    ASSERT_EQ(true, x.isNegative());
-    ASSERT_EQ(false, x.hasError());
+    ASSERT_TRUE(x.isNegative());
+    ASSERT_FALSE(x.hasError());
+    ASSERT_FALSE(x.hasOverflow());
 
     c.input(Button::ceca);
     ASSERT_EQ(0, getIntValue(x));
     ASSERT_EQ(0, x.getPointPos());
     ASSERT_EQ(0, getIntValue(y));
     ASSERT_EQ(0, y.getPointPos());
-    ASSERT_EQ(false, x.isNegative());
-    ASSERT_EQ(false, x.hasError());
+    ASSERT_FALSE(x.isNegative());
+    ASSERT_FALSE(x.hasError());
+    ASSERT_FALSE(x.hasOverflow());
+}
+
+TEST_CALCULATOR_INPUT(CeAfterError) {
+    Calculator c(8);
+    c.input(Button::d9);
+    c.input(Button::div);
+    c.input(Button::d0);
+    c.input(Button::equals);
+    State &state = c.getState();
+    ASSERT_EQ(0, getIntValue(state.x));
+    ASSERT_EQ(0, state.x.getPointPos());
+    ASSERT_TRUE(state.x.hasError());
+    ASSERT_FALSE(state.x.hasOverflow());
+
+    c.input(Button::ce);
+    ASSERT_EQ(0, getIntValue(state.x));
+    ASSERT_EQ(0, state.x.getPointPos());
+    ASSERT_TRUE(state.x.hasError());
+    ASSERT_FALSE(state.x.hasOverflow());
+
+    c.input(Button::ca);
+    ASSERT_EQ(0, getAbsIntValue(state.x));
+    ASSERT_EQ(0, state.x.getPointPos());
+    ASSERT_EQ(0, getAbsIntValue(state.y));
+    ASSERT_EQ(0, state.y.getPointPos());
+    ASSERT_FALSE(state.x.hasError());
+    ASSERT_FALSE(state.x.hasOverflow());
+}
+
+TEST_CALCULATOR_INPUT(CeCaAfterError) {
+    Calculator c(8);
+    c.input(Button::d9);
+    c.input(Button::div);
+    c.input(Button::d0);
+    c.input(Button::equals);
+    State &state = c.getState();
+    ASSERT_EQ(0, getIntValue(state.x));
+    ASSERT_EQ(0, state.x.getPointPos());
+    ASSERT_TRUE(state.x.hasError());
+    ASSERT_FALSE(state.x.hasOverflow());
+
+    c.input(Button::ceca);
+    ASSERT_EQ(0, getAbsIntValue(state.x));
+    ASSERT_EQ(0, state.x.getPointPos());
+    ASSERT_EQ(0, getAbsIntValue(state.y));
+    ASSERT_EQ(0, state.y.getPointPos());
+    ASSERT_FALSE(state.x.hasError());
+    ASSERT_FALSE(state.x.hasOverflow());
 }
 
 TEST_CALCULATOR_INPUT(ZeroTyping) {

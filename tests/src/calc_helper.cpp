@@ -34,7 +34,7 @@ void calculatorcomrade::setValue(Register &r, int64_t value, int8_t digitsAfterP
 
     if (digitsAfterPoint < totalDigits) {
         int8_t intDigits = totalDigits - digitsAfterPoint;
-        r.setError(intDigits > digits);
+        r.setError(intDigits > digits, intDigits > digits);
         if (r.hasError()) {
             r.setPointPos(digits - (intDigits - digits));
             for (int16_t i = 0; i < digits; i++) {
@@ -60,7 +60,7 @@ void calculatorcomrade::setValue(Register &r, int64_t value, int8_t digitsAfterP
             }
         }
     } else { // means: (digitsAfterPoint >= totalDigits)
-        r.setError(false);
+        r.setError(false, false);
         int8_t newTotalDigits = digitsAfterPoint + S1;
         int16_t delta = newTotalDigits > digits ? newTotalDigits - digits : (int16_t) 0;
         if (newTotalDigits - totalDigits >= digits) {

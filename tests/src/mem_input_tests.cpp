@@ -439,7 +439,11 @@ TEST_MEM(MemOverflow) {
     ASSERT_TRUE(s.memHasValue());
     c.input(Button::ce);
     ASSERT_TRUE(s.x.isZero());
-    ASSERT_FALSE(s.x.hasError());
+    ASSERT_TRUE(s.x.hasError()); // ce doesn't clear the error
+    ASSERT_TRUE(s.memHasValue());
+    c.input(Button::ceca);
+    ASSERT_TRUE(s.x.isZero());
+    ASSERT_FALSE(s.x.hasError()); // ceca and ca clear the error
     ASSERT_TRUE(s.memHasValue());
     c.input(Button::memR);
     ASSERT_EQ(99999999, getIntValue(s.x));

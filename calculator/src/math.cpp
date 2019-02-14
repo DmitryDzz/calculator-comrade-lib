@@ -167,7 +167,8 @@ void Math::doubleSizedRegisterToSingle(Register &r2, Register &r) {
         else pointPos--;
         firstDigitIndex--;
     }
-    r2.setError(overflowPos > 0);
+    bool hasOverflow = overflowPos > 0;
+    r2.setError(hasOverflow, hasOverflow);
     r2.setPointPos(overflowPos > 0 ? size - overflowPos : pointPos);
     if (r2.isZero(true))
         r2.setNegative(false);
@@ -176,7 +177,7 @@ void Math::doubleSizedRegisterToSingle(Register &r2, Register &r) {
 }
 
 void Math::appendZerosOnOverflow(Register &r, uint8_t options) {
-    if (!r.hasError()) return;
+    if (!r.hasOverflow()) return;
     if (options & Config::OPTION_TRUNC_ZEROS_ON_OVERFLOW) return;
     while (safeShiftLeft(r, true)) {}
 }
@@ -226,7 +227,7 @@ void Math::addInternal(Register &r1, Register &r2) {
         }
 
         if (extraDigit) {
-            r1.setError(true);
+            r1.setError(true, true);
             unsafeShiftRight(r1, false);
             r1.setDigit(size - S1, 1);
             r1.setPointPos(size - S1);
@@ -323,7 +324,7 @@ void Math::div(Register &r1, Register &r2, Register &acc) {
 
     if (r2.isZero(true)) {
         r1.clear();
-        r1.setError(true);
+        r1.setError(true, false);
         return;
     }
 
@@ -611,5 +612,5 @@ void Math::sqrt(Register &r, Register &h2, Register &g2) {
 
     r.set(g);
     truncRightZeros(r);
-    r.setError(isNegative);
+    r.setError(isNegative, false);
 }

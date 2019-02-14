@@ -43,12 +43,14 @@ namespace calculatorcomrade {
             pointPos_ = rhs.pointPos_;
             negative_ = rhs.negative_;
             hasError_ = rhs.hasError_;
+            hasOverflow_ = rhs.hasOverflow_;
             notify();
         }
 
         void setSafe(const Register& rhs) {
             assert(size_ + size_ >= rhs.size_);
-            assert(rhs.hasError_ == false); // there's no overflow
+            assert(!rhs.hasError_);
+            assert(!rhs.hasOverflow_);
             clearInternal();
             if (size_ < rhs.size_) {
                 int8_t firstSrcIndex = 0;
@@ -80,6 +82,7 @@ namespace calculatorcomrade {
                 if (dstPointPos < 0) {
                     setPointPos(size_ - (srcIndex - srcPointPos + S1));
                     hasError_ = true; // (overflow)
+                    hasOverflow_ = true;
                 }
                 negative_ = rhs.negative_;
             } else {
@@ -89,6 +92,7 @@ namespace calculatorcomrade {
                 pointPos_ = rhs.pointPos_;
                 negative_ = rhs.negative_;
                 hasError_ = rhs.hasError_;
+                hasOverflow_ = rhs.hasOverflow_;
             }
             notify();
         }
@@ -175,8 +179,13 @@ namespace calculatorcomrade {
             return hasError_;
         }
 
-        inline void setError(const bool value) {
-            hasError_ = value;
+        inline bool hasOverflow() const {
+            return hasOverflow_;
+        }
+
+        inline void setError(const bool hasError, const bool hasOverflow) {
+            hasError_ = hasError;
+            hasOverflow_ = hasOverflow;
             notify();
         }
 
@@ -188,7 +197,8 @@ namespace calculatorcomrade {
                     return false;
             return lhs.pointPos_ == rhs.pointPos_ &&
                    lhs.negative_ == rhs.negative_ &&
-                   lhs.hasError_ == rhs.hasError_;
+                   lhs.hasError_ == rhs.hasError_ &&
+                   lhs.hasOverflow_ == rhs.hasOverflow_;
         }
     private:
         int8_t size_;
@@ -196,6 +206,7 @@ namespace calculatorcomrade {
         int8_t pointPos_ = 0;
         bool negative_ = false;
         bool hasError_ = false;
+        bool hasOverflow_ = false;
 
         RegisterChangedCallback changedCallback_ = nullptr;
         bool canNotify_ = true;
@@ -215,6 +226,7 @@ namespace calculatorcomrade {
             pointPos_ = 0;
             negative_ = false;
             hasError_ = false;
+            hasOverflow_ = false;
         }
     };
 

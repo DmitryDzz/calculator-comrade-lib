@@ -26,10 +26,23 @@ State& Calculator::getState() {
 
 void Calculator::input(Button button) {
     if (state_.x.hasError()) {
-        if (button == Button::ca)
-            clearAll();
-        else if (button == Button::ce || button == Button::ceca)
-            state_.x.setError(false);
+        switch (button) {
+            case Button::ca:
+                clearAll();
+                break;
+            case Button::ce:
+                if (state_.x.hasOverflow())
+                    state_.x.setError(false, false);
+                break;
+            case Button::ceca:
+                if (state_.x.hasOverflow())
+                    state_.x.setError(false, false);
+                else
+                    clearAll();
+                break;
+            default:
+                break;
+        }
 
         saveButton(button);
         if (displayEventCallback_ != nullptr)
@@ -304,7 +317,7 @@ void Calculator::memPlusOrMinus(const Operation memOperation) {
     }
     if (acc.hasError()) {
         x.clear();
-        x.setError(true);
+        x.setError(true, false);
     } else {
         m.set(acc);
     }
