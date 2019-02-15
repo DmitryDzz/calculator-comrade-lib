@@ -101,7 +101,7 @@ TEST_SQRT(SqrtFakeNegative) {
     ASSERT_EQ(-6, getIntValue(x));
 }
 
-TEST_SQRT(SqrtAfterOperator) {
+TEST_SQRT(SqrtAfterOperator1) {
     Calculator c(8);
     Register &x = c.getState().x;
 
@@ -168,6 +168,84 @@ TEST_SQRT(SqrtAfterOperator) {
     c.input(Button::equals);
     ASSERT_EQ(1, getIntValue(x));
     ASSERT_EQ(0, x.getPointPos());
+}
+
+TEST_SQRT(SqrtAfterOperator2) {
+    Calculator c(8);
+    Register &x = c.getState().x;
+    Register &y = c.getState().y;
+
+    // 5 + 9 √ 2  =>  2
+    // =  =>  7
+    // =  =>  9
+    c.input(Button::ca);
+    c.input(Button::d5);
+    c.input(Button::plus);
+    c.input(Button::d9);
+    c.input(Button::sqrt);
+    c.input(Button::d2);
+    ASSERT_EQ(2, getIntValue(x));
+    ASSERT_EQ(5, getIntValue(y));
+    c.input(Button::equals);
+    ASSERT_EQ(7, getIntValue(x));
+    ASSERT_EQ(2, getIntValue(y));
+    c.input(Button::equals);
+    ASSERT_EQ(9, getIntValue(x));
+    ASSERT_EQ(2, getIntValue(y));
+
+    // 5 - 9 √ 2  =>  2
+    // =  =>  3
+    // =  =>  1
+    c.input(Button::ca);
+    c.input(Button::d5);
+    c.input(Button::minus);
+    c.input(Button::d9);
+    c.input(Button::sqrt);
+    c.input(Button::d2);
+    ASSERT_EQ(2, getIntValue(x));
+    ASSERT_EQ(5, getIntValue(y));
+    c.input(Button::equals);
+    ASSERT_EQ(3, getIntValue(x));
+    ASSERT_EQ(2, getIntValue(y));
+    c.input(Button::equals);
+    ASSERT_EQ(1, getIntValue(x));
+    ASSERT_EQ(2, getIntValue(y));
+
+    // 2 * 9 √ 4  =>  4
+    // =  =>  8
+    // =  =>  16
+    c.input(Button::ca);
+    c.input(Button::d2);
+    c.input(Button::mul);
+    c.input(Button::d9);
+    c.input(Button::sqrt);
+    c.input(Button::d4);
+    ASSERT_EQ(4, getIntValue(x));
+    ASSERT_EQ(2, getIntValue(y));
+    c.input(Button::equals);
+    ASSERT_EQ(8, getIntValue(x));
+    ASSERT_EQ(2, getIntValue(y));
+    c.input(Button::equals);
+    ASSERT_EQ(16, getIntValue(x));
+    ASSERT_EQ(2, getIntValue(y));
+
+    // 8 / 9 √ 2  =>  2
+    // =  =>  4
+    // =  =>  2
+    c.input(Button::ca);
+    c.input(Button::d8);
+    c.input(Button::div);
+    c.input(Button::d9);
+    c.input(Button::sqrt);
+    c.input(Button::d2);
+    ASSERT_EQ(2, getIntValue(x));
+    ASSERT_EQ(8, getIntValue(y));
+    c.input(Button::equals);
+    ASSERT_EQ(4, getIntValue(x));
+    ASSERT_EQ(2, getIntValue(y));
+    c.input(Button::equals);
+    ASSERT_EQ(2, getIntValue(x));
+    ASSERT_EQ(2, getIntValue(y));
 }
 
 TEST_SQRT(SqrtAfterOperation) {
