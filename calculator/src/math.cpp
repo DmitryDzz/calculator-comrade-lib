@@ -25,6 +25,12 @@ void Math::calculate(Register &r1, Register &r2, const Operation &operation, uin
             div(r1, r2);
             break;
         case Operation::mu:
+            // I'm not sure about this code...
+            // Check EqualsAfterMuPercent test in mu_input_tests.cpp.
+//            if (!r2.isZero()) {
+//                mul(r1, r2);
+//                r2.clear();
+//            }
             return;
     }
 

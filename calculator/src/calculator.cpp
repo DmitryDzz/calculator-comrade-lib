@@ -262,8 +262,19 @@ void Calculator::calculateAddSubMulDiv() {
 }
 
 void Calculator::calculateEquals() {
+    Operation op = state_.operation;
+
+    // MU operator ugly patch.
+    if (op == Operation::mu) {
+        if (!hasOperation_) {
+            Math::calculate(state_.x, state_.y, Operation::mul, options_);
+        }
+        state_.y.clear();
+        state_.operation = Operation::add;
+        return;
+    }
+
     if (hasOperation_) {
-        Operation op = state_.operation;
         if (op == Operation::add || op == Operation::sub || op == Operation::div) {
             state_.exchangeXY();
         }
@@ -273,7 +284,6 @@ void Calculator::calculateEquals() {
         else if (lastButton_ == Button::div)
             state_.x.setOne();
     }
-
     Math::calculate(state_.x, state_.y, state_.operation, options_);
 }
 
