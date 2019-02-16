@@ -28,6 +28,7 @@ namespace calculatorcomrade {
         changeSign,
         mul,
         div,
+        mu,
         sqrt,
         percent,
         equals,

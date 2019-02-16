@@ -15,6 +15,7 @@ set(SOURCES
         src/percent_input_tests.cpp
         src/mem_input_tests.cpp
         src/sqrt_input_tests.cpp
+        src/mu_input_tests.cpp
 )
 
 set(TARGET tests)

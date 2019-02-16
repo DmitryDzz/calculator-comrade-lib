@@ -24,6 +24,8 @@ void Math::calculate(Register &r1, Register &r2, const Operation &operation, uin
         case Operation::div:
             div(r1, r2);
             break;
+        case Operation::mu:
+            return;
     }
 
     appendZerosOnOverflow(r1, options);
@@ -414,6 +416,9 @@ void Math::calculatePercent(Register &r1, Register &r2, const Operation &operati
         case Operation::div:
             divPercent(r1, r2);
             break;
+        case Operation::mu:
+            muPercent(r1, r2);
+            break;
     }
 
     appendZerosOnOverflow(r1, options);
@@ -556,6 +561,28 @@ void Math::divPercent(Register &r1, Register &r2) {
 
     doubleSizedRegisterToSingle(r1ex, r1);
     truncRightZeros(r1);
+}
+
+// "value mu percent %" => value / (1 - percent/100)
+// Example: 200 mu 60 % => 500
+// Input: r1: value, r2: percent
+// Output: r1: result, r2: percent/100
+void Math::muPercent(Register &r1, Register &r2) {
+    int8_t size = r1.getSize();
+    assert(size == r2.getSize());
+
+    Register acc(size);
+    acc.setDigit(2, 1); // acc = 100
+
+    div(r2, acc); // r2 = r2 / 100
+
+    acc.clear();
+    acc.setDigit(0, 1); // acc = 1
+    sub(acc, r2);
+
+    div(r1, acc);
+    truncRightZeros(r1);
+    truncRightZeros(r2);
 }
 
 void Math::changeSign(Register &r) {

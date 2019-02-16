@@ -1005,3 +1005,75 @@ TEST_MATH(Sqrt) {
     ASSERT_FALSE(r.isNegative());
     ASSERT_FALSE(r.hasError());
 }
+
+TEST_MATH(Mu) {
+    Register r1(8);
+    Register r2(8);
+
+    r1.setChangedCallback(on_r1_changed);
+    r2.setChangedCallback(on_r2_changed);
+
+    // 200 mu 60 % => 500
+    setValue(r1, 200);
+    setValue(r2, 60);
+    Math::muPercent(r1, r2);
+    ASSERT_EQ(500, getIntValue(r1));
+    ASSERT_EQ(0, r1.getPointPos());
+    ASSERT_FALSE(r1.hasError());
+    ASSERT_EQ(6, getIntValue(r2));
+    ASSERT_EQ(1, r2.getPointPos());
+    ASSERT_FALSE(r2.hasError());
+
+    // -200 mu 60 % => -500
+    setValue(r1, -200);
+    setValue(r2, 60);
+    Math::muPercent(r1, r2);
+    ASSERT_EQ(-500, getIntValue(r1));
+    ASSERT_EQ(0, r1.getPointPos());
+    ASSERT_FALSE(r1.hasError());
+    ASSERT_EQ(6, getIntValue(r2));
+    ASSERT_EQ(1, r2.getPointPos());
+    ASSERT_FALSE(r2.hasError());
+
+    // 200 mu (-60) % => 125
+    setValue(r1, 200);
+    setValue(r2, -60);
+    Math::muPercent(r1, r2);
+    ASSERT_EQ(125, getIntValue(r1));
+    ASSERT_EQ(0, r1.getPointPos());
+    ASSERT_FALSE(r1.hasError());
+    ASSERT_EQ(-6, getIntValue(r2));
+    ASSERT_EQ(1, r2.getPointPos());
+    ASSERT_FALSE(r2.hasError());
+
+    // (-200) mu (-60) % => 125
+    setValue(r1, -200);
+    setValue(r2, -60);
+    Math::muPercent(r1, r2);
+    ASSERT_EQ(-125, getIntValue(r1));
+    ASSERT_EQ(0, r1.getPointPos());
+    ASSERT_FALSE(r1.hasError());
+    ASSERT_EQ(-6, getIntValue(r2));
+    ASSERT_EQ(1, r2.getPointPos());
+    ASSERT_FALSE(r2.hasError());
+}
+
+TEST_MATH(MuError) {
+    Register r1(8);
+    Register r2(8);
+
+    r1.setChangedCallback(on_r1_changed);
+    r2.setChangedCallback(on_r2_changed);
+
+    // 200 mu 100 % => [err] 0
+    setValue(r1, 200);
+    setValue(r2, 100);
+    Math::muPercent(r1, r2);
+    ASSERT_EQ(0, getIntValue(r1));
+    ASSERT_EQ(0, r1.getPointPos());
+    ASSERT_TRUE(r1.hasError());
+    ASSERT_FALSE(r1.hasOverflow());
+    ASSERT_EQ(1, getIntValue(r2));
+    ASSERT_EQ(0, r2.getPointPos());
+    ASSERT_FALSE(r2.hasError());
+}

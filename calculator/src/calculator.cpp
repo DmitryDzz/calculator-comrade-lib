@@ -131,6 +131,16 @@ void Calculator::input(Button button) {
             state_.operation = Operation::div;
             hasOperation_ = true;
             break;
+        case Button::mu:
+            if (hasOperation_) {
+                state_.y.clear();
+                state_.operation = Operation::add;
+                hasOperation_ = false;
+            } else {
+                state_.operation = Operation::mu;
+                hasOperation_ = true;
+            }
+            break;
         case Button::percent:
             calculatePercent();
             hasOperation_ = false;
@@ -237,7 +247,8 @@ void Calculator::calculateAddSubMulDiv() {
     if (lastButton_ == Button::plus ||
         lastButton_ == Button::minus ||
         lastButton_ == Button::mul ||
-        lastButton_ == Button::div) return;
+        lastButton_ == Button::div ||
+        lastButton_ == Button::mu) return;
 
     Operation op = state_.operation;
     if (op == Operation::add || op == Operation::sub || op == Operation::div) {
@@ -269,7 +280,7 @@ void Calculator::calculateEquals() {
 void Calculator::calculatePercent() {
     Operation op = state_.operation;
     if (hasOperation_) {
-        if (op == Operation::add || op == Operation::sub || op == Operation::div) {
+        if (op == Operation::add || op == Operation::sub || op == Operation::div || op == Operation ::mu) {
             state_.exchangeXY();
         }
 

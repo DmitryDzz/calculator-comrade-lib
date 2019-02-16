@@ -29,6 +29,7 @@ namespace calculatorcomrade {
         static void subPercent(Register &r1, Register &r2);
         static void mulPercent(Register &r1, Register &r2);
         static void divPercent(Register &r1, Register &r2);
+        static void muPercent(Register &r1, Register &r2);
 
         static void sqrt(Register &r);
         static void sqrt(Register &r, Register &h2, Register &g2);

@@ -11,7 +11,8 @@ namespace calculatorcomrade {
         add,
         sub,
         mul,
-        div
+        div,
+        mu
     };
 }
 
