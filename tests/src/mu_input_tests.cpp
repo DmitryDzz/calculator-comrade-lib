@@ -14,7 +14,9 @@ using namespace calculatorcomrade;
 
 TEST_MU(MuRegularOperations) {
     Calculator c(8);
-    Register &x = c.getState().x;
+    State &s = c.getState();
+    Register &x = s.x;
+    Register &y = s.y;
 
     // 200 mu 60 % => 500
     // % => 500
@@ -28,9 +30,15 @@ TEST_MU(MuRegularOperations) {
     c.input(Button::percent);
     ASSERT_EQ(500, getIntValue(x));
     ASSERT_EQ(0, x.getPointPos());
+    ASSERT_EQ(6, getIntValue(y));
+    ASSERT_EQ(1, y.getPointPos());
+    ASSERT_EQ(Operation::mu, s.operation);
     c.input(Button::percent);
     ASSERT_EQ(500, getIntValue(x));
     ASSERT_EQ(0, x.getPointPos());
+    ASSERT_EQ(6, getIntValue(y));
+    ASSERT_EQ(1, y.getPointPos());
+    ASSERT_EQ(Operation::mu, s.operation);
 
     // 200 mu 60 = => 60
     // = => 60
@@ -44,9 +52,13 @@ TEST_MU(MuRegularOperations) {
     c.input(Button::equals);
     ASSERT_EQ(60, getIntValue(x));
     ASSERT_EQ(0, x.getPointPos());
+    ASSERT_TRUE(y.isZero());
+    ASSERT_EQ(Operation::add, s.operation);
     c.input(Button::equals);
     ASSERT_EQ(60, getIntValue(x));
     ASSERT_EQ(0, x.getPointPos());
+    ASSERT_TRUE(y.isZero());
+    ASSERT_EQ(Operation::add, s.operation);
 }
 
 TEST_MU(MuArithmeticOperationAfterMuPercent) {
