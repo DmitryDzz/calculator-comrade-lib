@@ -214,6 +214,33 @@ TEST_CALCULATOR_INPUT(CeCaAfterError) {
     ASSERT_FALSE(state.x.hasOverflow());
 }
 
+TEST_CALCULATOR_INPUT(CeCaAfterEquals) {
+    Calculator c(8);
+    State &s = c.getState();
+
+    c.input(Button::d2);
+    c.input(Button::mul);
+    c.input(Button::d3);
+    c.input(Button::equals);
+    c.input(Button::ceca);
+    ASSERT_TRUE(s.x.isZero());
+    ASSERT_TRUE(s.y.isZero());
+    ASSERT_TRUE(s.operation == Operation::add);
+
+    c.input(Button::d2);
+    c.input(Button::memPlus);
+    c.input(Button::div);
+    c.input(Button::d0);
+    c.input(Button::equals);
+    c.input(Button::ceca);
+    ASSERT_TRUE(s.x.isZero());
+    ASSERT_TRUE(s.y.isZero());
+    ASSERT_FALSE(s.m.isZero());
+    ASSERT_TRUE(s.operation == Operation::add);
+    ASSERT_FALSE(s.x.hasError());
+    ASSERT_FALSE(s.x.hasOverflow());
+}
+
 TEST_CALCULATOR_INPUT(ZeroTyping) {
     Calculator c(4);
     State defaultState(4);
