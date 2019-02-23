@@ -229,3 +229,36 @@ TEST(TestRegister, PointPos) {
     ASSERT_EQ(false, reg.isNegative());
     ASSERT_EQ(false, reg.hasError());
 }
+
+TEST(TestRegister, GetDisplayDigit) {
+    Register reg(8);
+
+    ASSERT_EQ(0, reg.getDisplayDigit(0));
+    ASSERT_EQ(-1, reg.getDisplayDigit(1));
+    ASSERT_EQ(-1, reg.getDisplayDigit(2));
+    ASSERT_EQ(-1, reg.getDisplayDigit(3));
+    ASSERT_EQ(-1, reg.getDisplayDigit(4));
+    ASSERT_EQ(-1, reg.getDisplayDigit(5));
+    ASSERT_EQ(-1, reg.getDisplayDigit(6));
+    ASSERT_EQ(-1, reg.getDisplayDigit(7));
+
+    setValue(reg, 1, 4); // 0000.0001
+    ASSERT_EQ(1, reg.getDisplayDigit(0));
+    ASSERT_EQ(0, reg.getDisplayDigit(1));
+    ASSERT_EQ(0, reg.getDisplayDigit(2));
+    ASSERT_EQ(0, reg.getDisplayDigit(3));
+    ASSERT_EQ(0, reg.getDisplayDigit(4));
+    ASSERT_EQ(-1, reg.getDisplayDigit(5));
+    ASSERT_EQ(-1, reg.getDisplayDigit(6));
+    ASSERT_EQ(-1, reg.getDisplayDigit(7));
+
+    setValue(reg, 30001, 2); // 000300.01
+    ASSERT_EQ(1, reg.getDisplayDigit(0));
+    ASSERT_EQ(0, reg.getDisplayDigit(1));
+    ASSERT_EQ(0, reg.getDisplayDigit(2));
+    ASSERT_EQ(0, reg.getDisplayDigit(3));
+    ASSERT_EQ(3, reg.getDisplayDigit(4));
+    ASSERT_EQ(-1, reg.getDisplayDigit(5));
+    ASSERT_EQ(-1, reg.getDisplayDigit(6));
+    ASSERT_EQ(-1, reg.getDisplayDigit(7));
+}

@@ -9,6 +9,8 @@
 
 #include "calculator/config.h"
 
+#define SM1 ((int8_t)-1)
+#define S0 ((int8_t)0)
 #define S1 ((int8_t)1)
 
 namespace calculatorcomrade {
@@ -137,6 +139,17 @@ namespace calculatorcomrade {
 
         inline const int8_t& getDigit(const int8_t index) const {
             return data_[index];
+        };
+
+        inline int8_t getDisplayDigit(const int8_t index) const {
+            if (data_[index] > 0 || pointPos_ >= index) return data_[index];
+
+            bool hasNonZeroDigitsToTheRight = false;
+            for (int8_t i = index + S1; i < size_; i++) {
+                hasNonZeroDigitsToTheRight = data_[i] > 0;
+                if (hasNonZeroDigitsToTheRight) break;
+            }
+            return hasNonZeroDigitsToTheRight ? S0 : SM1;
         };
 
         inline void setDigit(const int8_t index, const int8_t value) {

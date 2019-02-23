@@ -45,6 +45,8 @@ extern "C" HRES GetPointPos(HCALC hCalc, int8_t *pointPos);
 
 extern "C" HRES GetDigit(HCALC hCalc, int8_t index, int8_t *digit);
 
+extern "C" HRES GetDisplayDigit(HCALC hCalc, int8_t index, int8_t *digit);
+
 #endif //CALCULATORCOMRADE_MAIN_H
 
 #pragma clang diagnostic pop

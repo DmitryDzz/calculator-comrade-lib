@@ -115,4 +115,12 @@ extern "C" HRES GetDigit(const HCALC hCalc, const int8_t index, int8_t *digit) {
     return HRES_OK;
 }
 
+extern "C" HRES GetDisplayDigit(const HCALC hCalc, const int8_t index, int8_t *digit) {
+    Calculator* calculator = findInstance(hCalc);
+    if (calculator == nullptr)
+        return HRES_ERR_NO_INSTANCE;
+    *digit = DISPLAY_REGISTER(calculator).getDisplayDigit(index);
+    return HRES_OK;
+}
+
 #pragma clang diagnostic pop
