@@ -241,6 +241,18 @@ TEST_CALCULATOR_INPUT(CeCaAfterEquals) {
     ASSERT_FALSE(s.x.hasOverflow());
 }
 
+TEST_CALCULATOR_INPUT(CeCaAfterOperation) {
+    Calculator c(8);
+    State &s = c.getState();
+
+    c.input(Button::d2);
+    c.input(Button::mul);
+    c.input(Button::ceca);
+    ASSERT_TRUE(s.x.isZero());
+    ASSERT_TRUE(s.y.isZero());
+    ASSERT_TRUE(s.operation == Operation::add);
+}
+
 TEST_CALCULATOR_INPUT(ZeroTyping) {
     Calculator c(4);
     State defaultState(4);
@@ -394,7 +406,7 @@ TEST_CALCULATOR_INPUT(ZeroInHighDigit) {
 }
 
 TEST_CALCULATOR_INPUT(SerialSum) {
-    Calculator c(2);
+    Calculator c(Config::MIN_SIZE);
     State &state = c.getState();
     c.input(Button::d2);
     c.input(Button::plus);
@@ -411,7 +423,7 @@ TEST_CALCULATOR_INPUT(SerialSum) {
 }
 
 TEST_CALCULATOR_INPUT(SerialSub) {
-    Calculator c(2);
+    Calculator c(Config::MIN_SIZE);
     State &state = c.getState();
     c.input(Button::d8);
     c.input(Button::minus);
@@ -428,7 +440,7 @@ TEST_CALCULATOR_INPUT(SerialSub) {
 }
 
 TEST_CALCULATOR_INPUT(SerialMul) {
-    Calculator c(2);
+    Calculator c(Config::MIN_SIZE);
     State &state = c.getState();
     c.input(Button::d2);
     c.input(Button::mul);

@@ -102,7 +102,7 @@ void Calculator::input(Button button) {
             clearEntry();
             break;
         case Button::ceca:
-            if (!hasOperation_ || (button == lastButton_) || lastButtonWasCe_) clearAll();
+            if (!(hasOperation_ && inNumber_) || (button == lastButton_) || lastButtonWasCe_) clearAll();
             else clearEntry();
             break;
         case Button::d0 ... Button::d9:
