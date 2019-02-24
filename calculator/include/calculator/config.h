@@ -9,6 +9,9 @@
 
 class Config {
 public:
+    // MU operator requares at least 3 digits to store value 100 (%) in register.
+    // So min size of registers is limited by 3.
+    static const int8_t MIN_SIZE = 3;
     static const int8_t MAX_SIZE = 16;
     static const int8_t DEFAULT_SIZE = 8;
 

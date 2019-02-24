@@ -27,7 +27,7 @@ namespace calculatorcomrade {
                 y(size),
                 m(size),
                 operation(Operation::add) {
-            assert(size > 0);
+            assert(size >= Config::MIN_SIZE);
             assert(size <= Config::MAX_SIZE);
         }
 
