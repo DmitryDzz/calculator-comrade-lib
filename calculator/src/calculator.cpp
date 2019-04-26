@@ -67,6 +67,10 @@ void Calculator::input(Button button) {
     switch (button) {
         case Button::d0 ... Button::d9:
         case Button::point:
+            if (inNumber_ && inputSize_ == 0 && !inputHasPoint_) {
+                state_.x.clear();
+            }
+            // No break! In case of a number after Sqrt operation.
         case Button::memR:
         case Button::memRC:
         case Button::sqrt:
