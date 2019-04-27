@@ -1,0 +1,3 @@
+
+v1a (2019-04-27)
+* Fixed input after Sqrt operation.

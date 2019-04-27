@@ -36,3 +36,6 @@
 
 # CLion IDE and command line builds
 cmake-build-*
+
+# Output directory with final .so
+output

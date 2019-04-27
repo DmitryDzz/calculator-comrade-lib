@@ -1,29 +1,40 @@
 @echo off
 
+set VERSION=%1
+
 rem Android
 rem -------
 
-set PLATFORM=android-arm64-v8a
+set OS=android
+
+set ARCHITECTURE=arm64-v8a
+set PLATFORM=%OS%-%ARCHITECTURE%
 echo[ & echo Platform %PLATFORM% & echo -------------------------- & echo[
-call build-platform.cmd %PLATFORM%
+call build-platform.cmd %PLATFORM% %OS% %ARCHITECTURE% %VERSION%
 
-set PLATFORM=android-armeabi-v7a
+set ARCHITECTURE=armeabi-v7a
+set PLATFORM=%OS%-%ARCHITECTURE%
 echo[ & echo Platform %PLATFORM% & echo ---------------------------- & echo[
-call build-platform.cmd %PLATFORM%
+call build-platform.cmd %PLATFORM% %OS% %ARCHITECTURE% %VERSION%
 
-set PLATFORM=android-x86
+set ARCHITECTURE=x86
+set PLATFORM=%OS%-%ARCHITECTURE%
 echo[ & echo Platform %PLATFORM% & echo -------------------- & echo[
-call build-platform.cmd %PLATFORM%
+call build-platform.cmd %PLATFORM% %OS% %ARCHITECTURE% %VERSION%
 
 rem Windows
 rem -------
 
-set PLATFORM=windows-x86_64
-echo[ & echo Platform %PLATFORM% & echo ----------------------- & echo[
-call build-platform.cmd %PLATFORM%
+set OS=windows
 
-set PLATFORM=windows-x86
+set ARCHITECTURE=x86_64
+set PLATFORM=%OS%-%ARCHITECTURE%
+echo[ & echo Platform %PLATFORM% & echo ----------------------- & echo[
+call build-platform.cmd %PLATFORM% %OS% %ARCHITECTURE% %VERSION%
+
+set ARCHITECTURE=x86
+set PLATFORM=%OS%-%ARCHITECTURE%
 echo[ & echo Platform %PLATFORM% & echo -------------------- & echo[
-call build-platform.cmd %PLATFORM%
+call build-platform.cmd %PLATFORM% %OS% %ARCHITECTURE% %VERSION%
 
 echo[ & echo Hope it works. Press something... & pause > nul
