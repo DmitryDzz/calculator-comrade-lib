@@ -18,8 +18,8 @@ del /Q %OUTPUT_DIR%\%OS%\%ARCHITECTURE%\*.* 2>nul
 set SRC_DIR=lib\
 if exist bin\ set SRC_DIR=bin\
 set FILENAME=libcalculator_v%VERSION%
-copy %SRC_DIR%\*.dll %OUTPUT_DIR%\%OS%\%ARCHITECTURE%\%FILENAME%.dll > nul 2> nul
-copy %SRC_DIR%\*.so %OUTPUT_DIR%\%OS%\%ARCHITECTURE%\%FILENAME%.so > nul 2> nul
+copy /B /V %SRC_DIR%\*.dll %OUTPUT_DIR%\%OS%\%ARCHITECTURE%\%FILENAME%.dll > nul 2> nul
+copy /B /V %SRC_DIR%\*.so %OUTPUT_DIR%\%OS%\%ARCHITECTURE%\%FILENAME%.so > nul 2> nul
 echo[ && echo "%FILENAME%" is copied to output\%OS%\%ARCHITECTURE%\
 
 cd ..

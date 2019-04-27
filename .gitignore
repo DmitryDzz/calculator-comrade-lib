@@ -38,4 +38,5 @@
 cmake-build-*
 
 # Output directory with final .so
-output
+output/
+output.zip
