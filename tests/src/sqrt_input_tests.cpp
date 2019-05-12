@@ -398,3 +398,24 @@ TEST_SQRT(AfterSqrt3) {
     ASSERT_EQ(0, x.getPointPos());
     ASSERT_TRUE(y.isZero());
 }
+
+TEST_SQRT(CeCaAfterOperationAndSqrt) {
+    Calculator c(8);
+    Register &x = c.getState().x;
+    Register &y = c.getState().y;
+
+    c.input(Button::d2);
+    c.input(Button::plus);
+    c.input(Button::d9);
+    ASSERT_EQ(9, getIntValue(x));
+    ASSERT_EQ(2, getIntValue(y));
+    c.input(Button::sqrt);
+    ASSERT_EQ(3, getIntValue(x));
+    ASSERT_EQ(2, getIntValue(y));
+    c.input(Button::ceca);
+    ASSERT_TRUE(x.isZero());
+    ASSERT_EQ(2, getIntValue(y));
+    c.input(Button::ceca);
+    ASSERT_TRUE(x.isZero());
+    ASSERT_TRUE(y.isZero());
+}

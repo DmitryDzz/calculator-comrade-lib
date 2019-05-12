@@ -189,7 +189,7 @@ void Calculator::clearAll() {
 }
 
 void Calculator::clearEntry() {
-    if (inputSize_ > 0 || inputHasPoint_)
+    if (inputSize_ > 0 || inputHasPoint_ || lastButton_ == Button::sqrt)
         clearInput();
 }
 
@@ -231,6 +231,8 @@ void Calculator::saveButton(const Button button) {
         case Button::minus:
         case Button::mul:
         case Button::div:
+        case Button::mu:
+        case Button::sqrt:
             lastButton_ = button;
             break;
         case Button::ce:
