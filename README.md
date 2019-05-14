@@ -1,5 +1,5 @@
 # calculator-comrade-lib
-Simulator of a simple calculator with basic arithmetic operations (+, ⁻, ×, ÷, %, √) and M/RM functions.
+The library is an emulator of a pocket calculator with basic arithmetic operations (+, ⁻, ×, ÷, %, √, MU) and M/RM functions.
 
 # Quick start
 ## Clone the project:
