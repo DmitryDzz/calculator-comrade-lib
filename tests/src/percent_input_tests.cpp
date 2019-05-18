@@ -5,7 +5,6 @@
 #include <gmock/gmock.h>
 
 #include "calculator/calculator.h"
-#include "calculator/state.h"
 #include "calculator/button.h"
 #include "calculator/operation.h"
 #include "calc_helper.h"
@@ -16,7 +15,7 @@ using namespace calculatorcomrade;
 
 TEST_PERCENT(NoOperation) {
     Calculator c(8);
-    Register &x = c.getState().x;
+    Register &x = c.getX();
     c.input(Button::d5);
     c.input(Button::percent);
     ASSERT_EQ(5, getIntValue(x));
@@ -24,7 +23,7 @@ TEST_PERCENT(NoOperation) {
 
 TEST_PERCENT(AddPercent) {
     Calculator c(8);
-    Register &x = c.getState().x;
+    Register &x = c.getX();
 
     c.input(Button::ca);
     c.input(Button::d2);
@@ -85,7 +84,7 @@ TEST_PERCENT(AddPercent) {
 
 TEST_PERCENT(SubPercent) {
     Calculator c(8);
-    Register &x = c.getState().x;
+    Register &x = c.getX();
 
     c.input(Button::ca);
     c.input(Button::d2);
@@ -146,8 +145,8 @@ TEST_PERCENT(SubPercent) {
 
 TEST_PERCENT(MulPercent) {
     Calculator c(8);
-    Register &x = c.getState().x;
-    Register &y = c.getState().y;
+    Register &x = c.getX();
+    Register &y = c.getY();
 
     c.input(Button::ca);
     c.input(Button::d2);
@@ -220,8 +219,8 @@ TEST_PERCENT(MulPercent) {
 
 TEST_PERCENT(DivPercent1) {
     Calculator c(8);
-    Register &x = c.getState().x;
-    Register &y = c.getState().y;
+    Register &x = c.getX();
+    Register &y = c.getY();
 
     c.input(Button::ca);
     c.input(Button::d2);

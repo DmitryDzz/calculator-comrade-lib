@@ -4,10 +4,12 @@
 
 #include <gmock/gmock.h>
 
+#include "calculator/calculator.h"
 #include "calculator/config.h"
 #include "calculator/register.h"
 #include "calc_helper.h"
 
+using calculatorcomrade::Calculator;
 using calculatorcomrade::Register;
 
 TEST(TestRegister, DefaultState) {
@@ -261,4 +263,24 @@ TEST(TestRegister, GetDisplayDigit) {
     ASSERT_EQ(-1, reg.getDisplayDigit(5));
     ASSERT_EQ(-1, reg.getDisplayDigit(6));
     ASSERT_EQ(-1, reg.getDisplayDigit(7));
+}
+
+TEST(TestRegister, ExchangeXY) {
+    Calculator c(8);
+    Register& x = c.getX();
+    Register& y = c.getY();
+
+    setValue(x, -1234567890); // expecting overflow error flag
+    setValue(y, 1974);
+    c.exchangeXY();
+
+    ASSERT_EQ(1974, getAbsIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_EQ(false, x.isNegative());
+    ASSERT_EQ(false, x.hasError());
+
+    ASSERT_EQ(12345678, getAbsIntValue(y));
+    ASSERT_EQ(6, y.getPointPos());
+    ASSERT_EQ(true, y.isNegative());
+    ASSERT_EQ(true, y.hasError()); // overflow error flag
 }

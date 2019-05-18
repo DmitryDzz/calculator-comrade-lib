@@ -7,8 +7,8 @@
 
 #include "calculator/config.h"
 #include "calculator/button.h"
+#include "calculator/register.h"
 #include "calculator/operation.h"
-#include "calculator/state.h"
 
 namespace calculatorcomrade {
 
@@ -20,8 +20,11 @@ namespace calculatorcomrade {
         explicit Calculator(int8_t size) : Calculator(size, 0) {};
         explicit Calculator(int8_t size, uint8_t options) :
                 options_(options),
-                state_(size),
                 size_(size),
+                x_(size),
+                y_(size),
+                m_(size),
+                operation_(Operation::add),
                 lastButton_(Button::none),
                 lastButtonWasCe_(false),
                 hasOperation_(false),
@@ -37,12 +40,24 @@ namespace calculatorcomrade {
         uint8_t getOptions() { return options_; }
         void setOptions(uint8_t options) { options_ = options; }
         void setDisplayEventCallback(DisplayEventCallback callback);
-        State& getState();
+        Register& getX() { return x_; }
+        Register& getY() { return y_; }
+        Register& getM() { return m_; }
+        Operation getOperation() { return operation_; }
+
+        void exchangeXY();
+        bool memHasValue();
+        void memClear();
+        void memRestore();
+
         void input(Button button);
     private:
         uint8_t options_;
         int8_t size_;
-        State state_;
+        Register x_;
+        Register y_;
+        Register m_;
+        Operation operation_;
         Button lastButton_;
         bool lastButtonWasCe_;
         bool hasOperation_;
@@ -66,9 +81,7 @@ namespace calculatorcomrade {
         void changeSign();
 
         void memPlusOrMinus(Operation memOperation);
-        void memClear();
-        void memRestore();
     };
-};
+}
 
 #endif //CALCULATORCOMRADE_CALCULATOR_H

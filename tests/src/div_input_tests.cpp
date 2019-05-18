@@ -10,350 +10,352 @@
 
 using calculatorcomrade::Calculator;
 using calculatorcomrade::Button;
-using calculatorcomrade::State;
+using calculatorcomrade::Register;
 using calculatorcomrade::Operation;
 
 // Input: 10/==
 TEST(TestDiv, Div1) {
-    State expectedState(Config::DEFAULT_SIZE);
     Calculator calc(Config::DEFAULT_SIZE);
+    Register& x = calc.getX();
+    Register& y = calc.getY();
 
     calc.input(Button::d1);
     calc.input(Button::d0);
-    setValue(expectedState.x, 10);
-    setValue(expectedState.y, 0);
-    expectedState.operation = Operation::add;
-    ASSERT_EQ(expectedState, calc.getState());
+    ASSERT_EQ(10, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_TRUE(y.isZero());
+    ASSERT_EQ(Operation::add, calc.getOperation());
 
     calc.input(Button::div);
-    setValue(expectedState.x, 10);
-    setValue(expectedState.y, 0);
-    expectedState.operation = Operation::div;
-    ASSERT_EQ(expectedState, calc.getState());
+    ASSERT_EQ(10, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_TRUE(y.isZero());
+    ASSERT_EQ(Operation::div, calc.getOperation());
 
     calc.input(Button::equals);
-    setValue(expectedState.x, 1, 1); // 0.1
-    setValue(expectedState.y, 10);
-    expectedState.operation = Operation::div;
-    ASSERT_EQ(expectedState, calc.getState());
+    ASSERT_EQ(1, getIntValue(x));
+    ASSERT_EQ(1, x.getPointPos()); // 0.1
+    ASSERT_EQ(10, getIntValue(y));
+    ASSERT_EQ(0, y.getPointPos());
+    ASSERT_EQ(Operation::div, calc.getOperation());
 
     calc.input(Button::equals);
-    setValue(expectedState.x, 1, 2); // 0.01
-    setValue(expectedState.y, 10);
-    expectedState.operation = Operation::div;
-    ASSERT_EQ(expectedState, calc.getState());
+    ASSERT_EQ(1, getIntValue(x));
+    ASSERT_EQ(2, x.getPointPos()); // 0.01
+    ASSERT_EQ(10, getIntValue(y));
+    ASSERT_EQ(0, y.getPointPos());
+    ASSERT_EQ(Operation::div, calc.getOperation());
 }
 
 // Input: 24/2===
 TEST(TestDiv, Div2) {
-    State expectedState(Config::DEFAULT_SIZE);
     Calculator calc(Config::DEFAULT_SIZE);
+    Register& x = calc.getX();
+    Register& y = calc.getY();
 
     calc.input(Button::d2);
     calc.input(Button::d4);
-    setValue(expectedState.x, 24);
-    setValue(expectedState.y, 0);
-    expectedState.operation = Operation::add;
-    ASSERT_EQ(expectedState, calc.getState());
+    ASSERT_EQ(24, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_TRUE(y.isZero());
+    ASSERT_EQ(Operation::add, calc.getOperation());
 
     calc.input(Button::div);
-    setValue(expectedState.x, 24);
-    setValue(expectedState.y, 0);
-    expectedState.operation = Operation::div;
-    ASSERT_EQ(expectedState, calc.getState());
+    ASSERT_EQ(24, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_TRUE(y.isZero());
+    ASSERT_EQ(Operation::div, calc.getOperation());
 
     calc.input(Button::d2);
-    setValue(expectedState.x, 2);
-    setValue(expectedState.y, 24);
-    expectedState.operation = Operation::div;
-    ASSERT_EQ(expectedState, calc.getState());
+    ASSERT_EQ(2, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_EQ(24, getIntValue(y));
+    ASSERT_EQ(0, y.getPointPos());
+    ASSERT_EQ(Operation::div, calc.getOperation());
 
     calc.input(Button::equals);
-    setValue(expectedState.x, 12);
-    setValue(expectedState.y, 2);
-    expectedState.operation = Operation::div;
-    ASSERT_EQ(expectedState, calc.getState());
+    ASSERT_EQ(12, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_EQ(2, getIntValue(y));
+    ASSERT_EQ(0, y.getPointPos());
+    ASSERT_EQ(Operation::div, calc.getOperation());
 
     calc.input(Button::equals);
-    setValue(expectedState.x, 6);
-    setValue(expectedState.y, 2);
-    expectedState.operation = Operation::div;
-    ASSERT_EQ(expectedState, calc.getState());
+    ASSERT_EQ(6, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_EQ(2, getIntValue(y));
+    ASSERT_EQ(0, y.getPointPos());
+    ASSERT_EQ(Operation::div, calc.getOperation());
 
     calc.input(Button::equals);
-    setValue(expectedState.x, 3);
-    setValue(expectedState.y, 2);
-    expectedState.operation = Operation::div;
-    ASSERT_EQ(expectedState, calc.getState());
+    ASSERT_EQ(3, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_EQ(2, getIntValue(y));
+    ASSERT_EQ(0, y.getPointPos());
+    ASSERT_EQ(Operation::div, calc.getOperation());
 }
 
 // Input: 27/3=12/2==
 TEST(TestDiv, Div3) {
-    State expectedState(Config::DEFAULT_SIZE);
     Calculator calc(Config::DEFAULT_SIZE);
+    Register& x = calc.getX();
+    Register& y = calc.getY();
 
     calc.input(Button::d2);
     calc.input(Button::d7);
-    setValue(expectedState.x, 27);
-    setValue(expectedState.y, 0);
-    expectedState.operation = Operation::add;
-    ASSERT_EQ(expectedState, calc.getState());
 
     calc.input(Button::div);
-    setValue(expectedState.x, 27);
-    setValue(expectedState.y, 0);
-    expectedState.operation = Operation::div;
-    ASSERT_EQ(expectedState, calc.getState());
 
     calc.input(Button::d3);
-    setValue(expectedState.x, 3);
-    setValue(expectedState.y, 27);
-    expectedState.operation = Operation::div;
-    ASSERT_EQ(expectedState, calc.getState());
+    ASSERT_EQ(3, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_EQ(27, getIntValue(y));
+    ASSERT_EQ(0, y.getPointPos());
+    ASSERT_EQ(Operation::div, calc.getOperation());
 
     calc.input(Button::equals);
-    setValue(expectedState.x, 9);
-    setValue(expectedState.y, 3);
-    expectedState.operation = Operation::div;
-    ASSERT_EQ(expectedState, calc.getState());
+    ASSERT_EQ(9, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_EQ(3, getIntValue(y));
+    ASSERT_EQ(0, y.getPointPos());
+    ASSERT_EQ(Operation::div, calc.getOperation());
 
     calc.input(Button::d1);
     calc.input(Button::d2);
-    setValue(expectedState.x, 12);
-    setValue(expectedState.y, 3);
-    expectedState.operation = Operation::div;
-    ASSERT_EQ(expectedState, calc.getState());
+    ASSERT_EQ(12, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_EQ(3, getIntValue(y));
+    ASSERT_EQ(0, y.getPointPos());
+    ASSERT_EQ(Operation::div, calc.getOperation());
 
     calc.input(Button::div);
-    setValue(expectedState.x, 12);
-    setValue(expectedState.y, 3);
-    expectedState.operation = Operation::div;
-    ASSERT_EQ(expectedState, calc.getState());
+    ASSERT_EQ(12, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_EQ(3, getIntValue(y));
+    ASSERT_EQ(0, y.getPointPos());
+    ASSERT_EQ(Operation::div, calc.getOperation());
 
     calc.input(Button::d2);
-    setValue(expectedState.x, 2);
-    setValue(expectedState.y, 12);
-    expectedState.operation = Operation::div;
-    ASSERT_EQ(expectedState, calc.getState());
+    ASSERT_EQ(2, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_EQ(12, getIntValue(y));
+    ASSERT_EQ(0, y.getPointPos());
+    ASSERT_EQ(Operation::div, calc.getOperation());
 
     calc.input(Button::equals);
-    setValue(expectedState.x, 6);
-    setValue(expectedState.y, 2);
-    expectedState.operation = Operation::div;
-    ASSERT_EQ(expectedState, calc.getState());
+    ASSERT_EQ(6, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_EQ(2, getIntValue(y));
+    ASSERT_EQ(0, y.getPointPos());
+    ASSERT_EQ(Operation::div, calc.getOperation());
 
     calc.input(Button::equals);
-    setValue(expectedState.x, 3);
-    setValue(expectedState.y, 2);
-    expectedState.operation = Operation::div;
-    ASSERT_EQ(expectedState, calc.getState());
+    ASSERT_EQ(3, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_EQ(2, getIntValue(y));
+    ASSERT_EQ(0, y.getPointPos());
+    ASSERT_EQ(Operation::div, calc.getOperation());
 }
 
 // Input: 120/5/3/2===
 TEST(TestDiv, Div4) {
-    State expectedState(Config::DEFAULT_SIZE);
     Calculator calc(Config::DEFAULT_SIZE);
+    Register& x = calc.getX();
+    Register& y = calc.getY();
 
     calc.input(Button::d1);
     calc.input(Button::d2);
     calc.input(Button::d0);
-    setValue(expectedState.x, 120);
-    setValue(expectedState.y, 0);
-    expectedState.operation = Operation::add;
-    ASSERT_EQ(expectedState, calc.getState());
 
     calc.input(Button::div);
-    setValue(expectedState.x, 120);
-    setValue(expectedState.y, 0);
-    expectedState.operation = Operation::div;
-    ASSERT_EQ(expectedState, calc.getState());
 
     calc.input(Button::d5);
-    setValue(expectedState.x, 5);
-    setValue(expectedState.y, 120);
-    expectedState.operation = Operation::div;
-    ASSERT_EQ(expectedState, calc.getState());
+    ASSERT_EQ(5, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_EQ(120, getIntValue(y));
+    ASSERT_EQ(0, y.getPointPos());
+    ASSERT_EQ(Operation::div, calc.getOperation());
 
     calc.input(Button::div);
-    setValue(expectedState.x, 24);
-    setValue(expectedState.y, 5);
-    expectedState.operation = Operation::div;
-    ASSERT_EQ(expectedState, calc.getState());
+    ASSERT_EQ(24, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_EQ(5, getIntValue(y));
+    ASSERT_EQ(0, y.getPointPos());
+    ASSERT_EQ(Operation::div, calc.getOperation());
 
     calc.input(Button::d3);
-    setValue(expectedState.x, 3);
-    setValue(expectedState.y, 24);
-    expectedState.operation = Operation::div;
-    ASSERT_EQ(expectedState, calc.getState());
+    ASSERT_EQ(3, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_EQ(24, getIntValue(y));
+    ASSERT_EQ(0, y.getPointPos());
+    ASSERT_EQ(Operation::div, calc.getOperation());
 
     calc.input(Button::div);
-    setValue(expectedState.x, 8);
-    setValue(expectedState.y, 3);
-    expectedState.operation = Operation::div;
-    ASSERT_EQ(expectedState, calc.getState());
+    ASSERT_EQ(8, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_EQ(3, getIntValue(y));
+    ASSERT_EQ(0, y.getPointPos());
+    ASSERT_EQ(Operation::div, calc.getOperation());
 
     calc.input(Button::d2);
-    setValue(expectedState.x, 2);
-    setValue(expectedState.y, 8);
-    expectedState.operation = Operation::div;
-    ASSERT_EQ(expectedState, calc.getState());
+    ASSERT_EQ(2, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_EQ(8, getIntValue(y));
+    ASSERT_EQ(0, y.getPointPos());
+    ASSERT_EQ(Operation::div, calc.getOperation());
 
     calc.input(Button::equals);
-    setValue(expectedState.x, 4);
-    setValue(expectedState.y, 2);
-    expectedState.operation = Operation::div;
-    ASSERT_EQ(expectedState, calc.getState());
+    ASSERT_EQ(4, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_EQ(2, getIntValue(y));
+    ASSERT_EQ(0, y.getPointPos());
+    ASSERT_EQ(Operation::div, calc.getOperation());
 
     calc.input(Button::equals);
-    setValue(expectedState.x, 2);
-    setValue(expectedState.y, 2);
-    expectedState.operation = Operation::div;
-    ASSERT_EQ(expectedState, calc.getState());
+    ASSERT_EQ(2, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_EQ(2, getIntValue(y));
+    ASSERT_EQ(0, y.getPointPos());
+    ASSERT_EQ(Operation::div, calc.getOperation());
 
     calc.input(Button::equals);
-    setValue(expectedState.x, 1);
-    setValue(expectedState.y, 2);
-    expectedState.operation = Operation::div;
-    ASSERT_EQ(expectedState, calc.getState());
+    ASSERT_EQ(1, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_EQ(2, getIntValue(y));
+    ASSERT_EQ(0, y.getPointPos());
+    ASSERT_EQ(Operation::div, calc.getOperation());
 }
 
 // Input: 12/2=8==
 TEST(TestDiv, Div5) {
-    State expectedState(Config::DEFAULT_SIZE);
     Calculator calc(Config::DEFAULT_SIZE);
+    Register& x = calc.getX();
+    Register& y = calc.getY();
 
     calc.input(Button::d1);
     calc.input(Button::d2);
-    setValue(expectedState.x, 12);
-    setValue(expectedState.y, 0);
-    expectedState.operation = Operation::add;
-    ASSERT_EQ(expectedState, calc.getState());
 
     calc.input(Button::div);
-    setValue(expectedState.x, 12);
-    setValue(expectedState.y, 0);
-    expectedState.operation = Operation::div;
-    ASSERT_EQ(expectedState, calc.getState());
 
     calc.input(Button::d2);
-    setValue(expectedState.x, 2);
-    setValue(expectedState.y, 12);
-    expectedState.operation = Operation::div;
-    ASSERT_EQ(expectedState, calc.getState());
+    ASSERT_EQ(2, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_EQ(12, getIntValue(y));
+    ASSERT_EQ(0, y.getPointPos());
+    ASSERT_EQ(Operation::div, calc.getOperation());
 
     calc.input(Button::equals);
-    setValue(expectedState.x, 6);
-    setValue(expectedState.y, 2);
-    expectedState.operation = Operation::div;
-    ASSERT_EQ(expectedState, calc.getState());
+    ASSERT_EQ(6, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_EQ(2, getIntValue(y));
+    ASSERT_EQ(0, y.getPointPos());
+    ASSERT_EQ(Operation::div, calc.getOperation());
 
     calc.input(Button::d8);
-    setValue(expectedState.x, 8);
-    setValue(expectedState.y, 2);
-    expectedState.operation = Operation::div;
-    ASSERT_EQ(expectedState, calc.getState());
+    ASSERT_EQ(8, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_EQ(2, getIntValue(y));
+    ASSERT_EQ(0, y.getPointPos());
+    ASSERT_EQ(Operation::div, calc.getOperation());
 
     calc.input(Button::equals);
-    setValue(expectedState.x, 4);
-    setValue(expectedState.y, 2);
-    expectedState.operation = Operation::div;
-    ASSERT_EQ(expectedState, calc.getState());
+    ASSERT_EQ(4, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_EQ(2, getIntValue(y));
+    ASSERT_EQ(0, y.getPointPos());
+    ASSERT_EQ(Operation::div, calc.getOperation());
 
     calc.input(Button::equals);
-    setValue(expectedState.x, 2);
-    setValue(expectedState.y, 2);
-    expectedState.operation = Operation::div;
-    ASSERT_EQ(expectedState, calc.getState());
+    ASSERT_EQ(2, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_EQ(2, getIntValue(y));
+    ASSERT_EQ(0, y.getPointPos());
+    ASSERT_EQ(Operation::div, calc.getOperation());
 }
 
 // Input: 40/4=/==
 TEST(TestDiv, Div6) {
-    State expectedState(Config::DEFAULT_SIZE);
     Calculator calc(Config::DEFAULT_SIZE);
+    Register& x = calc.getX();
+    Register& y = calc.getY();
 
     calc.input(Button::d4);
     calc.input(Button::d0);
-    setValue(expectedState.x, 40);
-    setValue(expectedState.y, 0);
-    expectedState.operation = Operation::add;
-    ASSERT_EQ(expectedState, calc.getState());
 
     calc.input(Button::div);
-    setValue(expectedState.x, 40);
-    setValue(expectedState.y, 0);
-    expectedState.operation = Operation::div;
-    ASSERT_EQ(expectedState, calc.getState());
 
     calc.input(Button::d4);
-    setValue(expectedState.x, 4);
-    setValue(expectedState.y, 40);
-    expectedState.operation = Operation::div;
-    ASSERT_EQ(expectedState, calc.getState());
+    ASSERT_EQ(4, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_EQ(40, getIntValue(y));
+    ASSERT_EQ(0, y.getPointPos());
+    ASSERT_EQ(Operation::div, calc.getOperation());
 
     calc.input(Button::equals);
-    setValue(expectedState.x, 10);
-    setValue(expectedState.y, 4);
-    expectedState.operation = Operation::div;
-    ASSERT_EQ(expectedState, calc.getState());
+    ASSERT_EQ(10, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_EQ(4, getIntValue(y));
+    ASSERT_EQ(0, y.getPointPos());
+    ASSERT_EQ(Operation::div, calc.getOperation());
 
     calc.input(Button::div);
-    setValue(expectedState.x, 10);
-    setValue(expectedState.y, 4);
-    expectedState.operation = Operation::div;
-    ASSERT_EQ(expectedState, calc.getState());
+    ASSERT_EQ(10, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_EQ(4, getIntValue(y));
+    ASSERT_EQ(0, y.getPointPos());
+    ASSERT_EQ(Operation::div, calc.getOperation());
 
     calc.input(Button::equals);
-    setValue(expectedState.x, 1, 1); // 0.1
-    setValue(expectedState.y, 10);
-    expectedState.operation = Operation::div;
-    ASSERT_EQ(expectedState, calc.getState());
+    ASSERT_EQ(1, getIntValue(x));
+    ASSERT_EQ(1, x.getPointPos()); // 0.1
+    ASSERT_EQ(10, getIntValue(y));
+    ASSERT_EQ(0, y.getPointPos());
+    ASSERT_EQ(Operation::div, calc.getOperation());
 
     calc.input(Button::equals);
-    setValue(expectedState.x, 1, 2); // 0.01
-    setValue(expectedState.y, 10);
-    expectedState.operation = Operation::div;
-    ASSERT_EQ(expectedState, calc.getState());
+    ASSERT_EQ(1, getIntValue(x));
+    ASSERT_EQ(2, x.getPointPos()); // 0.01
+    ASSERT_EQ(10, getIntValue(y));
+    ASSERT_EQ(0, y.getPointPos());
+    ASSERT_EQ(Operation::div, calc.getOperation());
 }
 
 // Input: 40/4/==
 TEST(TestDiv, Div7) {
-    State expectedState(Config::DEFAULT_SIZE);
     Calculator calc(Config::DEFAULT_SIZE);
+    Register& x = calc.getX();
+    Register& y = calc.getY();
 
     calc.input(Button::d4);
     calc.input(Button::d0);
-    setValue(expectedState.x, 40);
-    setValue(expectedState.y, 0);
-    expectedState.operation = Operation::add;
-    ASSERT_EQ(expectedState, calc.getState());
 
     calc.input(Button::div);
-    setValue(expectedState.x, 40);
-    setValue(expectedState.y, 0);
-    expectedState.operation = Operation::div;
-    ASSERT_EQ(expectedState, calc.getState());
 
     calc.input(Button::d4);
-    setValue(expectedState.x, 4);
-    setValue(expectedState.y, 40);
-    expectedState.operation = Operation::div;
-    ASSERT_EQ(expectedState, calc.getState());
+    ASSERT_EQ(4, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_EQ(40, getIntValue(y));
+    ASSERT_EQ(0, y.getPointPos());
+    ASSERT_EQ(Operation::div, calc.getOperation());
 
     calc.input(Button::div);
-    setValue(expectedState.x, 10);
-    setValue(expectedState.y, 4);
-    expectedState.operation = Operation::div;
-    ASSERT_EQ(expectedState, calc.getState());
+    ASSERT_EQ(10, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_EQ(4, getIntValue(y));
+    ASSERT_EQ(0, y.getPointPos());
+    ASSERT_EQ(Operation::div, calc.getOperation());
 
     calc.input(Button::equals);
-    setValue(expectedState.x, 1, 1);
-    setValue(expectedState.y, 10);
-    expectedState.operation = Operation::div;
-    ASSERT_EQ(expectedState, calc.getState());
+    ASSERT_EQ(1, getIntValue(x));
+    ASSERT_EQ(1, x.getPointPos()); // 0.1
+    ASSERT_EQ(10, getIntValue(y));
+    ASSERT_EQ(0, y.getPointPos());
+    ASSERT_EQ(Operation::div, calc.getOperation());
 
     calc.input(Button::equals);
-    setValue(expectedState.x, 1, 2);
-    setValue(expectedState.y, 10);
-    expectedState.operation = Operation::div;
-    ASSERT_EQ(expectedState, calc.getState());
+    ASSERT_EQ(1, getIntValue(x));
+    ASSERT_EQ(2, x.getPointPos()); // 0.01
+    ASSERT_EQ(10, getIntValue(y));
+    ASSERT_EQ(0, y.getPointPos());
+    ASSERT_EQ(Operation::div, calc.getOperation());
 }

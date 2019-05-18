@@ -13,8 +13,8 @@ using namespace calculatorcomrade;
 
 TEST_SQRT(SqrtRegularOperations) {
     Calculator c(8);
-    Register &x = c.getState().x;
-    Register &y= c.getState().y;
+    Register &x = c.getX();
+    Register &y= c.getY();
 
     c.input(Button::ca);
     c.input(Button::d9);
@@ -96,7 +96,7 @@ TEST_SQRT(SqrtRegularOperations) {
 
 TEST_SQRT(SqrtFakeNegative) {
     Calculator c(8);
-    Register &x = c.getState().x;
+    Register &x = c.getX();
 
     c.input(Button::minus);
     c.input(Button::d9);
@@ -110,7 +110,7 @@ TEST_SQRT(SqrtFakeNegative) {
 
 TEST_SQRT(SqrtAfterOperator1) {
     Calculator c(8);
-    Register &x = c.getState().x;
+    Register &x = c.getX();
 
     // 9 + √  =>  3
     // =  =>  12
@@ -179,8 +179,8 @@ TEST_SQRT(SqrtAfterOperator1) {
 
 TEST_SQRT(SqrtAfterOperator2) {
     Calculator c(8);
-    Register &x = c.getState().x;
-    Register &y = c.getState().y;
+    Register &x = c.getX();
+    Register &y = c.getY();
 
     // 5 + 9 √ 2  =>  2
     // =  =>  7
@@ -257,7 +257,7 @@ TEST_SQRT(SqrtAfterOperator2) {
 
 TEST_SQRT(SqrtAfterOperation) {
     Calculator c(8);
-    Register &x = c.getState().x;
+    Register &x = c.getX();
 
     // 2 + 7 + √  =>  3
     // =  =>  12
@@ -336,8 +336,8 @@ TEST_SQRT(SqrtAfterOperation) {
 
 TEST_SQRT(AfterSqrt1) {
     Calculator c(8);
-    Register &x = c.getState().x;
-    Register &y = c.getState().y;
+    Register &x = c.getX();
+    Register &y = c.getY();
 
     c.input(Button::d4);
     c.input(Button::sqrt);
@@ -356,8 +356,8 @@ TEST_SQRT(AfterSqrt1) {
 
 TEST_SQRT(AfterSqrt2) {
     Calculator c(8);
-    Register &x = c.getState().x;
-    Register &y = c.getState().y;
+    Register &x = c.getX();
+    Register &y = c.getY();
 
     c.input(Button::d8);
     c.input(Button::sqrt);
@@ -376,8 +376,8 @@ TEST_SQRT(AfterSqrt2) {
 
 TEST_SQRT(AfterSqrt3) {
     Calculator c(8);
-    Register &x = c.getState().x;
-    Register &y = c.getState().y;
+    Register &x = c.getX();
+    Register &y = c.getY();
 
     c.input(Button::d8);
     c.input(Button::d1);
@@ -401,8 +401,8 @@ TEST_SQRT(AfterSqrt3) {
 
 TEST_SQRT(CeCaAfterOperationAndSqrt) {
     Calculator c(8);
-    Register &x = c.getState().x;
-    Register &y = c.getState().y;
+    Register &x = c.getX();
+    Register &y = c.getY();
 
     c.input(Button::d2);
     c.input(Button::plus);

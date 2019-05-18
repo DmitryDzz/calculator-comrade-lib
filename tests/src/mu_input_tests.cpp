@@ -14,9 +14,8 @@ using namespace calculatorcomrade;
 
 TEST_MU(MuRegularOperations) {
     Calculator c(8);
-    State &s = c.getState();
-    Register &x = s.x;
-    Register &y = s.y;
+    Register &x = c.getX();
+    Register &y = c.getY();
 
     // 200 mu 60 % => 500
     // % => 500
@@ -32,13 +31,13 @@ TEST_MU(MuRegularOperations) {
     ASSERT_EQ(0, x.getPointPos());
     ASSERT_EQ(6, getIntValue(y));
     ASSERT_EQ(1, y.getPointPos());
-    ASSERT_EQ(Operation::mu, s.operation);
+    ASSERT_EQ(Operation::mu, c.getOperation());
     c.input(Button::percent);
     ASSERT_EQ(500, getIntValue(x));
     ASSERT_EQ(0, x.getPointPos());
     ASSERT_EQ(6, getIntValue(y));
     ASSERT_EQ(1, y.getPointPos());
-    ASSERT_EQ(Operation::mu, s.operation);
+    ASSERT_EQ(Operation::mu, c.getOperation());
 
     // 200 mu 60 = => 60
     // = => 60
@@ -53,17 +52,18 @@ TEST_MU(MuRegularOperations) {
     ASSERT_EQ(60, getIntValue(x));
     ASSERT_EQ(0, x.getPointPos());
     ASSERT_TRUE(y.isZero());
-    ASSERT_EQ(Operation::add, s.operation);
+    ASSERT_EQ(Operation::add, c.getOperation());
     c.input(Button::equals);
     ASSERT_EQ(60, getIntValue(x));
     ASSERT_EQ(0, x.getPointPos());
     ASSERT_TRUE(y.isZero());
-    ASSERT_EQ(Operation::add, s.operation);
+    ASSERT_EQ(Operation::add, c.getOperation());
 }
 
 TEST_MU(MuArithmeticOperationAfterMuPercent) {
     Calculator c(8, Config::OPTION_TRUNC_ZEROS_ON_OVERFLOW);
-    State &s = c.getState();
+    Register &x = c.getX();
+    Register &y = c.getY();
 
     // 200 mu 60 % => 500
     // + => 500
@@ -77,21 +77,21 @@ TEST_MU(MuArithmeticOperationAfterMuPercent) {
     c.input(Button::d6);
     c.input(Button::d0);
     c.input(Button::percent);
-    ASSERT_EQ(500, getIntValue(s.x));
-    ASSERT_EQ(0, s.x.getPointPos());
-    ASSERT_EQ(6, getIntValue(s.y));
-    ASSERT_EQ(1, s.y.getPointPos());
-    ASSERT_EQ(Operation::mu, s.operation);
+    ASSERT_EQ(500, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_EQ(6, getIntValue(y));
+    ASSERT_EQ(1, y.getPointPos());
+    ASSERT_EQ(Operation::mu, c.getOperation());
     c.input(Button::plus);
     c.input(Button::equals);
-    ASSERT_EQ(5006, getIntValue(s.x));
-    ASSERT_EQ(1, s.x.getPointPos());
-    ASSERT_EQ(500, getIntValue(s.y));
-    ASSERT_EQ(0, s.y.getPointPos());
-    ASSERT_EQ(Operation::add, s.operation);
+    ASSERT_EQ(5006, getIntValue(x));
+    ASSERT_EQ(1, x.getPointPos());
+    ASSERT_EQ(500, getIntValue(y));
+    ASSERT_EQ(0, y.getPointPos());
+    ASSERT_EQ(Operation::add, c.getOperation());
     c.input(Button::equals);
-    ASSERT_EQ(10006, getIntValue(s.x));
-    ASSERT_EQ(1, s.x.getPointPos());
+    ASSERT_EQ(10006, getIntValue(x));
+    ASSERT_EQ(1, x.getPointPos());
 
     // 200 mu 60 % => 500
     // * => 500
@@ -105,23 +105,23 @@ TEST_MU(MuArithmeticOperationAfterMuPercent) {
     c.input(Button::d6);
     c.input(Button::d0);
     c.input(Button::percent);
-    ASSERT_EQ(500, getIntValue(s.x));
-    ASSERT_EQ(0, s.x.getPointPos());
-    ASSERT_EQ(6, getIntValue(s.y));
-    ASSERT_EQ(1, s.y.getPointPos());
-    ASSERT_EQ(Operation::mu, s.operation);
+    ASSERT_EQ(500, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_EQ(6, getIntValue(y));
+    ASSERT_EQ(1, y.getPointPos());
+    ASSERT_EQ(Operation::mu, c.getOperation());
     c.input(Button::mul);
     c.input(Button::equals);
-    ASSERT_EQ(250000, getIntValue(s.x));
-    ASSERT_EQ(0, s.x.getPointPos());
-    ASSERT_EQ(500, getIntValue(s.y));
-    ASSERT_EQ(0, s.y.getPointPos());
-    ASSERT_EQ(Operation::mul, s.operation);
+    ASSERT_EQ(250000, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_EQ(500, getIntValue(y));
+    ASSERT_EQ(0, y.getPointPos());
+    ASSERT_EQ(Operation::mul, c.getOperation());
     c.input(Button::equals);
-    ASSERT_EQ(125, getIntValue(s.x));
-    ASSERT_EQ(2, s.x.getPointPos());
-    ASSERT_TRUE(s.x.hasError());
-    ASSERT_TRUE(s.x.hasOverflow());
+    ASSERT_EQ(125, getIntValue(x));
+    ASSERT_EQ(2, x.getPointPos());
+    ASSERT_TRUE(x.hasError());
+    ASSERT_TRUE(x.hasOverflow());
 
     // 200 mu 60 % => 500
     // / => 500
@@ -135,26 +135,27 @@ TEST_MU(MuArithmeticOperationAfterMuPercent) {
     c.input(Button::d6);
     c.input(Button::d0);
     c.input(Button::percent);
-    ASSERT_EQ(500, getIntValue(s.x));
-    ASSERT_EQ(0, s.x.getPointPos());
-    ASSERT_EQ(6, getIntValue(s.y));
-    ASSERT_EQ(1, s.y.getPointPos());
-    ASSERT_EQ(Operation::mu, s.operation);
+    ASSERT_EQ(500, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_EQ(6, getIntValue(y));
+    ASSERT_EQ(1, y.getPointPos());
+    ASSERT_EQ(Operation::mu, c.getOperation());
     c.input(Button::div);
     c.input(Button::equals);
-    ASSERT_EQ(2, getIntValue(s.x));
-    ASSERT_EQ(3, s.x.getPointPos());
-    ASSERT_EQ(500, getIntValue(s.y));
-    ASSERT_EQ(0, s.y.getPointPos());
-    ASSERT_EQ(Operation::div, s.operation);
+    ASSERT_EQ(2, getIntValue(x));
+    ASSERT_EQ(3, x.getPointPos());
+    ASSERT_EQ(500, getIntValue(y));
+    ASSERT_EQ(0, y.getPointPos());
+    ASSERT_EQ(Operation::div, c.getOperation());
     c.input(Button::equals);
-    ASSERT_EQ(4, getIntValue(s.x));
-    ASSERT_EQ(6, s.x.getPointPos());
+    ASSERT_EQ(4, getIntValue(x));
+    ASSERT_EQ(6, x.getPointPos());
 }
 
 TEST_MU(MuArithmeticOperationBeforePercent) {
     Calculator c(8);
-    State &s = c.getState();
+    Register &x = c.getX();
+    Register &y = c.getY();
 
     // 200 mu 60 + => 60
     // % => 320
@@ -167,23 +168,23 @@ TEST_MU(MuArithmeticOperationBeforePercent) {
     c.input(Button::d6);
     c.input(Button::d0);
     c.input(Button::plus);
-    ASSERT_EQ(60, getIntValue(s.x));
-    ASSERT_EQ(0, s.x.getPointPos());
-    ASSERT_EQ(200, getIntValue(s.y));
-    ASSERT_EQ(0, s.y.getPointPos());
-    ASSERT_EQ(Operation::add, s.operation);
+    ASSERT_EQ(60, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_EQ(200, getIntValue(y));
+    ASSERT_EQ(0, y.getPointPos());
+    ASSERT_EQ(Operation::add, c.getOperation());
     c.input(Button::percent);
-    ASSERT_EQ(320, getIntValue(s.x));
-    ASSERT_EQ(0, s.x.getPointPos());
-    ASSERT_EQ(200, getIntValue(s.y));
-    ASSERT_EQ(0, s.y.getPointPos());
-    ASSERT_EQ(Operation::add, s.operation);
+    ASSERT_EQ(320, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_EQ(200, getIntValue(y));
+    ASSERT_EQ(0, y.getPointPos());
+    ASSERT_EQ(Operation::add, c.getOperation());
     c.input(Button::equals);
-    ASSERT_EQ(520, getIntValue(s.x));
-    ASSERT_EQ(0, s.x.getPointPos());
-    ASSERT_EQ(200, getIntValue(s.y));
-    ASSERT_EQ(0, s.y.getPointPos());
-    ASSERT_EQ(Operation::add, s.operation);
+    ASSERT_EQ(520, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_EQ(200, getIntValue(y));
+    ASSERT_EQ(0, y.getPointPos());
+    ASSERT_EQ(Operation::add, c.getOperation());
 
     // 200 mu 60 - => 60
     // % => 80
@@ -196,28 +197,29 @@ TEST_MU(MuArithmeticOperationBeforePercent) {
     c.input(Button::d6);
     c.input(Button::d0);
     c.input(Button::minus);
-    ASSERT_EQ(60, getIntValue(s.x));
-    ASSERT_EQ(0, s.x.getPointPos());
-    ASSERT_EQ(200, getIntValue(s.y));
-    ASSERT_EQ(0, s.y.getPointPos());
-    ASSERT_EQ(Operation::sub, s.operation);
+    ASSERT_EQ(60, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_EQ(200, getIntValue(y));
+    ASSERT_EQ(0, y.getPointPos());
+    ASSERT_EQ(Operation::sub, c.getOperation());
     c.input(Button::percent);
-    ASSERT_EQ(80, getIntValue(s.x));
-    ASSERT_EQ(0, s.x.getPointPos());
-    ASSERT_EQ(200, getIntValue(s.y));
-    ASSERT_EQ(0, s.y.getPointPos());
-    ASSERT_EQ(Operation::sub, s.operation);
+    ASSERT_EQ(80, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_EQ(200, getIntValue(y));
+    ASSERT_EQ(0, y.getPointPos());
+    ASSERT_EQ(Operation::sub, c.getOperation());
     c.input(Button::equals);
-    ASSERT_EQ(-120, getIntValue(s.x));
-    ASSERT_EQ(0, s.x.getPointPos());
-    ASSERT_EQ(200, getIntValue(s.y));
-    ASSERT_EQ(0, s.y.getPointPos());
-    ASSERT_EQ(Operation::sub, s.operation);
+    ASSERT_EQ(-120, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_EQ(200, getIntValue(y));
+    ASSERT_EQ(0, y.getPointPos());
+    ASSERT_EQ(Operation::sub, c.getOperation());
 }
 
 TEST_MU(MuAfterMul) {
     Calculator c(8);
-    State &s = c.getState();
+    Register &x = c.getX();
+    Register &y = c.getY();
 
     // 200 * 60 mu => 60
     // % => 60
@@ -230,20 +232,20 @@ TEST_MU(MuAfterMul) {
     c.input(Button::d6);
     c.input(Button::d0);
     c.input(Button::mu);
-    ASSERT_EQ(60, getIntValue(s.x));
-    ASSERT_EQ(0, s.x.getPointPos());
-    ASSERT_TRUE(s.y.isZero());
-    ASSERT_EQ(Operation::add, s.operation);
+    ASSERT_EQ(60, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_TRUE(y.isZero());
+    ASSERT_EQ(Operation::add, c.getOperation());
     c.input(Button::percent);
-    ASSERT_EQ(60, getIntValue(s.x));
-    ASSERT_EQ(0, s.x.getPointPos());
-    ASSERT_TRUE(s.y.isZero());
-    ASSERT_EQ(Operation::add, s.operation);
+    ASSERT_EQ(60, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_TRUE(y.isZero());
+    ASSERT_EQ(Operation::add, c.getOperation());
     c.input(Button::percent);
-    ASSERT_EQ(60, getIntValue(s.x));
-    ASSERT_EQ(0, s.x.getPointPos());
-    ASSERT_TRUE(s.y.isZero());
-    ASSERT_EQ(Operation::add, s.operation);
+    ASSERT_EQ(60, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_TRUE(y.isZero());
+    ASSERT_EQ(Operation::add, c.getOperation());
 
     // 200 * 60 mu => 60
     // = => 60
@@ -256,25 +258,26 @@ TEST_MU(MuAfterMul) {
     c.input(Button::d6);
     c.input(Button::d0);
     c.input(Button::mu);
-    ASSERT_EQ(60, getIntValue(s.x));
-    ASSERT_EQ(0, s.x.getPointPos());
-    ASSERT_TRUE(s.y.isZero());
-    ASSERT_EQ(Operation::add, s.operation);
+    ASSERT_EQ(60, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_TRUE(y.isZero());
+    ASSERT_EQ(Operation::add, c.getOperation());
     c.input(Button::equals);
-    ASSERT_EQ(60, getIntValue(s.x));
-    ASSERT_EQ(0, s.x.getPointPos());
-    ASSERT_TRUE(s.y.isZero());
-    ASSERT_EQ(Operation::add, s.operation);
+    ASSERT_EQ(60, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_TRUE(y.isZero());
+    ASSERT_EQ(Operation::add, c.getOperation());
     c.input(Button::equals);
-    ASSERT_EQ(60, getIntValue(s.x));
-    ASSERT_EQ(0, s.x.getPointPos());
-    ASSERT_TRUE(s.y.isZero());
-    ASSERT_EQ(Operation::add, s.operation);
+    ASSERT_EQ(60, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_TRUE(y.isZero());
+    ASSERT_EQ(Operation::add, c.getOperation());
 }
 
 TEST_MU(EqualsAfterMuPercent) {
     Calculator c(8);
-    State &s = c.getState();
+    Register &x = c.getX();
+    Register &y = c.getY();
 
     // 200 mu 60 % => 500
     // = => 300
@@ -287,19 +290,19 @@ TEST_MU(EqualsAfterMuPercent) {
     c.input(Button::d6);
     c.input(Button::d0);
     c.input(Button::percent);
-    ASSERT_EQ(500, getIntValue(s.x));
-    ASSERT_EQ(0, s.x.getPointPos());
-    ASSERT_EQ(6, getIntValue(s.y));
-    ASSERT_EQ(1, s.y.getPointPos());
-    ASSERT_EQ(Operation::mu, s.operation);
+    ASSERT_EQ(500, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_EQ(6, getIntValue(y));
+    ASSERT_EQ(1, y.getPointPos());
+    ASSERT_EQ(Operation::mu, c.getOperation());
     c.input(Button::equals);
-    ASSERT_EQ(300, getIntValue(s.x));
-    ASSERT_EQ(0, s.x.getPointPos());
-    ASSERT_TRUE(s.y.isZero());
-    ASSERT_EQ(Operation::add, s.operation);
+    ASSERT_EQ(300, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_TRUE(y.isZero());
+    ASSERT_EQ(Operation::add, c.getOperation());
     c.input(Button::equals);
-    ASSERT_EQ(300, getIntValue(s.x));
-    ASSERT_EQ(0, s.x.getPointPos());
-    ASSERT_TRUE(s.y.isZero());
-    ASSERT_EQ(Operation::add, s.operation);
+    ASSERT_EQ(300, getIntValue(x));
+    ASSERT_EQ(0, x.getPointPos());
+    ASSERT_TRUE(y.isZero());
+    ASSERT_EQ(Operation::add, c.getOperation());
 }

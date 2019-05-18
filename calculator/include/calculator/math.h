@@ -46,6 +46,6 @@ namespace calculatorcomrade {
         static void addInternal(Register &r1, Register &r2);
         static void addPercent(Register &r1ex, Register &r2ex, Register &accEx);
     };
-};
+}
 
 #endif //CALCULATORCOMRADE_MATH_H

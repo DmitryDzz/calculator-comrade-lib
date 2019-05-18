@@ -17,7 +17,7 @@ InstancesMap g_instances;
 HCALC g_calc_hnd = 0;
 
 #define CALCULATOR(pCalculator) (*((Calculator *)pCalculator))
-#define DISPLAY_REGISTER(pCalculator) (CALCULATOR(pCalculator).getState().x)
+#define DISPLAY_REGISTER(pCalculator) (CALCULATOR(pCalculator).getX())
 
 Calculator* findInstance(HCALC hCalc) {
     auto it = g_instances.find(hCalc);
@@ -95,7 +95,7 @@ extern "C" HRES GetMemory(const HCALC hCalc, bool *memoryHasValue) {
     Calculator* calculator = findInstance(hCalc);
     if (calculator == nullptr)
         return HRES_ERR_NO_INSTANCE;
-    *memoryHasValue = calculator->getState().memHasValue();
+    *memoryHasValue = calculator->memHasValue();
     return HRES_OK;
 }
 

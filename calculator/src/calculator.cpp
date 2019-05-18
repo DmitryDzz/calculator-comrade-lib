@@ -14,29 +14,24 @@
 using calculatorcomrade::Button;
 using calculatorcomrade::Calculator;
 using calculatorcomrade::Register;
-using calculatorcomrade::State;
 
 void Calculator::setDisplayEventCallback(DisplayEventCallback const callback) {
     displayEventCallback_ = callback;
 }
 
-State& Calculator::getState() {
-    return state_;
-}
-
 void Calculator::input(Button button) {
-    if (state_.x.hasError()) {
+    if (x_.hasError()) {
         switch (button) {
             case Button::ca:
                 clearAll();
                 break;
             case Button::ce:
-                if (state_.x.hasOverflow())
-                    state_.x.setError(false, false);
+                if (x_.hasOverflow())
+                    x_.setError(false, false);
                 break;
             case Button::ceca:
-                if (state_.x.hasOverflow())
-                    state_.x.setError(false, false);
+                if (x_.hasOverflow())
+                    x_.setError(false, false);
                 else
                     clearAll();
                 break;
@@ -68,7 +63,7 @@ void Calculator::input(Button button) {
         case Button::d0 ... Button::d9:
         case Button::point:
             if (inNumber_ && inputSize_ == 0 && !inputHasPoint_) {
-                state_.x.clear();
+                x_.clear();
             }
             // No break! In case of a number after Sqrt operation.
         case Button::memR:
@@ -79,10 +74,10 @@ void Calculator::input(Button button) {
             // First digit or point after operation:
             if (isNumberOrPoint && !inNumber_) {
                 if (hasOperation_) {
-                    state_.y.set(state_.x);
+                    y_.set(x_);
                 }
                 if (button != Button::sqrt) {
-                    state_.x.clear();
+                    x_.clear();
                 }
                 inputSize_ = 0;
                 inputHasPoint_ = false;
@@ -117,31 +112,31 @@ void Calculator::input(Button button) {
             break;
         case Button::plus:
             calculateAddSubMulDiv();
-            state_.operation = Operation::add;
+            operation_ = Operation::add;
             hasOperation_ = true;
             break;
         case Button::minus:
             calculateAddSubMulDiv();
-            state_.operation = Operation::sub;
+            operation_ = Operation::sub;
             hasOperation_ = true;
             break;
         case Button::mul:
             calculateAddSubMulDiv();
-            state_.operation = Operation::mul;
+            operation_ = Operation::mul;
             hasOperation_ = true;
             break;
         case Button::div:
             calculateAddSubMulDiv();
-            state_.operation = Operation::div;
+            operation_ = Operation::div;
             hasOperation_ = true;
             break;
         case Button::mu:
             if (hasOperation_) {
-                state_.y.clear();
-                state_.operation = Operation::add;
+                y_.clear();
+                operation_ = Operation::add;
                 hasOperation_ = false;
             } else {
-                state_.operation = Operation::mu;
+                operation_ = Operation::mu;
                 hasOperation_ = true;
             }
             break;
@@ -183,7 +178,9 @@ void Calculator::input(Button button) {
 }
 
 void Calculator::clearAll() {
-    state_.clear();
+    x_.clear();
+    y_.clear();
+    operation_ = Operation::add;
     hasOperation_ = false;
     clearInput();
 }
@@ -194,18 +191,18 @@ void Calculator::clearEntry() {
 }
 
 void Calculator::clearInput() {
-    state_.x.clear();
+    x_.clear();
     inputSize_ = 0;
     inputHasPoint_ = false;
 }
 
 void Calculator::inputDigit(int8_t digit) {
     if (digit == 0 && !inputHasPoint_ && inputSize_ == 0) return;
-    if (inputSize_ >= size_ || state_.x.getPointPos() == size_ - 1) return;
+    if (inputSize_ >= size_ || x_.getPointPos() == size_ - 1) return;
     shiftLeftOnInput();
-    state_.x.setDigit(0, digit);
+    x_.setDigit(0, digit);
     inputSize_++;
-    if (inputHasPoint_) state_.x.incPointPos(1);
+    if (inputHasPoint_) x_.incPointPos(1);
 }
 
 void Calculator::inputPoint() {
@@ -217,8 +214,8 @@ void Calculator::shiftLeftOnInput() {
     if (size_ == 0 || inputSize_ >= size_) return;
     if (inputSize_ > 0) {
         for (int8_t i = 0; i < inputSize_; i++)
-            state_.x.setDigit(inputSize_ - i, state_.x.getDigit(inputSize_ - i - S1));
-        state_.x.setDigit(0, 0);
+            x_.setDigit(inputSize_ - i, x_.getDigit(inputSize_ - i - S1));
+        x_.setDigit(0, 0);
     }
 }
 
@@ -256,54 +253,54 @@ void Calculator::calculateAddSubMulDiv() {
         lastButton_ == Button::div ||
         lastButton_ == Button::mu) return;
 
-    Operation op = state_.operation;
+    Operation op = operation_;
     if (op == Operation::add || op == Operation::sub || op == Operation::div) {
-        state_.exchangeXY();
+        exchangeXY();
     }
 
-    Math::calculate(state_.x, state_.y, state_.operation, options_);
+    Math::calculate(x_, y_, operation_, options_);
 
     if (op == Operation::add || op == Operation::sub)
-        state_.y.clear();
+        y_.clear();
 }
 
 void Calculator::calculateEquals() {
-    Operation op = state_.operation;
+    Operation op = operation_;
 
     // MU operator ugly patch.
     if (op == Operation::mu) {
         if (!hasOperation_) {
-            Math::calculate(state_.x, state_.y, Operation::mul, options_);
+            Math::calculate(x_, y_, Operation::mul, options_);
         }
-        state_.y.clear();
-        state_.operation = Operation::add;
+        y_.clear();
+        operation_ = Operation::add;
         return;
     }
 
     if (hasOperation_) {
         if (op == Operation::add || op == Operation::sub || op == Operation::div) {
-            state_.exchangeXY();
+            exchangeXY();
         }
 
         if (lastButton_ == Button::mul)
-            state_.y.set(state_.x);
+            y_.set(x_);
         else if (lastButton_ == Button::div)
-            state_.x.setOne();
+            x_.setOne();
     }
-    Math::calculate(state_.x, state_.y, state_.operation, options_);
+    Math::calculate(x_, y_, operation_, options_);
 }
 
 void Calculator::calculatePercent() {
-    Operation op = state_.operation;
+    Operation op = operation_;
     if (hasOperation_) {
         if (op == Operation::add || op == Operation::sub || op == Operation::div || op == Operation ::mu) {
-            state_.exchangeXY();
+            exchangeXY();
         }
 
-        Math::calculatePercent(state_.x, state_.y, state_.operation, options_);
+        Math::calculatePercent(x_, y_, operation_, options_);
     } else {
         if (op == Operation::mul || op == Operation::div) {
-            Math::calculatePercent(state_.x, state_.y, state_.operation, options_);
+            Math::calculatePercent(x_, y_, operation_, options_);
         }
     }
 }
@@ -311,54 +308,61 @@ void Calculator::calculatePercent() {
 void Calculator::calculateSqrt() {
     inputSize_ = 0;
     inputHasPoint_ = false;
-    Math::sqrt(state_.x);
+    Math::sqrt(x_);
 }
 
 void Calculator::changeSign() {
-    Math::changeSign(state_.x);
+    Math::changeSign(x_);
 }
 
 void Calculator::memPlusOrMinus(const Operation memOperation) {
     assert(memOperation == Operation::add || memOperation == Operation::sub);
     inNumber_ = false;
 
-    Register &x = state_.x;
-    Register &y = state_.y;
-    Register &m = state_.m;
-
     if (hasOperation_) {
         calculateEquals();
-        y.clear();
-        state_.operation = Operation::add;
+        y_.clear();
+        operation_ = Operation::add;
         hasOperation_ = false;
-        if (x.hasError()) return;
+        if (x_.hasError()) return;
     }
 
-    Register acc(m.getSize());
-    acc.set(m);
+    Register acc(m_.getSize());
+    acc.set(m_);
     if (options_ & Config::OPTION_MEM_CAN_TRUNC_X) {
-        Math::calculate(acc, x, memOperation, options_);
+        Math::calculate(acc, x_, memOperation, options_);
     } else {
-        Register xT(x.getSize());
-        xT.set(x);
+        Register xT(x_.getSize());
+        xT.set(x_);
         Math::calculate(acc, xT, memOperation, options_);
     }
     if (acc.hasError()) {
-        x.clear();
-        x.setError(true, false);
+        x_.clear();
+        x_.setError(true, false);
     } else {
-        m.set(acc);
+        m_.set(acc);
     }
+}
+
+void Calculator::exchangeXY() {
+    Register tmp(size_);
+    tmp.set(x_);
+    x_.set(y_);
+    y_.set(tmp);
+}
+
+bool Calculator::memHasValue() {
+    return !m_.isZero();
 }
 
 void Calculator::memClear()
 {
     inNumber_ = false;
-    state_.memClear();
+    m_.clear();
 }
 
 void Calculator::memRestore()
 {
     inNumber_ = false;
-    state_.memRestore();
+    x_.set(m_);
 }

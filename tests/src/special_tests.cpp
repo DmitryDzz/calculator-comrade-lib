@@ -5,14 +5,12 @@
 #include <gmock/gmock.h>
 #include <calculator/calculator.h>
 
-#include "calculator/state.h"
 #include "calculator/math.h"
 #include "calculator/register.h"
 #include "calc_helper.h"
 
 using calculatorcomrade::Calculator;
 using calculatorcomrade::Button;
-using calculatorcomrade::State;
 using calculatorcomrade::Register;
 using calculatorcomrade::Math;
 using calculatorcomrade::Operation;
@@ -56,32 +54,32 @@ TEST_SPECIAL(RegisterYChanged) {
     calc.input(Button::d5);
     calc.input(Button::equals);
 
-    ASSERT_EQ(11344444, getAbsIntValue(calc.getState().x));
-    ASSERT_EQ(4, calc.getState().x.getPointPos());
+    ASSERT_EQ(11344444, getAbsIntValue(calc.getX()));
+    ASSERT_EQ(4, calc.getX().getPointPos());
 
-    ASSERT_EQ(1001234, getAbsIntValue(calc.getState().y));
-    ASSERT_EQ(4, calc.getState().y.getPointPos());
-
-    calc.input(Button::equals);
-
-    ASSERT_EQ(1034321, getAbsIntValue(calc.getState().x));
-    ASSERT_EQ(3, calc.getState().x.getPointPos());
-
-    ASSERT_EQ(1001234, getAbsIntValue(calc.getState().y));
-    ASSERT_EQ(4, calc.getState().y.getPointPos());
+    ASSERT_EQ(1001234, getAbsIntValue(calc.getY()));
+    ASSERT_EQ(4, calc.getY().getPointPos());
 
     calc.input(Button::equals);
 
-    ASSERT_EQ(9341976, getAbsIntValue(calc.getState().x));
-    ASSERT_EQ(4, calc.getState().x.getPointPos());
+    ASSERT_EQ(1034321, getAbsIntValue(calc.getX()));
+    ASSERT_EQ(3, calc.getX().getPointPos());
 
-    ASSERT_EQ(1001234, getAbsIntValue(calc.getState().y));
-    ASSERT_EQ(4, calc.getState().y.getPointPos());
+    ASSERT_EQ(1001234, getAbsIntValue(calc.getY()));
+    ASSERT_EQ(4, calc.getY().getPointPos());
+
+    calc.input(Button::equals);
+
+    ASSERT_EQ(9341976, getAbsIntValue(calc.getX()));
+    ASSERT_EQ(4, calc.getX().getPointPos());
+
+    ASSERT_EQ(1001234, getAbsIntValue(calc.getY()));
+    ASSERT_EQ(4, calc.getY().getPointPos());
 }
 
 TEST_SPECIAL(CeAndCeCaCompatibility) {
     Calculator c(8);
-    Register &x = c.getState().x;
+    Register &x = c.getX();
 
     for (int8_t i = 0; i < 8; i++)
         c.input(Button::d9);

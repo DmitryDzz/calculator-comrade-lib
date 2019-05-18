@@ -21,8 +21,6 @@ namespace calculatorcomrade {
     void setValue(Register &r, int64_t value, int8_t digitsAfterPoint);
 
     void evaluateText(Register &r, std::string *output);
-
-    Button stringToButton(const std::string& button);
 }
 
 #endif //CALCULATORCOMRADE_CALC_HELPER_HPP
