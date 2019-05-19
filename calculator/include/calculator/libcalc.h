@@ -47,6 +47,21 @@ extern "C" HRES GetDigit(HCALC hCalc, int8_t index, int8_t *digit);
 
 extern "C" HRES GetDisplayDigit(HCALC hCalc, int8_t index, int8_t *digit);
 
+/// Exports current state to dump.
+/// \param hCalc [input param] instance identifier.
+/// \param dump [input/output param] dump pointer, nullable.
+/// \param dumpSize [output param] dump size.
+/// \return HRES.
+extern "C" HRES ExportDump(HCALC hCalc, int8_t *dump, int8_t *dumpSize);
+
+/// Sets calculator's state to recently saved by exportDump method.
+/// \param hCalc [input param] instance identifier.
+/// \param dump [input param] dump pointer, nullable.
+/// \param dumpSize [input param] dump size.
+/// \param importedSize [output param] the value should be equal to dumpSize. Otherwise it is an error code: 1 - wrong dump version, 0 or 2 - wrong dump size.
+/// \return HRES.
+extern "C" HRES ImportDump(HCALC hCalc, int8_t *dump, int8_t dumpSize, int8_t *importedSize);
+
 #endif //CALCULATORCOMRADE_MAIN_H
 
 #pragma clang diagnostic pop

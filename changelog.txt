@@ -1,3 +1,5 @@
+v1 (2019-05-12)
+* Fixed ClearEntry after sqrt operation.
 
 v1a (2019-04-27)
 * Fixed input after Sqrt operation.

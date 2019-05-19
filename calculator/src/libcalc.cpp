@@ -123,4 +123,20 @@ extern "C" HRES GetDisplayDigit(const HCALC hCalc, const int8_t index, int8_t *d
     return HRES_OK;
 }
 
+extern "C" HRES ExportDump(const HCALC hCalc, int8_t *dump, int8_t *dumpSize) {
+    Calculator* calculator = findInstance(hCalc);
+    if (calculator == nullptr)
+        return HRES_ERR_NO_INSTANCE;
+    *dumpSize = calculator->exportDump(dump);
+    return HRES_OK;
+}
+
+extern "C" HRES ImportDump(const HCALC hCalc, int8_t *dump, const int8_t dumpSize, int8_t *importedSize) {
+    Calculator* calculator = findInstance(hCalc);
+    if (calculator == nullptr)
+        return HRES_ERR_NO_INSTANCE;
+    *importedSize = calculator->importDump(dump, dumpSize);
+    return HRES_OK;
+}
+
 #pragma clang diagnostic pop
