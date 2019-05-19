@@ -1,3 +1,7 @@
+v2 (2019-05-19)
+* State class was removed.
+* exportDump() and importDump() functions.
+
 v1 (2019-05-12)
 * Fixed ClearEntry after sqrt operation.
 
