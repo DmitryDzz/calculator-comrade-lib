@@ -10,6 +10,7 @@
 #include "calc_helper.h"
 
 using calculatorcomrade::Calculator;
+using calculatorcomrade::Config;
 using calculatorcomrade::Register;
 
 TEST(TestRegister, DefaultState) {

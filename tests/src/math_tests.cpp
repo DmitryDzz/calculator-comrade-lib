@@ -4,9 +4,11 @@
 
 #include <gmock/gmock.h>
 
+#include "calculator/config.h"
 #include "calculator/math.h"
 #include "calc_helper.h"
 
+using calculatorcomrade::Config;
 using calculatorcomrade::Register;
 using calculatorcomrade::Math;
 using calculatorcomrade::Operation;

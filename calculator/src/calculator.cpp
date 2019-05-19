@@ -365,3 +365,110 @@ void Calculator::memRestore()
     inNumber_ = false;
     x_.set(m_);
 }
+
+int8_t Calculator::exportDump(int8_t *dump) {
+    int8_t index = 0;
+
+    // Header:
+    writeToDump(dump, index++, Config::DUMP_VERSION); // dump version
+    writeToDump(dump, index++, getDumpSize());        // dump size
+
+    // Body:
+    writeToDump(dump, index++, size_);
+    writeToDump(dump, index++, options_);
+    writeToDump(dump, index++, static_cast<int8_t>(operation_));
+    writeToDump(dump, index++, hasOperation_ ? 1 : 0);
+    writeToDump(dump, index++, inNumber_ ? 1 : 0);
+    writeToDump(dump, index++, inputSize_);
+    writeToDump(dump, index++, inputHasPoint_ ? 1 : 0);
+    writeToDump(dump, index++, static_cast<int8_t>(lastButton_));
+    writeToDump(dump, index++, lastButtonWasCe_ ? 1 : 0);
+
+    // Register X:
+    for (int8_t i = 0; i < size_; i++) {
+        writeToDump(dump, index++, x_.getDigit(i));
+    }
+    writeToDump(dump, index++, x_.getPointPos());
+    writeToDump(dump, index++, x_.isNegative() ? 1 : 0);
+    writeToDump(dump, index++, x_.hasError() ? 1 : 0);
+    writeToDump(dump, index++, x_.hasOverflow() ? 1 : 0);
+
+    // Register Y:
+    for (int8_t i = 0; i < size_; i++) {
+        writeToDump(dump, index++, y_.getDigit(i));
+    }
+    writeToDump(dump, index++, y_.getPointPos());
+    writeToDump(dump, index++, y_.isNegative() ? 1 : 0);
+    writeToDump(dump, index++, y_.hasError() ? 1 : 0);
+    writeToDump(dump, index++, y_.hasOverflow() ? 1 : 0);
+
+    // Register M:
+    for (int8_t i = 0; i < size_; i++) {
+        writeToDump(dump, index++, m_.getDigit(i));
+    }
+    writeToDump(dump, index++, m_.getPointPos());
+    writeToDump(dump, index++, m_.isNegative() ? 1 : 0);
+    writeToDump(dump, index++, m_.hasError() ? 1 : 0);
+    writeToDump(dump, index++, m_.hasOverflow() ? 1 : 0);
+
+    return index;
+}
+
+int8_t Calculator::importDump(const int8_t *dump, int8_t dumpSize) {
+    int8_t index = 0;
+    if (dumpSize < 2) return index;
+    if (dump[index++] != Config::DUMP_VERSION) return index;
+    if (dump[index++] != getDumpSize()) return index;
+
+    size_ = dump[index++];
+    options_ = dump[index++];
+    operation_ = (Operation) dump[index++];
+    hasOperation_ = dump[index++] == 1;
+    inNumber_ = dump[index++] == 1;
+    inputSize_ = dump[index++];
+    inputHasPoint_ = dump[index++] == 1;
+    lastButton_ = (Button) dump[index++];
+    lastButtonWasCe_ = dump[index++] == 1;
+
+    // Register X:
+    for (int8_t i = 0; i < size_; i++) {
+        x_.setDigit(i, dump[index++]);
+    }
+    x_.setPointPos(dump[index++]);
+    x_.setNegative(dump[index++] == 1);
+    bool hasError = dump[index++] == 1;
+    bool hasOverflow = dump[index++] == 1;
+    x_.setError(hasError, hasOverflow);
+
+    // Register Y:
+    for (int8_t i = 0; i < size_; i++) {
+        y_.setDigit(i, dump[index++]);
+    }
+    y_.setPointPos(dump[index++]);
+    y_.setNegative(dump[index++] == 1);
+    hasError = dump[index++] == 1;
+    hasOverflow = dump[index++] == 1;
+    y_.setError(hasError, hasOverflow);
+
+    // Register M:
+    for (int8_t i = 0; i < size_; i++) {
+        m_.setDigit(i, dump[index++]);
+    }
+    m_.setPointPos(dump[index++]);
+    m_.setNegative(dump[index++] == 1);
+    hasError = dump[index++] == 1;
+    hasOverflow = dump[index++] == 1;
+    m_.setError(hasError, hasOverflow);
+
+    return index;
+}
+
+void Calculator::writeToDump(int8_t *dump, int8_t index, int8_t value) {
+    if (dump != nullptr) {
+        dump[index] = value;
+    }
+}
+
+int8_t Calculator::getDumpSize() {
+    return 11 + 3 * (4 + size_);
+}

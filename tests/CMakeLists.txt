@@ -13,6 +13,7 @@ set(SOURCES
         src/mem_input_tests.cpp
         src/sqrt_input_tests.cpp
         src/mu_input_tests.cpp
+        src/dump_tests.cpp
 )
 
 set(TARGET tests)

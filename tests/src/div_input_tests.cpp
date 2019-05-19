@@ -9,6 +9,7 @@
 #include "calc_helper.h"
 
 using calculatorcomrade::Calculator;
+using calculatorcomrade::Config;
 using calculatorcomrade::Button;
 using calculatorcomrade::Register;
 using calculatorcomrade::Operation;
