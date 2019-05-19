@@ -19,19 +19,19 @@ namespace calculatorcomrade {
         explicit Calculator() : Calculator(Config::DEFAULT_SIZE, 0) {};
         explicit Calculator(int8_t size) : Calculator(size, 0) {};
         explicit Calculator(int8_t size, uint8_t options) :
-                options_(options),
                 size_(size),
+                options_(options),
                 x_(size),
                 y_(size),
                 m_(size),
                 operation_(Operation::add),
-                lastButton_(Button::none),
-                lastButtonWasCe_(false),
                 hasOperation_(false),
                 inNumber_(false),
-                displayEventCallback_(nullptr),
                 inputSize_(0),
-                inputHasPoint_(false) {
+                inputHasPoint_(false),
+                lastButton_(Button::none),
+                lastButtonWasCe_(false),
+                displayEventCallback_(nullptr) {
             assert(size >= Config::MIN_SIZE);
             assert(size <= Config::MAX_SIZE);
         };
