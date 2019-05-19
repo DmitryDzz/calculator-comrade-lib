@@ -234,7 +234,6 @@ void Calculator::saveButton(const Button button) {
             break;
         case Button::ce:
             // This is a patch for test ClearEntry4: "3 * ce =" => 9
-            //TODO DZZ Check it on another calculator with CE button.
             lastButtonWasCe_ = true;
             break;
         default:
