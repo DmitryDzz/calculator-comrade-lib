@@ -131,12 +131,16 @@ extern "C" HRES ExportDump(const HCALC hCalc, int8_t *dump, int8_t *dumpSize) {
     return HRES_OK;
 }
 
-extern "C" HRES ImportDump(const HCALC hCalc, int8_t *dump, const int8_t dumpSize, int8_t *importedSize) {
+extern "C" HRES ImportDump(const HCALC hCalc, int8_t *dump, const int8_t dumpSize) {
     Calculator* calculator = findInstance(hCalc);
     if (calculator == nullptr)
         return HRES_ERR_NO_INSTANCE;
-    *importedSize = calculator->importDump(dump, dumpSize);
-    return HRES_OK;
+    int8_t importedSize = calculator->importDump(dump, dumpSize);
+    if (importedSize == dumpSize)
+        return HRES_OK;
+    if (importedSize == 1)
+        return HRES_ERR_WRONG_DUMP_VERSION;
+    return HRES_ERR_WRONG_DUMP_SIZE;
 }
 
 #pragma clang diagnostic pop

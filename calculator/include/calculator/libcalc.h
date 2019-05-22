@@ -24,6 +24,8 @@ typedef std::map<HCALC, Calculator*> InstancesMap;
 #define HRES_OK ((HRES)0)
 #define HRES_ERR_NO_INSTANCE ((HRES)-1)
 #define HRES_ERR_TOO_MANY_INSTANCES ((HRES)-2)
+#define HRES_ERR_WRONG_DUMP_VERSION ((HRES)-3)
+#define HRES_ERR_WRONG_DUMP_SIZE ((HRES)-4)
 
 extern "C" HRES CreateCalculator(int8_t digits, uint8_t options, HCALC *hcalc);
 
@@ -58,9 +60,8 @@ extern "C" HRES ExportDump(HCALC hCalc, int8_t *dump, int8_t *dumpSize);
 /// \param hCalc [input param] instance identifier.
 /// \param dump [input param] dump pointer, nullable.
 /// \param dumpSize [input param] dump size.
-/// \param importedSize [output param] the value should be equal to dumpSize. Otherwise it is an error code: 1 - wrong dump version, 0 or 2 - wrong dump size.
 /// \return HRES.
-extern "C" HRES ImportDump(HCALC hCalc, int8_t *dump, int8_t dumpSize, int8_t *importedSize);
+extern "C" HRES ImportDump(HCALC hCalc, int8_t *dump, int8_t dumpSize);
 
 #endif //CALCULATORCOMRADE_MAIN_H
 
