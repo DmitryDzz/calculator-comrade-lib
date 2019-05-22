@@ -1,3 +1,6 @@
+v3 (2019-05-22)
+* An improvement of importDump() function.
+
 v2 (2019-05-19)
 * State class was removed.
 * exportDump() and importDump() functions.
