@@ -1,5 +1,7 @@
 # calculator-comrade-lib
-The library is an emulator of a pocket calculator with basic arithmetic operations (+, ⁻, ×, ÷, %, √, MU) and M/RM functions.
+This c++ library emulates a pocket calculator's microprocessor. It implements basic arithmetic operations (+, –, ×, ÷, %, √, MU, ±) and basic memory operations (M+, M-, MR, MC).
+
+The emulator doesn't implement BCD encoding (binary-coded decimals) since it was designed for 8-bit microprocessors and higher. However, in all other aspects, the architecture and algorithms were scrupulously reproduced.
 
 # Quick start
 ## Clone the project:
