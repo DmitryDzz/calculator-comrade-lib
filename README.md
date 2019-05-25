@@ -33,3 +33,5 @@ The library is generated for the following target systems:
 * Android x86
 * Windows x86
 * Windows x86_64
+
+To build the libraries, run the script `build.cmd xxx`, where `xxx` is a version number. See the result in `output` directory.
