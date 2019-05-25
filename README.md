@@ -12,14 +12,24 @@ Create a directory next to the project:<br>
 `mkdir build-cmake`<br>
 `cd build-cmake`
 
-Generate a build system.<br>
+Generate a build system:<br>
 Linux: `cmake -G "Unix Makefiles" ../calculator-comrade-lib`<br>
 Windows: `cmake -G "MinGW Makefiles" ..\calculator-comrade-lib`<br>
 
-Build the project.<br>
+Build the project:<br>
 Linux: `make`<br>
 Windows: `mingw32-make`
 
-Run tests.<br>
+Run tests:<br>
 Linux: `./bin/tests`<br>
 Windows: `bin\tests.exe`
+
+## How to build a cross-platform release
+Currently, only Windows host system is supported.
+
+The library is generated for the following target systems:
+* Android arm64-v8a
+* Android armeabi-v7a
+* Android x86
+* Windows x86
+* Windows x86_64
