@@ -2,6 +2,8 @@
 
 set VERSION=%1
 
+set SKIP_TESTS=TRUE
+
 rem Android
 rem -------
 
