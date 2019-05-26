@@ -10,7 +10,10 @@ The library was used in [Calculator Comrade](https://dmitrydzz.github.io/calcula
 
 [![Get it on Google Play](https://developer.android.com/images/brand/en_generic_rgb_wo_60.png)](https://play.google.com/store/apps/details?id=ru.robotmitya.comrade)
 
-# Quick start
+# License
+Code released under the [MIT License](https://github.com/DmitryDzz/calculator-comrade-lib/blob/master/LICENSE).
+
+# Getting Started
 ## Clone the project:
 `git clone --recurse-submodules git@github.com:DmitryDzz/calculator-comrade-lib.git`
 
@@ -42,3 +45,9 @@ The library is generated for the following target systems:
 * Windows x86_64
 
 To build the libraries, run the script `build.cmd xxx`, where `xxx` is a version number. See the result in `output` directory.
+
+## API
+
+See the list of exported functions in [libcalc.h](https://github.com/DmitryDzz/calculator-comrade-lib/blob/master/calculator/include/calculator/libcalc.h) file.
+
+For embedded applications use Calculator class ([calculator.h](https://github.com/DmitryDzz/calculator-comrade-lib/blob/master/calculator/include/calculator/calculator.h)).
