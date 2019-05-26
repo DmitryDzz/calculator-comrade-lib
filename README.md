@@ -1,4 +1,4 @@
-# calculator-comrade-lib
+# Calculator Comrade Library
 
 ![Calculator Comrade Library](https://dmitrydzz.github.io/calculator-comrade-pages/images/display_512x250.png)
 
