@@ -1,7 +1,9 @@
-//
-// Created by dmitrydzz on 27.01.2019.
-//
-
+/**
+ * Calculator Comrade Library
+ * License: https://github.com/DmitryDzz/calculator-comrade-lib/blob/master/LICENSE
+ * Author: Dmitry Dzakhov
+ * Email: info@robot-mitya.ru
+ */
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunknown-pragmas"
 #pragma ide diagnostic ignored "OCUnusedGlobalDeclarationInspection"

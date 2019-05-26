@@ -1,7 +1,9 @@
-//
-// Created by dmitrydzz on 09.10.18.
-//
-
+/**
+ * Calculator Comrade Library
+ * License: https://github.com/DmitryDzz/calculator-comrade-lib/blob/master/LICENSE
+ * Author: Dmitry Dzakhov
+ * Email: info@robot-mitya.ru
+ */
 #ifndef CALCULATORCOMRADE_REGISTER_H
 #define CALCULATORCOMRADE_REGISTER_H
 

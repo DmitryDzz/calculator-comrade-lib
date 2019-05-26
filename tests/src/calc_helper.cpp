@@ -1,7 +1,9 @@
-//
-// Created by dmitrydzz on 11.01.19.
-//
-
+/**
+ * Calculator Comrade Library
+ * License: https://github.com/DmitryDzz/calculator-comrade-lib/blob/master/LICENSE
+ * Author: Dmitry Dzakhov
+ * Email: info@robot-mitya.ru
+ */
 #include "calc_helper.h"
 
 #define S1 ((int8_t)1)
