@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# Linux
+# -----
+OS=linux
+
+ARCHITECTURE=host_architecture
+echo "Platform $OS-$ARCHITECTURE"
+echo ---------------------
+./build-platform-on-linux $OS $ARCHITECTURE
+echo
+
+# TODO: Cross-platform toolchains are not ready yet.
+
+# ARCHITECTURE=x86_64
+# echo "Platform $OS-$ARCHITECTURE"
+# echo ---------------------
+# ./build-platform-on-linux $OS $ARCHITECTURE
+# echo
+
+# ARCHITECTURE=x86
+# echo "Platform $OS-$ARCHITECTURE"
+# echo ---------------
+# ./build-platform-on-linux $OS $ARCHITECTURE
+# echo
+
+# ARCHITECTURE=arm
+# echo "Platform $OS-$ARCHITECTURE"
+# echo ------------------
+# ./build-platform-on-linux $OS $ARCHITECTURE
+# echo
+
+# ARCHITECTURE=arm64
+# echo "Platform $OS-$ARCHITECTURE"
+# echo -----------------
+# ./build-platform-on-linux $OS $ARCHITECTURE
+# echo

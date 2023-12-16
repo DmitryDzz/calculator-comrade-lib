@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# Android
+# -------
+OS=android
+
+ARCHITECTURE=arm64-v8a
+echo "Platform $OS-$ARCHITECTURE"
+echo --------------------------
+./build-platform-on-linux $OS $ARCHITECTURE
+echo
+
+ARCHITECTURE=armeabi-v7a
+echo "Platform $OS-$ARCHITECTURE"
+echo ----------------------------
+./build-platform-on-linux $OS $ARCHITECTURE
+echo
+
+ARCHITECTURE=x86
+echo "Platform $OS-$ARCHITECTURE"
+echo --------------------
+./build-platform-on-linux $OS $ARCHITECTURE
+echo
