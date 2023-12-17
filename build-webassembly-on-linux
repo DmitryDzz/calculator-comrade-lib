@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# NOTE
+# The installation of emsdk is described here: https://emscripten.org/docs/getting_started/index.html
+
+# WebAssembly
+# -----------
+PLATFORM=webassembly
+echo "Platform $PLATFORM"
+echo ---------------------
+./build-platform-on-linux $PLATFORM ../../emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake
+echo

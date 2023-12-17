@@ -1,0 +1,20 @@
+#!/bin/bash
+FROM_DIR=$1
+OUTPUT_DIR=$2
+OUTPUT_SUBDIR=$3
+VERSION=$4
+
+mkdir -p $OUTPUT_DIR/$OUTPUT_SUBDIR
+rm -f $OUTPUT_DIR/$OUTPUT_SUBDIR/*.*
+
+SRC_DIR=$FROM_DIR/lib
+[[ -d $FROM_DIR/bin/ ]] || SRC_DIR=$FROM_DIR/bin
+
+FILENAME=libcalculator_v$VERSION
+
+cp $SRC_DIR/libcalculator.dll $OUTPUT_DIR/$OUTPUT_SUBDIR/$FILENAME.dll > null 2> null
+cp $SRC_DIR/libcalculator.so $OUTPUT_DIR/$OUTPUT_SUBDIR/$FILENAME.so > null 2> null
+cp $SRC_DIR/libcalculator.a $OUTPUT_DIR/$OUTPUT_SUBDIR/$FILENAME.a > null 2> null
+
+echo
+echo "$FILENAME" library is copied to output/$OUTPUT_SUBDIR/

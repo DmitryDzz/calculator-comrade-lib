@@ -5,19 +5,22 @@
 OS=android
 
 ARCHITECTURE=arm64-v8a
-echo "Platform $OS-$ARCHITECTURE"
+PLATFORM=$OS-$ARCHITECTURE
+echo "Platform $PLATFORM"
 echo --------------------------
-./build-platform-on-linux $OS $ARCHITECTURE
+./build-platform-on-linux $PLATFORM ../toolchain-$PLATFORM.cmake
 echo
 
 ARCHITECTURE=armeabi-v7a
-echo "Platform $OS-$ARCHITECTURE"
+PLATFORM=$OS-$ARCHITECTURE
+echo "Platform $PLATFORM"
 echo ----------------------------
-./build-platform-on-linux $OS $ARCHITECTURE
+./build-platform-on-linux $PLATFORM ../toolchain-$PLATFORM.cmake
 echo
 
 ARCHITECTURE=x86
-echo "Platform $OS-$ARCHITECTURE"
+PLATFORM=$OS-$ARCHITECTURE
+echo "Platform $PLATFORM"
 echo --------------------
-./build-platform-on-linux $OS $ARCHITECTURE
+./build-platform-on-linux $PLATFORM ../toolchain-$PLATFORM.cmake
 echo

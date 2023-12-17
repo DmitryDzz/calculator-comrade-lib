@@ -5,33 +5,38 @@
 OS=linux
 
 ARCHITECTURE=host_architecture
-echo "Platform $OS-$ARCHITECTURE"
+PLATFORM=$OS-$ARCHITECTURE
+echo "Platform $PLATFORM"
 echo ---------------------
-./build-platform-on-linux $OS $ARCHITECTURE
+./build-platform-on-linux $PLATFORM ../toolchain-$PLATFORM.cmake
 echo
 
 # TODO: Cross-platform toolchains are not ready yet.
 
 # ARCHITECTURE=x86_64
-# echo "Platform $OS-$ARCHITECTURE"
+# PLATFORM=$OS-$ARCHITECTURE
+# echo "Platform $PLATFORM"
 # echo ---------------------
-# ./build-platform-on-linux $OS $ARCHITECTURE
+# ./build-platform-on-linux $PLATFORM ../--TODO--
 # echo
 
 # ARCHITECTURE=x86
-# echo "Platform $OS-$ARCHITECTURE"
+# PLATFORM=$OS-$ARCHITECTURE
+# echo "Platform $PLATFORM"
 # echo ---------------
-# ./build-platform-on-linux $OS $ARCHITECTURE
+# ./build-platform-on-linux $PLATFORM ../--TODO--
 # echo
 
 # ARCHITECTURE=arm
-# echo "Platform $OS-$ARCHITECTURE"
+# PLATFORM=$OS-$ARCHITECTURE
+# echo "Platform $PLATFORM"
 # echo ------------------
-# ./build-platform-on-linux $OS $ARCHITECTURE
+# ./build-platform-on-linux $PLATFORM ../--TODO--
 # echo
 
 # ARCHITECTURE=arm64
-# echo "Platform $OS-$ARCHITECTURE"
+# PLATFORM=$OS-$ARCHITECTURE
+# echo "Platform $PLATFORM"
 # echo -----------------
-# ./build-platform-on-linux $OS $ARCHITECTURE
+# ./build-platform-on-linux $PLATFORM ../--TODO--
 # echo
