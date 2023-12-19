@@ -6,7 +6,10 @@
 # WebAssembly
 # -----------
 PLATFORM=webassembly
+BUILD_TESTS=OFF
+BUILD_SHARED_LIBS=OFF
+BUILD_STATIC_LIBS=ON
 echo "Platform $PLATFORM"
 echo ---------------------
-./build-platform-on-linux $PLATFORM ../../emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake
+./build-platform-on-linux $PLATFORM $BUILD_TESTS $BUILD_SHARED_LIBS $BUILD_STATIC_LIBS ../../emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake
 echo

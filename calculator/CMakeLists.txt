@@ -12,7 +12,12 @@ set(
 
 set(TARGET calculator)
 
-add_library(${TARGET} SHARED ${SOURCES})
+if(${BUILD_SHARED_LIBS})
+    add_library(${TARGET} SHARED ${SOURCES})
+endif()
+if(${BUILD_STATIC_LIBS})
+    add_library(${TARGET} STATIC ${SOURCES})
+endif()
 
 target_include_directories(${TARGET} PUBLIC include)
 

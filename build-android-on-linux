@@ -3,24 +3,27 @@
 # Android
 # -------
 OS=android
+BUILD_TESTS=ON
+BUILD_SHARED_LIBS=ON
+BUILD_STATIC_LIBS=OFF
 
 ARCHITECTURE=arm64-v8a
 PLATFORM=$OS-$ARCHITECTURE
 echo "Platform $PLATFORM"
 echo --------------------------
-./build-platform-on-linux $PLATFORM ../toolchain-$PLATFORM.cmake
+./build-platform-on-linux $PLATFORM $BUILD_TESTS $BUILD_SHARED_LIBS $BUILD_STATIC_LIBS ../toolchain-$PLATFORM.cmake
 echo
 
 ARCHITECTURE=armeabi-v7a
 PLATFORM=$OS-$ARCHITECTURE
 echo "Platform $PLATFORM"
 echo ----------------------------
-./build-platform-on-linux $PLATFORM ../toolchain-$PLATFORM.cmake
+./build-platform-on-linux $PLATFORM $BUILD_TESTS $BUILD_SHARED_LIBS $BUILD_STATIC_LIBS ../toolchain-$PLATFORM.cmake
 echo
 
 ARCHITECTURE=x86
 PLATFORM=$OS-$ARCHITECTURE
 echo "Platform $PLATFORM"
 echo --------------------
-./build-platform-on-linux $PLATFORM ../toolchain-$PLATFORM.cmake
+./build-platform-on-linux $PLATFORM $BUILD_TESTS $BUILD_SHARED_LIBS $BUILD_STATIC_LIBS ../toolchain-$PLATFORM.cmake
 echo

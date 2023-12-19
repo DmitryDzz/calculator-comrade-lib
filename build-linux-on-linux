@@ -3,12 +3,15 @@
 # Linux
 # -----
 OS=linux
+BUILD_TESTS=ON
+BUILD_SHARED_LIBS=ON
+BUILD_STATIC_LIBS=OFF
 
 ARCHITECTURE=host_architecture
 PLATFORM=$OS-$ARCHITECTURE
 echo "Platform $PLATFORM"
 echo ---------------------
-./build-platform-on-linux $PLATFORM ../toolchain-$PLATFORM.cmake
+./build-platform-on-linux $PLATFORM $BUILD_TESTS $BUILD_SHARED_LIBS $BUILD_STATIC_LIBS ../toolchain-$PLATFORM.cmake
 echo
 
 # TODO: Cross-platform toolchains are not ready yet.
@@ -17,26 +20,26 @@ echo
 # PLATFORM=$OS-$ARCHITECTURE
 # echo "Platform $PLATFORM"
 # echo ---------------------
-# ./build-platform-on-linux $PLATFORM ../--TODO--
+# ./build-platform-on-linux $PLATFORM $BUILD_TESTS $BUILD_SHARED_LIBS $BUILD_STATIC_LIBS ../--TODO--
 # echo
 
 # ARCHITECTURE=x86
 # PLATFORM=$OS-$ARCHITECTURE
 # echo "Platform $PLATFORM"
 # echo ---------------
-# ./build-platform-on-linux $PLATFORM ../--TODO--
+# ./build-platform-on-linux $PLATFORM $BUILD_TESTS $BUILD_SHARED_LIBS $BUILD_STATIC_LIBS ../--TODO--
 # echo
 
 # ARCHITECTURE=arm
 # PLATFORM=$OS-$ARCHITECTURE
 # echo "Platform $PLATFORM"
 # echo ------------------
-# ./build-platform-on-linux $PLATFORM ../--TODO--
+# ./build-platform-on-linux $PLATFORM $BUILD_TESTS $BUILD_SHARED_LIBS $BUILD_STATIC_LIBS ../--TODO--
 # echo
 
 # ARCHITECTURE=arm64
 # PLATFORM=$OS-$ARCHITECTURE
 # echo "Platform $PLATFORM"
 # echo -----------------
-# ./build-platform-on-linux $PLATFORM ../--TODO--
+# ./build-platform-on-linux $PLATFORM $BUILD_TESTS $BUILD_SHARED_LIBS $BUILD_STATIC_LIBS ../--TODO--
 # echo
