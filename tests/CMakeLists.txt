@@ -1,4 +1,4 @@
-set(SOURCES
+set(CALCULATOR_TEST_SOURCES
         src/main.cpp
         src/basic_input_tests.cpp
         src/register_tests.cpp
@@ -16,10 +16,25 @@ set(SOURCES
         src/dump_tests.cpp
 )
 
-set(TARGET tests)
+set(INSTALL_GTEST OFF CACHE BOOL "" FORCE)
 
-add_subdirectory("googletest")
+add_subdirectory(googletest EXCLUDE_FROM_ALL)
 
-add_executable(${TARGET} ${SOURCES})
+add_executable(calculator_tests ${CALCULATOR_TEST_SOURCES})
 
-target_link_libraries(${TARGET} calculator gtest gmock)
+set_target_properties(calculator_tests
+        PROPERTIES
+        OUTPUT_NAME tests
+)
+
+target_link_libraries(calculator_tests
+        PRIVATE
+        calculator
+        GTest::gtest
+        GTest::gmock
+)
+
+add_test(
+        NAME calculator_tests
+        COMMAND calculator_tests
+)

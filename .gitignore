@@ -37,6 +37,9 @@
 # CLion IDE and command line builds
 cmake-build-*
 
+# CMake builds
+build/
+
 # Output directory with final .so
 output/
 output.zip

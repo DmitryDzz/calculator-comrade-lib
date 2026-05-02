@@ -1,0 +1,233 @@
+{
+  "version": 3,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 21,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "base",
+      "hidden": true,
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "cacheVariables": {
+        "BUILD_TESTING": "ON",
+        "BUILD_SHARED_LIBS": "ON",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+      }
+    },
+    {
+      "name": "debug",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "release",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "linux-clang",
+      "hidden": true,
+      "inherits": "base",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      },
+      "environment": {
+        "CC": "clang",
+        "CXX": "clang++"
+      }
+    },
+    {
+      "name": "windows-clang",
+      "hidden": true,
+      "inherits": "base",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      },
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "clang-cl",
+        "CMAKE_CXX_COMPILER": "clang-cl"
+      }
+    },
+
+    {
+      "name": "linux-x64-debug",
+      "displayName": "Linux x64 Debug",
+      "inherits": ["linux-clang", "debug"]
+    },
+    {
+      "name": "linux-x64-release",
+      "displayName": "Linux x64 Release",
+      "inherits": ["linux-clang", "release"]
+    },
+    {
+      "name": "linux-arm64-debug",
+      "displayName": "Linux arm64 Debug",
+      "inherits": ["linux-clang", "debug"]
+    },
+    {
+      "name": "linux-arm64-release",
+      "displayName": "Linux arm64 Release",
+      "inherits": ["linux-clang", "release"]
+    },
+
+    {
+      "name": "windows-x64-debug",
+      "displayName": "Windows x64 Debug",
+      "inherits": ["windows-clang", "debug"]
+    },
+    {
+      "name": "windows-x64-release",
+      "displayName": "Windows x64 Release",
+      "inherits": ["windows-clang", "release"]
+    },
+
+    {
+      "name": "android-arm64-base",
+      "hidden": true,
+      "inherits": "base",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      },
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "$env{ANDROID_NDK_HOME}/build/cmake/android.toolchain.cmake",
+        "ANDROID_ABI": "arm64-v8a",
+        "ANDROID_PLATFORM": "android-21"
+      }
+    },
+    {
+      "name": "android-armv7-base",
+      "hidden": true,
+      "inherits": "base",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      },
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "$env{ANDROID_NDK_HOME}/build/cmake/android.toolchain.cmake",
+        "ANDROID_ABI": "armeabi-v7a",
+        "ANDROID_PLATFORM": "android-21",
+        "ANDROID_ARM_NEON": "ON"
+      }
+    },
+    {
+      "name": "android-arm64-debug",
+      "displayName": "Android arm64-v8a Debug",
+      "inherits": ["android-arm64-base", "debug"]
+    },
+    {
+      "name": "android-arm64-release",
+      "displayName": "Android arm64-v8a Release",
+      "inherits": ["android-arm64-base", "release"]
+    },
+    {
+      "name": "android-armv7-debug",
+      "displayName": "Android armeabi-v7a Debug",
+      "inherits": ["android-armv7-base", "debug"]
+    },
+    {
+      "name": "android-armv7-release",
+      "displayName": "Android armeabi-v7a Release",
+      "inherits": ["android-armv7-base", "release"]
+    },
+
+    {
+      "name": "wasm-base",
+      "hidden": true,
+      "inherits": "base",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      },
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "$env{EMSDK}/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake",
+        "BUILD_SHARED_LIBS": "OFF"
+      }
+    },
+    {
+      "name": "wasm-debug",
+      "displayName": "WebAssembly Debug",
+      "inherits": ["wasm-base", "debug"]
+    },
+    {
+      "name": "wasm-release",
+      "displayName": "WebAssembly Release",
+      "inherits": ["wasm-base", "release"]
+    }
+  ],
+  "buildPresets": [
+    { "name": "linux-x64-debug", "configurePreset": "linux-x64-debug" },
+    { "name": "linux-x64-release", "configurePreset": "linux-x64-release" },
+    { "name": "linux-arm64-debug", "configurePreset": "linux-arm64-debug" },
+    { "name": "linux-arm64-release", "configurePreset": "linux-arm64-release" },
+
+    { "name": "windows-x64-debug", "configurePreset": "windows-x64-debug" },
+    { "name": "windows-x64-release", "configurePreset": "windows-x64-release" },
+
+    { "name": "android-arm64-debug", "configurePreset": "android-arm64-debug" },
+    { "name": "android-arm64-release", "configurePreset": "android-arm64-release" },
+    { "name": "android-armv7-debug", "configurePreset": "android-armv7-debug" },
+    { "name": "android-armv7-release", "configurePreset": "android-armv7-release" },
+
+    { "name": "wasm-debug", "configurePreset": "wasm-debug" },
+    { "name": "wasm-release", "configurePreset": "wasm-release" }
+  ],
+  "testPresets": [
+    {
+      "name": "linux-x64-debug",
+      "configurePreset": "linux-x64-debug",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "linux-x64-release",
+      "configurePreset": "linux-x64-release",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "linux-arm64-debug",
+      "configurePreset": "linux-arm64-debug",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "linux-arm64-release",
+      "configurePreset": "linux-arm64-release",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "windows-x64-debug",
+      "configurePreset": "windows-x64-debug",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "windows-x64-release",
+      "configurePreset": "windows-x64-release",
+      "output": {
+        "outputOnFailure": true
+      }
+    }
+  ]
+}
