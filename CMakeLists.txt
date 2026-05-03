@@ -6,6 +6,7 @@ project(CalculatorComrade
 )
 
 option(BUILD_SHARED_LIBS "Build shared libraries" ON)
+option(CALCULATOR_BUILD_LIB "Build calculator C API wrapper library" ON)
 
 include(CTest)
 
@@ -14,6 +15,10 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 
 add_subdirectory(calculator)
+
+if(CALCULATOR_BUILD_LIB)
+    add_subdirectory(calculator_lib)
+endif()
 
 if(BUILD_TESTING)
     message(STATUS "Configuring with tests")

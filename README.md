@@ -10,8 +10,35 @@ The library was used in [Calculator Comrade](https://dmitrydzz.github.io/calcula
 
 [![Get it on Google Play](https://developer.android.com/images/brand/en_generic_rgb_wo_60.png)](https://play.google.com/store/apps/details?id=ru.robotmitya.comrade)
 
-# License
+## License
 The code was released under the [MIT License](https://github.com/DmitryDzz/calculator-comrade-lib/blob/master/LICENSE).
+
+## Project structure
+
+The project is split into two parts:
+
+- `calculator` – the calculator core.
+- `calculator_lib` – the C-style library wrapper.
+
+### calculator
+
+`calculator` contains the actual calculator engine.
+
+This part is intended to stay small, portable, and suitable for embedded projects. The code is written in a conservative C++ style and avoids platform-specific APIs.
+
+For embedded applications, this is the preferred part of the project to reuse. The `calculator` directory is intentionally kept self-contained so it can be copied into a small embedded project if needed.
+
+Use the `Calculator` class directly when integrating the core into firmware or other low-level environments.
+
+The CMake target currently requires C++11. The core is intentionally kept simple so that it can later be adapted to older or more restricted embedded toolchains if needed.
+
+### calculator_lib
+
+`calculator_lib` provides the exported C-style API declared in `libcalc.h`.
+
+This layer is intended for integration scenarios where a plain C-compatible interface is more convenient, for example desktop applications, mobile applications, WebAssembly bindings, or foreign-function interfaces.
+
+Unlike the core, this layer may use heavier C++ facilities internally, such as STL containers and dynamic allocation. It is not the recommended layer for very small microcontrollers.
 
 ## Getting started
 
@@ -90,7 +117,7 @@ ctest --preset linux-arm64-release
 
 The Windows x64 presets are intended to be used on a Windows x64 host.
 
-Use a terminal where the Visual Studio / MSVC build environment is already initialized, for example **Developer PowerShell for VS** or **Developer Command Prompt for VS**.
+Use a terminal where the Visual Studio / MSVC build environment is already initialized, for example Developer PowerShell for VS or Developer Command Prompt for VS.
 
 The project is configured to use Ninja and Clang on Windows as well.
 
@@ -216,8 +243,16 @@ build/android-arm64-debug
 build/wasm-debug
 ```
 
-## API
+## Host build scripts
 
-See the list of exported functions in [libcalc.h](https://github.com/DmitryDzz/calculator-comrade-lib/blob/master/calculator/include/calculator/libcalc.h) file.
+The repository includes convenience scripts for building all presets that are expected to work on a particular host platform.
 
-For embedded applications, use Calculator class ([calculator.h](https://github.com/DmitryDzz/calculator-comrade-lib/blob/master/calculator/include/calculator/calculator.h)).
+These scripts are intended for local validation before pushing changes or preparing a release. They run the corresponding CMake configure and build presets for both `debug` and `release` configurations. Where tests are supported on the host platform, the scripts also run the matching CTest presets.
+
+Available scripts:
+
+- `build-on-host-linux-x64.sh` – builds and tests Linux x64, then builds Android arm64, Android armv7, and WebAssembly presets. Android and WebAssembly test binaries are built, but not executed by this script.
+- `build-on-host-linux-arm64.sh` – builds and tests Linux arm64 presets. This script is intended for native Linux arm64 hosts, for example Raspberry Pi.
+- `build-on-host-windows-x64.cmd` – builds and tests Windows x64 presets. This script should be run from a terminal where the Visual Studio / MSVC build environment is already initialized, such as Developer PowerShell for VS or Developer Command Prompt for VS.
+
+The scripts are thin wrappers around CMake Presets. They do not replace the individual preset commands described above; they only provide a quicker way to run all relevant builds for the current host.

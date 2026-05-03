@@ -8,13 +8,18 @@ set(CALCULATOR_TEST_SOURCES
         src/math_tests.cpp
         src/calc_helper.cpp
         src/special_tests.cpp
-        src/libcalc_tests.cpp
         src/percent_input_tests.cpp
         src/mem_input_tests.cpp
         src/sqrt_input_tests.cpp
         src/mu_input_tests.cpp
         src/dump_tests.cpp
 )
+
+if(CALCULATOR_BUILD_LIB)
+    list(APPEND CALCULATOR_TEST_SOURCES
+            src/libcalc_tests.cpp
+    )
+endif()
 
 set(INSTALL_GTEST OFF CACHE BOOL "" FORCE)
 
@@ -38,3 +43,10 @@ add_test(
         NAME calculator_tests
         COMMAND calculator_tests
 )
+
+if(CALCULATOR_BUILD_LIB)
+    target_link_libraries(calculator_tests
+            PRIVATE
+            calculator_lib
+    )
+endif()

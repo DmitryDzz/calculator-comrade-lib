@@ -1,11 +1,11 @@
 set(CALCULATOR_SOURCES
-        src/libcalc.cpp
         src/calculator.cpp
         src/math.cpp
 
         include/calculator/button.h
         include/calculator/calculator.h
         include/calculator/config.h
+        include/calculator/math.h
         include/calculator/operation.h
         include/calculator/register.h
 )
@@ -19,5 +19,5 @@ target_include_directories(calculator
 
 target_compile_features(calculator
         PUBLIC
-        cxx_std_14
+        cxx_std_11
 )
