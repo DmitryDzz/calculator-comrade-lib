@@ -73,11 +73,11 @@ using calculatorcomrade::Config;
 
 TEST_DUMP(DumpSize) {
     Calculator calc8(8);
-    int8_t dumpSize8 = calc8.exportDump(nullptr);
+    const uint8_t dumpSize8 = calc8.exportDump(nullptr);
     ASSERT_EQ(47, dumpSize8);
 
     Calculator calc12(12);
-    int8_t dumpSize12 = calc12.exportDump(nullptr);
+    const uint8_t dumpSize12 = calc12.exportDump(nullptr);
     ASSERT_EQ(59, dumpSize12);
 }
 
@@ -89,9 +89,9 @@ TEST_DUMP(ExportDump) {
 
     dumpSize = c.exportDump(dump);
     ASSERT_EQ(47, dumpSize);
-    ASSERT_EQ((uint8_t) Config::DUMP_VERSION, dump[0]);
+    ASSERT_EQ(static_cast<uint8_t>(Config::DUMP_VERSION), dump[0]);
     ASSERT_EQ(dumpSize, dump[1]);
-    ASSERT_EQ((uint8_t) Config::OPTIONS_DEFAULT, dump[3]);
+    ASSERT_EQ(static_cast<uint8_t>(Config::OPTIONS_DEFAULT), dump[3]);
     for (uint8_t i = 4; i < dumpSize; i++) {
         ASSERT_EQ(0, dump[i]);
     }
@@ -100,7 +100,7 @@ TEST_DUMP(ExportDump) {
 TEST_DUMP(CheckDump) {
     Calculator c(8);
 
-    uint8_t dumpSize = c.exportDump(nullptr);
+    const uint8_t dumpSize = c.exportDump(nullptr);
     auto* dump = new uint8_t[dumpSize];
 
     c.input(Button::d2);
@@ -114,7 +114,7 @@ TEST_DUMP(CheckDump) {
     c.input(Button::equals);
     ASSERT_EQ(6, getIntValue(c.getX()));
 
-    uint8_t importedSize = c.importDump(dump, dumpSize);
+    const uint8_t importedSize = c.importDump(dump, dumpSize);
     ASSERT_EQ(dumpSize, importedSize);
 
     c.input(Button::d5);

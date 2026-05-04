@@ -42,6 +42,7 @@ extern "C" HRES DisposeCalculator(const HCALC hCalc) {
 }
 
 extern "C" void DisposeAll() {
+    // ReSharper disable once CppUseStructuredBinding
     for (const auto &g_instance : g_instances)
         delete g_instance.second;
 

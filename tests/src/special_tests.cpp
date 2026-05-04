@@ -81,7 +81,7 @@ TEST_SPECIAL(RegisterYChanged) {
 
 TEST_SPECIAL(CeAndCeCaCompatibility) {
     Calculator c(8);
-    Register &x = c.getX();
+    const Register &x = c.getX();
 
     for (int8_t i = 0; i < 8; i++)
         c.input(Button::d9);

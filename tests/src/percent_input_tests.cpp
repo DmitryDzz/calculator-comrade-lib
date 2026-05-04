@@ -8,7 +8,6 @@
 
 #include "calculator/calculator.h"
 #include "calculator/button.h"
-#include "calculator/operation.h"
 #include "calc_helper.h"
 
 using namespace calculatorcomrade;

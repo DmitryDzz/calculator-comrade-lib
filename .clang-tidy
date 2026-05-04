@@ -13,7 +13,8 @@ Checks: >
   -readability-use-std-min-max,
   -readability-braces-around-statements,
   -readability-function-cognitive-complexity,
-  -readability-identifier-length
+  -readability-identifier-length,
+  -readability-use-if-init
 WarningsAsErrors: ''
 HeaderFilterRegex: '.*'
 FormatStyle: none

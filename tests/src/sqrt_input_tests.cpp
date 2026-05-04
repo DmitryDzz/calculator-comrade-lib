@@ -339,7 +339,7 @@ TEST_SQRT(SqrtAfterOperation) {
 TEST_SQRT(AfterSqrt1) {
     Calculator c(8);
     Register &x = c.getX();
-    Register &y = c.getY();
+    const Register &y = c.getY();
 
     c.input(Button::d4);
     c.input(Button::sqrt);
@@ -359,7 +359,7 @@ TEST_SQRT(AfterSqrt1) {
 TEST_SQRT(AfterSqrt2) {
     Calculator c(8);
     Register &x = c.getX();
-    Register &y = c.getY();
+    const Register &y = c.getY();
 
     c.input(Button::d8);
     c.input(Button::sqrt);

@@ -450,7 +450,7 @@ TEST_MEM(NoMemOnOverflow) {
 TEST_MEM(MemOverflow) {
     Calculator c(8);
     Register &x = c.getX();
-    Register &y = c.getY();
+    // Register &y = c.getY();
     Register &m = c.getM();
 
     for (int8_t i = 0; i < 8; i++)
@@ -502,8 +502,9 @@ void TestMemTruncatesX(Calculator &c) {
     c.input(Button::memPlus);
     ASSERT_FALSE(x.hasError());
 
-    uint8_t options = c.getOptions();
-    if (options & Config::OPTION_MEM_CAN_TRUNC_X) {
+    // ReSharper disable once CppTooWideScopeInitStatement
+    const CalcOptions options = c.getOptions();
+    if ((options & Config::OPTION_MEM_CAN_TRUNC_X) != 0) {
         ASSERT_TRUE(x.isZero());
     } else {
         ASSERT_EQ(1, getIntValue(x));
@@ -528,7 +529,7 @@ void TestMemTruncatesX(Calculator &c) {
 //      mr => mem 99999999
 TEST_MEM(MemTruncsX) {
     Calculator c(8);
-    uint8_t options = c.getOptions();
+    CalcOptions options = c.getOptions();
 
     options |= Config::OPTION_MEM_CAN_TRUNC_X;
     c.setOptions(options);

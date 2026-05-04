@@ -27,6 +27,11 @@ add_subdirectory(googletest EXCLUDE_FROM_ALL)
 
 add_executable(calculator_tests ${CALCULATOR_TEST_SOURCES})
 
+target_compile_features(calculator_tests
+        PRIVATE
+        cxx_std_17
+)
+
 set_target_properties(calculator_tests
         PROPERTIES
         OUTPUT_NAME tests

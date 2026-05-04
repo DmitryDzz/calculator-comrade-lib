@@ -39,8 +39,8 @@ namespace calculatorcomrade {
         }
 
         CalcInt getSize() const { return size_; }
-        uint8_t getOptions() const { return options_; }
-        void setOptions(const uint8_t options) { options_ = options; }
+        CalcOptions getOptions() const { return options_; }
+        void setOptions(const CalcOptions options) { options_ = options; }
         void setDisplayEventCallback(DisplayEventCallback callback);
         Register& getX() { return x_; }
         Register& getY() { return y_; }
@@ -65,7 +65,7 @@ namespace calculatorcomrade {
         /// \return the returned value should be equal to dumpSize. Possible error codes: 1 - wrong dump version, 0 or 2 - wrong dump size.
         uint8_t importDump(const uint8_t *dump, uint8_t dumpSize);
     private:
-        uint8_t options_;
+        CalcOptions options_;
         CalcInt size_;
         Register x_;
         Register y_;

@@ -14,6 +14,7 @@ using calculatorcomrade::Config;
 using calculatorcomrade::Register;
 using calculatorcomrade::Math;
 using calculatorcomrade::Operation;
+using calculatorcomrade::CalcOptions;
 
 #define TEST_MATH(test_name) TEST(TestMath, test_name)
 
@@ -138,7 +139,7 @@ TEST_MATH(AddOverflowTruncZeros) {
     Register r1(8);
     Register r2(8);
 
-    uint8_t options = Config::OPTIONS_DEFAULT | Config::OPTION_TRUNC_ZEROS_ON_OVERFLOW;
+    constexpr CalcOptions options = Config::OPTIONS_DEFAULT | Config::OPTION_TRUNC_ZEROS_ON_OVERFLOW;
 
     setValue(r1, 99999999);
     setValue(r2, 1);
@@ -159,7 +160,7 @@ TEST_MATH(AddOverflowDoNotTruncZeros) {
     Register r1(8);
     Register r2(8);
 
-    uint8_t options = Config::OPTIONS_DEFAULT & (~Config::OPTION_TRUNC_ZEROS_ON_OVERFLOW);
+    constexpr CalcOptions options = Config::OPTIONS_DEFAULT & ~Config::OPTION_TRUNC_ZEROS_ON_OVERFLOW;
 
     setValue(r1, 99999999);
     setValue(r2, 1);
@@ -278,7 +279,7 @@ TEST_MATH(SubOverflowTruncZeros) {
     Register r1(8);
     Register r2(8);
 
-    uint8_t options = Config::OPTIONS_DEFAULT | Config::OPTION_TRUNC_ZEROS_ON_OVERFLOW;
+    constexpr CalcOptions options = Config::OPTIONS_DEFAULT | Config::OPTION_TRUNC_ZEROS_ON_OVERFLOW;
 
     setValue(r1, -99999999);
     setValue(r2, 1);
@@ -299,7 +300,7 @@ TEST_MATH(SubOverflowDoNotTruncZeros) {
     Register r1(8);
     Register r2(8);
 
-    uint8_t options = Config::OPTIONS_DEFAULT & (~Config::OPTION_TRUNC_ZEROS_ON_OVERFLOW);
+    constexpr CalcOptions options = Config::OPTIONS_DEFAULT & ~Config::OPTION_TRUNC_ZEROS_ON_OVERFLOW;
 
     setValue(r1, -99999999);
     setValue(r2, 1);

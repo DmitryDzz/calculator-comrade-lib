@@ -12,13 +12,13 @@
 
 namespace calculatorcomrade {
 
-    int64_t getAbsIntValue(Register &r);
+    CalcInt getAbsIntValue(Register &r);
 
-    int64_t getIntValue(Register &r);
+    CalcInt getIntValue(Register &r);
 
-    void setValue(Register &r, int64_t value);
+    void setValue(Register &r, CalcInt value);
 
-    void setValue(Register &r, int64_t value, int8_t digitsAfterPoint);
+    void setValue(Register &r, CalcInt value, CalcInt digitsAfterPoint);
 
     void evaluateText(Register &r, std::string *output);
 }
