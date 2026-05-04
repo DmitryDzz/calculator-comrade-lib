@@ -7,10 +7,8 @@
 #ifndef CALCULATORCOMRADE_CALC_HELPER_HPP
 #define CALCULATORCOMRADE_CALC_HELPER_HPP
 
-#include <cstdint>
 #include <string>
 #include "calculator/register.h"
-#include "calculator/button.h"
 
 namespace calculatorcomrade {
 

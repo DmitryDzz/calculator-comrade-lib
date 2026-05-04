@@ -84,15 +84,15 @@ TEST_DUMP(DumpSize) {
 TEST_DUMP(ExportDump) {
     Calculator c(8);
 
-    int8_t dumpSize = c.exportDump(nullptr);
-    auto* dump = new int8_t[dumpSize];
+    uint8_t dumpSize = c.exportDump(nullptr);
+    auto* dump = new uint8_t[dumpSize];
 
     dumpSize = c.exportDump(dump);
     ASSERT_EQ(47, dumpSize);
-    ASSERT_EQ((int8_t) Config::DUMP_VERSION, dump[0]);
+    ASSERT_EQ((uint8_t) Config::DUMP_VERSION, dump[0]);
     ASSERT_EQ(dumpSize, dump[1]);
-    ASSERT_EQ((int8_t) Config::OPTIONS_DEFAULT, dump[3]);
-    for (int8_t i = 4; i < dumpSize; i++) {
+    ASSERT_EQ((uint8_t) Config::OPTIONS_DEFAULT, dump[3]);
+    for (uint8_t i = 4; i < dumpSize; i++) {
         ASSERT_EQ(0, dump[i]);
     }
 }
@@ -100,8 +100,8 @@ TEST_DUMP(ExportDump) {
 TEST_DUMP(CheckDump) {
     Calculator c(8);
 
-    int8_t dumpSize = c.exportDump(nullptr);
-    auto* dump = new int8_t[dumpSize];
+    uint8_t dumpSize = c.exportDump(nullptr);
+    auto* dump = new uint8_t[dumpSize];
 
     c.input(Button::d2);
     c.input(Button::plus);
@@ -114,7 +114,7 @@ TEST_DUMP(CheckDump) {
     c.input(Button::equals);
     ASSERT_EQ(6, getIntValue(c.getX()));
 
-    int8_t importedSize = c.importDump(dump, dumpSize);
+    uint8_t importedSize = c.importDump(dump, dumpSize);
     ASSERT_EQ(dumpSize, importedSize);
 
     c.input(Button::d5);

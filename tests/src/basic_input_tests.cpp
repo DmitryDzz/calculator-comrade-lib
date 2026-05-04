@@ -83,7 +83,6 @@ TEST_CALCULATOR_INPUT(ClearAll) {
     Register &x = c.getX();
     Register &y = c.getY();
 
-
     c.input(Button::minus);
     for (int8_t i = 0; i < 8; i++)
         c.input(Button::d9);
@@ -235,9 +234,9 @@ TEST_CALCULATOR_INPUT(CeCaAfterError) {
 
 TEST_CALCULATOR_INPUT(CeCaAfterEquals) {
     Calculator c(8);
-    Register &x = c.getX();
-    Register &y = c.getY();
-    Register &m = c.getM();
+    const Register &x = c.getX();
+    const Register &y = c.getY();
+    const Register &m = c.getM();
 
     c.input(Button::d2);
     c.input(Button::mul);
@@ -264,8 +263,8 @@ TEST_CALCULATOR_INPUT(CeCaAfterEquals) {
 
 TEST_CALCULATOR_INPUT(CeCaAfterOperation) {
     Calculator c(8);
-    Register &x = c.getX();
-    Register &y = c.getY();
+    const Register &x = c.getX();
+    const Register &y = c.getY();
 
     c.input(Button::d2);
     c.input(Button::mul);
@@ -277,7 +276,7 @@ TEST_CALCULATOR_INPUT(CeCaAfterOperation) {
 
 TEST_CALCULATOR_INPUT(ZeroTyping) {
     Calculator c(4);
-    Register defaultRegister(4);
+    const Register defaultRegister(4);
     for (int i = 0; i < 10; i++) {
         c.input(Button::d0);
         ASSERT_EQ(defaultRegister, c.getX());
@@ -302,7 +301,7 @@ TEST_CALCULATOR_INPUT(ZeroTypingAfterPoint) {
 TEST_CALCULATOR_INPUT(PositiveInt) {
     Calculator c(4);
     Register expected(4);
-    Register& x = c.getX();
+    const Register& x = c.getX();
 
     c.input(Button::d1);
     expected.setDigit(0, 1);
@@ -333,7 +332,7 @@ TEST_CALCULATOR_INPUT(PositiveInt) {
 TEST_CALCULATOR_INPUT(NegativeInt) {
     Calculator c(4);
     Register expected(4);
-    Register& x = c.getX();
+    const Register& x = c.getX();
 
     c.input(Button::minus);
     ASSERT_EQ(expected, x);

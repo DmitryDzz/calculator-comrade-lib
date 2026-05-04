@@ -4,10 +4,6 @@
  * Author: Dmitry Dzakhov
  * Email: info@robot-mitya.ru
  */
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunknown-pragmas"
-#pragma ide diagnostic ignored "OCUnusedGlobalDeclarationInspection"
-
 #include <limits>
 #include <map>
 
@@ -21,8 +17,8 @@ HCALC g_calc_hnd = 0;
 #define CALCULATOR(pCalculator) (*((Calculator *)pCalculator))
 #define DISPLAY_REGISTER(pCalculator) (CALCULATOR(pCalculator).getX())
 
-Calculator* findInstance(HCALC hCalc) {
-    auto it = g_instances.find(hCalc);
+Calculator* findInstance(const HCALC hCalc) {
+    const auto it = g_instances.find(hCalc);
     if (it == g_instances.end())
         return nullptr;
     return it->second;
@@ -37,7 +33,7 @@ extern "C" HRES CreateCalculator(const int8_t digits, const uint8_t options, HCA
 }
 
 extern "C" HRES DisposeCalculator(const HCALC hCalc) {
-    auto it = g_instances.find(hCalc);
+    const auto it = g_instances.find(hCalc);
     if (it == g_instances.end())
         return HRES_ERR_NO_INSTANCE;
     delete it->second;
@@ -46,7 +42,7 @@ extern "C" HRES DisposeCalculator(const HCALC hCalc) {
 }
 
 extern "C" void DisposeAll() {
-    for (auto &g_instance : g_instances)
+    for (const auto &g_instance : g_instances)
         delete g_instance.second;
 
     g_instances.clear();
@@ -94,7 +90,7 @@ extern "C" HRES GetError(const HCALC hCalc, bool *hasError) {
 }
 
 extern "C" HRES GetMemory(const HCALC hCalc, bool *memoryHasValue) {
-    Calculator* calculator = findInstance(hCalc);
+    const Calculator* calculator = findInstance(hCalc);
     if (calculator == nullptr)
         return HRES_ERR_NO_INSTANCE;
     *memoryHasValue = calculator->memHasValue();
@@ -125,7 +121,7 @@ extern "C" HRES GetDisplayDigit(const HCALC hCalc, const int8_t index, int8_t *d
     return HRES_OK;
 }
 
-extern "C" HRES ExportDump(const HCALC hCalc, int8_t *dump, int8_t *dumpSize) {
+extern "C" HRES ExportDump(const HCALC hCalc, uint8_t *dump, uint8_t *dumpSize) {
     Calculator* calculator = findInstance(hCalc);
     if (calculator == nullptr)
         return HRES_ERR_NO_INSTANCE;
@@ -133,16 +129,14 @@ extern "C" HRES ExportDump(const HCALC hCalc, int8_t *dump, int8_t *dumpSize) {
     return HRES_OK;
 }
 
-extern "C" HRES ImportDump(const HCALC hCalc, int8_t *dump, const int8_t dumpSize) {
+extern "C" HRES ImportDump(const HCALC hCalc, const uint8_t *dump, const uint8_t dumpSize) {
     Calculator* calculator = findInstance(hCalc);
     if (calculator == nullptr)
         return HRES_ERR_NO_INSTANCE;
-    int8_t importedSize = calculator->importDump(dump, dumpSize);
+    const uint8_t importedSize = calculator->importDump(dump, dumpSize);
     if (importedSize == dumpSize)
         return HRES_OK;
     if (importedSize == 1)
         return HRES_ERR_WRONG_DUMP_VERSION;
     return HRES_ERR_WRONG_DUMP_SIZE;
 }
-
-#pragma clang diagnostic pop

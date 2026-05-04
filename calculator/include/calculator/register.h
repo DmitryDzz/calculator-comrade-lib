@@ -9,13 +9,17 @@
 
 #include <cassert>
 
+#include "calculator/types.h"
 #include "calculator/config.h"
 
-#define SM1 ((int8_t)-1)
-#define S0 ((int8_t)0)
-#define S1 ((int8_t)1)
-
 namespace calculatorcomrade {
+    constexpr CalcInt SM1 = -1;
+    constexpr CalcInt S0 = 0;
+    constexpr CalcInt S1 = 1;
+    constexpr CalcInt S2 = 2;
+    constexpr CalcInt S9 = 9;
+    constexpr CalcInt S10 = 10;
+
     class Register;
 
     using RegisterChangedCallback = void(*)(Register &r);
@@ -23,7 +27,7 @@ namespace calculatorcomrade {
     class Register {
     public:
         Register() = delete;
-        explicit Register(const int8_t size) : size_(size) {
+        explicit Register(const CalcInt size) : size_(size) {
             assert(size > 0);
             clearInternal();
         }
@@ -33,16 +37,17 @@ namespace calculatorcomrade {
             notify();
         }
 
-        int8_t getSize() const {
+        CalcInt getSize() const {
             return size_;
         }
 
         void set(const Register& rhs) {
             clearInternal();
-            int8_t size = size_ >= rhs.size_ ? rhs.size_ : size_;
+            const CalcInt size = size_ >= rhs.size_ ? rhs.size_ : size_;
             assert(size > 0);
-            for (int8_t i = 0; i < size; i++)
+            for (CalcInt i = 0; i < size; i++) {
                 data_[i] = rhs.data_[i];
+            }
             pointPos_ = rhs.pointPos_;
             negative_ = rhs.negative_;
             hasError_ = rhs.hasError_;
@@ -56,22 +61,21 @@ namespace calculatorcomrade {
             assert(!rhs.hasOverflow_);
             clearInternal();
             if (size_ < rhs.size_) {
-                int8_t firstSrcIndex = 0;
-                for (int8_t i = rhs.size_ - S1; i >= 0; i--) {
+                CalcInt firstSrcIndex = 0;
+                for (CalcInt i = rhs.size_ - S1; i >= 0; i--) {
                     if (rhs.data_[i] != 0) {
                         firstSrcIndex = i;
                         break;
                     }
                 }
-                int8_t srcPointPos = rhs.pointPos_;
+                const CalcInt srcPointPos = rhs.pointPos_;
                 if (srcPointPos > firstSrcIndex)
                     firstSrcIndex = srcPointPos;
-
-                int8_t firstDstIndex = firstSrcIndex < size_ ? firstSrcIndex : size_ - S1;
-                int8_t srcIndex = firstSrcIndex;
-                int8_t dstIndex = firstDstIndex;
-                int8_t dstPointPos = -S1;
-                for (int8_t i = 0; i < size_; i++) { // (maximum size_ iterations)
+                const CalcInt firstDstIndex = firstSrcIndex < size_ ? firstSrcIndex : size_ - S1;
+                CalcInt srcIndex = firstSrcIndex;
+                CalcInt dstIndex = firstDstIndex;
+                CalcInt dstPointPos = -S1;
+                for (CalcInt i = 0; i < size_; i++) { // (maximum size_ iterations)
                     data_[dstIndex] = rhs.data_[srcIndex];
                     if (srcPointPos == srcIndex) {
                         pointPos_ = dstIndex;
@@ -89,8 +93,8 @@ namespace calculatorcomrade {
                 }
                 negative_ = rhs.negative_;
             } else {
-                int8_t size = rhs.size_;
-                for (int8_t i = 0; i < size; i++)
+                const CalcInt size = rhs.size_;
+                for (CalcInt i = 0; i < size; i++)
                     data_[i] = rhs.data_[i];
                 pointPos_ = rhs.pointPos_;
                 negative_ = rhs.negative_;
@@ -118,86 +122,85 @@ namespace calculatorcomrade {
             return isZero(false);
         }
 
-        bool isZero(bool ignorePointPos) const {
-            for (int8_t i = 0; i < size_; i++)
+        bool isZero(const bool ignorePointPos) const {
+            for (CalcInt i = 0; i < size_; i++)
                 if (data_[i] > 0)
                     return false;
             return ignorePointPos ? true : pointPos_ == 0;
         }
 
-        bool operator==(const Register& other) {
+        bool operator==(const Register& other) const {
             return isEqual(*this, other);
         }
 
-        bool operator!=(const Register& other) {
+        bool operator!=(const Register& other) const {
             return !isEqual(*this, other);
         }
 
-
-        inline int8_t& getDigit(const int8_t index) {
+        CalcDigit& getDigit(const CalcInt index) {
             return data_[index];
-        };
+        }
 
-        inline const int8_t& getDigit(const int8_t index) const {
+        const CalcDigit& getDigit(const CalcInt index) const {
             return data_[index];
-        };
+        }
 
-        inline int8_t getDisplayDigit(const int8_t index) const {
+        CalcDigit getDisplayDigit(const CalcInt index) const {
             if (data_[index] > 0 || pointPos_ >= index) return data_[index];
 
             bool hasNonZeroDigitsToTheRight = false;
-            for (int8_t i = index + S1; i < size_; i++) {
+            for (CalcInt i = index + S1; i < size_; i++) {
                 hasNonZeroDigitsToTheRight = data_[i] > 0;
                 if (hasNonZeroDigitsToTheRight) break;
             }
-            return hasNonZeroDigitsToTheRight ? S0 : SM1;
-        };
+            return static_cast<CalcDigit>(hasNonZeroDigitsToTheRight ? S0 : SM1);
+        }
 
-        inline void setDigit(const int8_t index, const int8_t value) {
+        void setDigit(const CalcInt index, const CalcDigit value) {
             data_[index] = value;
             notify();
         }
 
-        inline void incDigit(const int8_t index, const int8_t delta) {
-            int8_t digit = data_[index] + delta;
-            setDigit(index, digit);
+        void incDigit(const CalcInt index, const CalcDigit delta) {
+            const CalcInt digit = data_[index] + delta;
+            setDigit(index, static_cast<CalcDigit>(digit));
         }
 
-        inline int8_t getPointPos() const {
+        CalcInt getPointPos() const {
             return pointPos_;
         }
 
-        inline void setPointPos(const int8_t value) {
+        void setPointPos(const CalcInt value) {
             pointPos_ = value;
             notify();
         }
 
-        inline void incPointPos(const int8_t delta) {
+        void incPointPos(const CalcInt delta) {
             setPointPos(pointPos_ + delta);
         }
 
-        inline bool isNegative() const {
+        bool isNegative() const {
             return negative_;
         }
 
-        inline void setNegative(const bool value) {
+        void setNegative(const bool value) {
             negative_ = isZero(true) ? false : value;
             notify();
         }
 
-        inline void switchNegative() {
+        void switchNegative() {
             setNegative(!negative_);
         }
 
-        inline bool hasError() const {
+        bool hasError() const {
             return hasError_;
         }
 
-        inline bool hasOverflow() const {
+        bool hasOverflow() const {
             return hasOverflow_;
         }
 
-        inline void setError(const bool hasError, const bool hasOverflow) {
+        void setError(const bool hasError, const bool hasOverflow) {
             hasError_ = hasError;
             hasOverflow_ = hasOverflow;
             notify();
@@ -206,7 +209,7 @@ namespace calculatorcomrade {
         static bool isEqual(const Register& lhs, const Register& rhs) {
             if (lhs.size_ != rhs.size_)
                 return false;
-            for (int8_t i = 0; i < lhs.size_; i++)
+            for (CalcInt i = 0; i < lhs.size_; i++)
                 if (lhs.data_[i] != rhs.data_[i])
                     return false;
             return lhs.pointPos_ == rhs.pointPos_ &&
@@ -215,9 +218,9 @@ namespace calculatorcomrade {
                    lhs.hasOverflow_ == rhs.hasOverflow_;
         }
     private:
-        int8_t size_;
-        int8_t data_[Config::MAX_SIZE * 2]{}; // *2 in case r*r
-        int8_t pointPos_ = 0;
+        CalcInt size_;
+        CalcDigit data_[Config::MAX_SIZE * 2]{}; // *2 in case r*r
+        CalcInt pointPos_ = 0;
         bool negative_ = false;
         bool hasError_ = false;
         bool hasOverflow_ = false;
@@ -235,7 +238,7 @@ namespace calculatorcomrade {
         }
 
         void clearInternal() {
-            for (int8_t i = 0; i < size_; i++)
+            for (CalcInt i = 0; i < size_; i++)
                 data_[i] = 0;
             pointPos_ = 0;
             negative_ = false;
@@ -244,13 +247,13 @@ namespace calculatorcomrade {
         }
     };
 
-    inline bool operator==(const Register& lhs, const Register& rhs) {
-        return Register::isEqual(lhs, rhs);
-    }
-
-    inline bool operator!=(const Register& lhs, const Register& rhs) {
-        return !Register::isEqual(lhs, rhs);
-    }
+    // inline bool operator==(const Register& lhs, const Register& rhs) {
+    //     return Register::isEqual(lhs, rhs);
+    // }
+    //
+    // inline bool operator!=(const Register& lhs, const Register& rhs) {
+    //     return !Register::isEqual(lhs, rhs);
+    // }
 }
 
 #endif //CALCULATORCOMRADE_REGISTER_H

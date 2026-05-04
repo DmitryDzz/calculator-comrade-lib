@@ -4,10 +4,6 @@
  * Author: Dmitry Dzakhov
  * Email: info@robot-mitya.ru
  */
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunknown-pragmas"
-#pragma ide diagnostic ignored "OCUnusedGlobalDeclarationInspection"
-
 #ifndef CALCULATORCOMRADE_MAIN_H
 #define CALCULATORCOMRADE_MAIN_H
 
@@ -18,10 +14,10 @@ using calculatorcomrade::Calculator;
 using calculatorcomrade::DisplayEventCallback;
 using calculatorcomrade::Button;
 
-typedef uint8_t HCALC;
-typedef int8_t HRES;
+using HCALC = uint8_t;
+using HRES = int8_t;
 
-typedef std::map<HCALC, Calculator*> InstancesMap;
+using InstancesMap = std::map<HCALC, Calculator*>;
 
 #define HRES_OK ((HRES)0)
 #define HRES_ERR_NO_INSTANCE ((HRES)-1)
@@ -56,15 +52,13 @@ extern "C" HRES GetDisplayDigit(HCALC hCalc, int8_t index, int8_t *digit);
 /// \param dump [input/output param] dump pointer, nullable.
 /// \param dumpSize [output param] dump size.
 /// \return HRES.
-extern "C" HRES ExportDump(HCALC hCalc, int8_t *dump, int8_t *dumpSize);
+extern "C" HRES ExportDump(HCALC hCalc, uint8_t *dump, uint8_t *dumpSize);
 
 /// Sets calculator's state to recently saved by exportDump method.
 /// \param hCalc [input param] instance identifier.
 /// \param dump [input param] dump pointer, nullable.
 /// \param dumpSize [input param] dump size.
 /// \return HRES.
-extern "C" HRES ImportDump(HCALC hCalc, int8_t *dump, int8_t dumpSize);
+extern "C" HRES ImportDump(HCALC hCalc, const uint8_t *dump, uint8_t dumpSize);
 
 #endif //CALCULATORCOMRADE_MAIN_H
-
-#pragma clang diagnostic pop

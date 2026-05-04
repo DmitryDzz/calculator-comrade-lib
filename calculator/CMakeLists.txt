@@ -2,6 +2,7 @@ set(CALCULATOR_SOURCES
         src/calculator.cpp
         src/math.cpp
 
+        include/calculator/types.h
         include/calculator/button.h
         include/calculator/calculator.h
         include/calculator/config.h

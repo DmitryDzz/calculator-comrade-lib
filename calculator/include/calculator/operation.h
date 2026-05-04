@@ -9,7 +9,7 @@
 
 namespace calculatorcomrade {
 
-    enum class Operation {
+    enum class Operation : uint8_t {
         add,
         sub,
         mul,

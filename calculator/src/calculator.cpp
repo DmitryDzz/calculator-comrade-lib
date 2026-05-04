@@ -4,14 +4,10 @@
  * Author: Dmitry Dzakhov
  * Email: info@robot-mitya.ru
  */
-#include <calculator/calculator.h>
 #include <string>
-#include <locale>
 
 #include "calculator/calculator.h"
 #include "calculator/math.h"
-
-#define S1 ((int8_t)1)
 
 using calculatorcomrade::Button;
 using calculatorcomrade::Calculator;
@@ -49,7 +45,16 @@ void Calculator::input(Button button) {
 
     bool isNumberOrPoint = false;
     switch (button) {
-        case Button::d0 ... Button::d9:
+        case Button::d0:
+        case Button::d1:
+        case Button::d2:
+        case Button::d3:
+        case Button::d4:
+        case Button::d5:
+        case Button::d6:
+        case Button::d7:
+        case Button::d8:
+        case Button::d9:
         case Button::point:
         case Button::memR:
         case Button::memRC:
@@ -62,7 +67,16 @@ void Calculator::input(Button button) {
     }
 
     switch (button) {
-        case Button::d0 ... Button::d9:
+        case Button::d0:
+        case Button::d1:
+        case Button::d2:
+        case Button::d3:
+        case Button::d4:
+        case Button::d5:
+        case Button::d6:
+        case Button::d7:
+        case Button::d8:
+        case Button::d9:
         case Button::point:
             if (inNumber_ && inputSize_ == 0 && !inputHasPoint_) {
                 x_.clear();
@@ -103,11 +117,20 @@ void Calculator::input(Button button) {
             clearEntry();
             break;
         case Button::ceca:
-            if (!(hasOperation_ && inNumber_) || (button == lastButton_) || lastButtonWasCe_) clearAll();
+            if (!(hasOperation_ && inNumber_) || button == lastButton_ || lastButtonWasCe_) clearAll();
             else clearEntry();
             break;
-        case Button::d0 ... Button::d9:
-            inputDigit((int8_t)button - (int8_t)Button::d0);
+        case Button::d0:
+        case Button::d1:
+        case Button::d2:
+        case Button::d3:
+        case Button::d4:
+        case Button::d5:
+        case Button::d6:
+        case Button::d7:
+        case Button::d8:
+        case Button::d9:
+            inputDigit(static_cast<CalcDigit>(static_cast<CalcInt>(button) - static_cast<CalcInt>(Button::d0)));
             break;
         case Button::point:
             inputPoint();
@@ -198,7 +221,7 @@ void Calculator::clearInput() {
     inputHasPoint_ = false;
 }
 
-void Calculator::inputDigit(int8_t digit) {
+void Calculator::inputDigit(const CalcDigit digit) {
     if (digit == 0 && !inputHasPoint_ && inputSize_ == 0) return;
     if (inputSize_ >= size_ || x_.getPointPos() == size_ - 1) return;
     shiftLeftOnInput();
@@ -215,7 +238,7 @@ void Calculator::inputPoint() {
 void Calculator::shiftLeftOnInput() {
     if (size_ == 0 || inputSize_ >= size_) return;
     if (inputSize_ > 0) {
-        for (int8_t i = 0; i < inputSize_; i++)
+        for (CalcInt i = 0; i < inputSize_; i++)
             x_.setDigit(inputSize_ - i, x_.getDigit(inputSize_ - i - S1));
         x_.setDigit(0, 0);
     }
@@ -254,7 +277,7 @@ void Calculator::calculateAddSubMulDiv() {
         lastButton_ == Button::div ||
         lastButton_ == Button::mu) return;
 
-    Operation op = operation_;
+    const Operation op = operation_;
     if (op == Operation::add || op == Operation::sub || op == Operation::div) {
         exchangeXY();
     }
@@ -266,7 +289,7 @@ void Calculator::calculateAddSubMulDiv() {
 }
 
 void Calculator::calculateEquals() {
-    Operation op = operation_;
+    const Operation op = operation_;
 
     // MU operator ugly patch.
     if (op == Operation::mu) {
@@ -292,7 +315,7 @@ void Calculator::calculateEquals() {
 }
 
 void Calculator::calculatePercent() {
-    Operation op = operation_;
+    const Operation op = operation_;
     if (hasOperation_) {
         if (op == Operation::add || op == Operation::sub || op == Operation::div || op == Operation ::mu) {
             exchangeXY();
@@ -330,7 +353,7 @@ void Calculator::memPlusOrMinus(const Operation memOperation) {
 
     Register acc(m_.getSize());
     acc.set(m_);
-    if (options_ & Config::OPTION_MEM_CAN_TRUNC_X) {
+    if ((options_ & Config::OPTION_MEM_CAN_TRUNC_X) != 0x00) {
         Math::calculate(acc, x_, memOperation, options_);
     } else {
         Register xT(x_.getSize());
@@ -352,7 +375,7 @@ void Calculator::exchangeXY() {
     y_.set(tmp);
 }
 
-bool Calculator::memHasValue() {
+bool Calculator::memHasValue() const {
     return !m_.isZero();
 }
 
@@ -368,8 +391,8 @@ void Calculator::memRestore()
     x_.set(m_);
 }
 
-int8_t Calculator::exportDump(int8_t *dump) {
-    int8_t index = 0;
+uint8_t Calculator::exportDump(uint8_t *dump) {
+    CalcInt index = 0;
 
     // Header:
     writeToDump(dump, index++, Config::DUMP_VERSION); // dump version
@@ -378,16 +401,16 @@ int8_t Calculator::exportDump(int8_t *dump) {
     // Body:
     writeToDump(dump, index++, size_);
     writeToDump(dump, index++, options_);
-    writeToDump(dump, index++, static_cast<int8_t>(operation_));
+    writeToDump(dump, index++, static_cast<uint8_t>(operation_));
     writeToDump(dump, index++, hasOperation_ ? 1 : 0);
     writeToDump(dump, index++, inNumber_ ? 1 : 0);
     writeToDump(dump, index++, inputSize_);
     writeToDump(dump, index++, inputHasPoint_ ? 1 : 0);
-    writeToDump(dump, index++, static_cast<int8_t>(lastButton_));
+    writeToDump(dump, index++, static_cast<uint8_t>(lastButton_));
     writeToDump(dump, index++, lastButtonWasCe_ ? 1 : 0);
 
     // Register X:
-    for (int8_t i = 0; i < size_; i++) {
+    for (CalcInt i = 0; i < size_; i++) {
         writeToDump(dump, index++, x_.getDigit(i));
     }
     writeToDump(dump, index++, x_.getPointPos());
@@ -396,7 +419,7 @@ int8_t Calculator::exportDump(int8_t *dump) {
     writeToDump(dump, index++, x_.hasOverflow() ? 1 : 0);
 
     // Register Y:
-    for (int8_t i = 0; i < size_; i++) {
+    for (CalcInt i = 0; i < size_; i++) {
         writeToDump(dump, index++, y_.getDigit(i));
     }
     writeToDump(dump, index++, y_.getPointPos());
@@ -405,7 +428,7 @@ int8_t Calculator::exportDump(int8_t *dump) {
     writeToDump(dump, index++, y_.hasOverflow() ? 1 : 0);
 
     // Register M:
-    for (int8_t i = 0; i < size_; i++) {
+    for (CalcInt i = 0; i < size_; i++) {
         writeToDump(dump, index++, m_.getDigit(i));
     }
     writeToDump(dump, index++, m_.getPointPos());
@@ -416,25 +439,25 @@ int8_t Calculator::exportDump(int8_t *dump) {
     return index;
 }
 
-int8_t Calculator::importDump(const int8_t *dump, int8_t dumpSize) {
-    int8_t index = 0;
+uint8_t Calculator::importDump(const uint8_t *dump, const uint8_t dumpSize) {
+    CalcInt index = 0;
     if (dumpSize < 2) return index;
     if (dump[index++] != Config::DUMP_VERSION) return index;
     if (dump[index++] != getDumpSize()) return index;
 
     size_ = dump[index++];
     options_ = dump[index++];
-    operation_ = (Operation) dump[index++];
+    operation_ = static_cast<Operation>(dump[index++]);
     hasOperation_ = dump[index++] == 1;
     inNumber_ = dump[index++] == 1;
     inputSize_ = dump[index++];
     inputHasPoint_ = dump[index++] == 1;
-    lastButton_ = (Button) dump[index++];
+    lastButton_ = static_cast<Button>(dump[index++]);
     lastButtonWasCe_ = dump[index++] == 1;
 
     // Register X:
-    for (int8_t i = 0; i < size_; i++) {
-        x_.setDigit(i, dump[index++]);
+    for (CalcInt i = 0; i < size_; i++) {
+        x_.setDigit(i, static_cast<CalcDigit>(dump[index++]));
     }
     x_.setPointPos(dump[index++]);
     x_.setNegative(dump[index++] == 1);
@@ -443,8 +466,8 @@ int8_t Calculator::importDump(const int8_t *dump, int8_t dumpSize) {
     x_.setError(hasError, hasOverflow);
 
     // Register Y:
-    for (int8_t i = 0; i < size_; i++) {
-        y_.setDigit(i, dump[index++]);
+    for (CalcInt i = 0; i < size_; i++) {
+        y_.setDigit(i, static_cast<CalcDigit>(dump[index++]));
     }
     y_.setPointPos(dump[index++]);
     y_.setNegative(dump[index++] == 1);
@@ -453,8 +476,8 @@ int8_t Calculator::importDump(const int8_t *dump, int8_t dumpSize) {
     y_.setError(hasError, hasOverflow);
 
     // Register M:
-    for (int8_t i = 0; i < size_; i++) {
-        m_.setDigit(i, dump[index++]);
+    for (CalcInt i = 0; i < size_; i++) {
+        m_.setDigit(i, static_cast<CalcDigit>(dump[index++]));
     }
     m_.setPointPos(dump[index++]);
     m_.setNegative(dump[index++] == 1);
@@ -465,12 +488,19 @@ int8_t Calculator::importDump(const int8_t *dump, int8_t dumpSize) {
     return index;
 }
 
-void Calculator::writeToDump(int8_t *dump, int8_t index, int8_t value) {
+void Calculator::writeToDump(uint8_t *dump, const uint8_t index, const uint8_t value) {
     if (dump != nullptr) {
         dump[index] = value;
     }
 }
 
-int8_t Calculator::getDumpSize() {
-    return 11 + 3 * (4 + size_);
+uint8_t Calculator::getDumpSize() const {
+    constexpr CalcInt headerSize = 11;
+    constexpr CalcInt numberOfRegisters = 3;
+    constexpr CalcInt registerFlagsSize = 4;
+
+    const CalcInt allRegistersDumpSize = numberOfRegisters * (registerFlagsSize + size_);
+    const CalcInt dumpSize = headerSize + allRegistersDumpSize;
+
+    return static_cast<uint8_t>(dumpSize);
 }
