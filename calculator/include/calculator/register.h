@@ -23,9 +23,8 @@ namespace calculatorcomrade {
     class Register {
     public:
         Register() = delete;
-        explicit Register(int8_t size) : size_(size) {
+        explicit Register(const int8_t size) : size_(size) {
             assert(size > 0);
-            data_ = new int8_t[size]();
             clearInternal();
         }
 
@@ -34,7 +33,7 @@ namespace calculatorcomrade {
             notify();
         }
 
-        inline int8_t getSize() const {
+        int8_t getSize() const {
             return size_;
         }
 
@@ -217,7 +216,7 @@ namespace calculatorcomrade {
         }
     private:
         int8_t size_;
-        int8_t* data_;
+        int8_t data_[Config::MAX_SIZE * 2]{}; // *2 in case r*r
         int8_t pointPos_ = 0;
         bool negative_ = false;
         bool hasError_ = false;
