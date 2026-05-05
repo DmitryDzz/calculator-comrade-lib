@@ -3,10 +3,12 @@ set(CALCULATOR_SOURCES
         src/math.cpp
 
         include/calculator/types.h
+        include/calculator/button_codes.h
         include/calculator/button.h
         include/calculator/calculator.h
         include/calculator/config.h
         include/calculator/math.h
+        include/calculator/operation_codes.h
         include/calculator/operation.h
         include/calculator/register.h
 )

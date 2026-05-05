@@ -40,6 +40,8 @@ This layer is intended for integration scenarios where a plain C-compatible inte
 
 Unlike the core, this layer may use heavier C++ facilities internally, such as STL containers and dynamic allocation. It is not the recommended layer for very small microcontrollers.
 
+The C API is not thread-safe. Calls that create, dispose, or use calculator instances must be externally synchronized if they can be made from multiple threads.
+
 ## Getting started
 
 The project uses CMake Presets for configuring and building the library.
@@ -242,6 +244,12 @@ build/linux-x64-release
 build/android-arm64-debug
 build/wasm-debug
 ```
+
+## Build options
+
+- `BUILD_TESTING=ON/OFF` – builds unit tests.
+- `CALCULATOR_BUILD_LIB=ON/OFF` – builds the C-style wrapper library.
+- `BUILD_SHARED_LIBS=ON/OFF` – builds shared/static libraries where applicable.
 
 ## Host build scripts
 

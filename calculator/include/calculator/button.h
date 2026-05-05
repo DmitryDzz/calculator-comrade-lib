@@ -7,38 +7,40 @@
 #ifndef CALCULATORCOMRADE_BUTTON_H
 #define CALCULATORCOMRADE_BUTTON_H
 
+#include "calculator/button_codes.h"
+
 namespace calculatorcomrade {
 
     enum class Button : uint8_t {
-        none,
-        ca,         // clear all
-        ce,         // clear entry
-        ceca,       // clear entry, clear all
-        d0,
-        d1,
-        d2,
-        d3,
-        d4,
-        d5,
-        d6,
-        d7,
-        d8,
-        d9,
-        point,
-        plus,
-        minus,
-        changeSign,
-        mul,
-        div,
-        mu,
-        sqrt,
-        percent,
-        equals,
-        memPlus,    // M+
-        memMinus,   // M-
-        memR,       // memory restore
-        memC,       // memory clean
-        memRC       // memory restore, memory clean
+        none = CALC_BUTTON_NONE,
+        ca = CALC_BUTTON_CA,                // clear all
+        ce = CALC_BUTTON_CE,                // clear entry
+        ceca = CALC_BUTTON_CECA,            // clear entry, clear all
+        d0 = CALC_BUTTON_D0,
+        d1 = CALC_BUTTON_D1,
+        d2 = CALC_BUTTON_D2,
+        d3 = CALC_BUTTON_D3,
+        d4 = CALC_BUTTON_D4,
+        d5 = CALC_BUTTON_D5,
+        d6 = CALC_BUTTON_D6,
+        d7 = CALC_BUTTON_D7,
+        d8 = CALC_BUTTON_D8,
+        d9 = CALC_BUTTON_D9,
+        point = CALC_BUTTON_POINT,
+        plus = CALC_BUTTON_PLUS,
+        minus = CALC_BUTTON_MINUS,
+        changeSign = CALC_BUTTON_CHANGESIGN,
+        mul = CALC_BUTTON_MUL,
+        div = CALC_BUTTON_DIV,
+        mu = CALC_BUTTON_MU,
+        sqrt = CALC_BUTTON_SQRT,
+        percent = CALC_BUTTON_PERCENT,
+        equals = CALC_BUTTON_EQUALS,
+        memPlus = CALC_BUTTON_MEMPLUS,      // M+
+        memMinus = CALC_BUTTON_MEMMINUS,    // M-
+        memR = CALC_BUTTON_MEMR,            // memory restore
+        memC = CALC_BUTTON_MEMC,            // memory clean
+        memRC = CALC_BUTTON_MEMRC           // memory restore, memory clean
     };
 }
 

@@ -19,3 +19,9 @@ target_compile_features(calculator_lib
         PUBLIC
         cxx_std_11
 )
+
+if(BUILD_SHARED_LIBS)
+    target_compile_definitions(calculator_lib PRIVATE CALCULATOR_LIB_BUILD)
+else()
+    target_compile_definitions(calculator_lib PUBLIC CALCULATOR_LIB_STATIC)
+endif()
