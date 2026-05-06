@@ -10,37 +10,47 @@
 
 TEST(TestLibCalcApi, TwoCalculators) {
     HCALC calc1;
-    CalculatorResult hr = CreateCalculator(8, 0, &calc1);
-    ASSERT_EQ(CALC_OK, hr);
+    CalculatorResult result = CreateCalculator(8, 0, &calc1);
+    ASSERT_EQ(CALC_OK, result);
     HCALC calc2;
-    hr = CreateCalculator(12, 0, &calc2);
-    ASSERT_EQ(CALC_OK, hr);
+    result = CreateCalculator(12, 0, &calc2);
+    ASSERT_EQ(CALC_OK, result);
 
     uint8_t size1;
-    hr = GetSize(calc1, &size1);
-    ASSERT_EQ(CALC_OK, hr);
+    result = GetSize(calc1, &size1);
+    ASSERT_EQ(CALC_OK, result);
     ASSERT_EQ(8, size1);
 
     uint8_t size2;
-    hr = GetSize(calc2, &size2);
-    ASSERT_EQ(CALC_OK, hr);
+    result = GetSize(calc2, &size2);
+    ASSERT_EQ(CALC_OK, result);
     ASSERT_EQ(12, size2);
 
     DisposeAll();
-    hr = GetSize(calc1, &size1);
-    ASSERT_EQ(CALC_ERR_NO_INSTANCE, hr);
+    result = GetSize(calc1, &size1);
+    ASSERT_EQ(CALC_ERR_NO_INSTANCE, result);
 }
 
-TEST(TestLibCalcApi, ManyCalculators) {
+TEST(TestLibCalcApi, ManyCalculatorsAtTheSameTime) {
     HCALC hcalc;
-    CalculatorResult hr;
+    CalculatorResult result;
     for (uint16_t i = 0; i < 255; i++) {
-        hr = CreateCalculator(8, 0, &hcalc);
-        ASSERT_EQ(CALC_OK, hr);
+        result = CreateCalculator(8, 0, &hcalc);
+        ASSERT_EQ(CALC_OK, result);
     }
 
-    hr = CreateCalculator(8, 0, &hcalc);
-    ASSERT_EQ(CALC_ERR_TOO_MANY_INSTANCES, hr);
+    result = CreateCalculator(8, 0, &hcalc);
+    ASSERT_EQ(CALC_ERR_TOO_MANY_INSTANCES, result);
 
     DisposeAll();
+}
+
+TEST(TestLibCalcApi, ManyCalculatorsOneAfterAnother) {
+    HCALC hcalc;
+    for (int i = 0; i < 300; i++) {
+        CalculatorResult result = CreateCalculator(8, 0, &hcalc);
+        ASSERT_EQ(CALC_OK, result);
+        result = DisposeCalculator(hcalc);
+        ASSERT_EQ(CALC_OK, result);
+    }
 }

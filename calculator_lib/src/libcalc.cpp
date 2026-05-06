@@ -15,11 +15,6 @@ using namespace calculatorcomrade;
 using InstancesMap = std::map<HCALC, Calculator*>;
 InstancesMap g_instances;
 
-HCALC g_calc_hnd = 0;
-
-// #define CALCULATOR(pCalculator) (*((Calculator *)pCalculator))
-// #define DISPLAY_REGISTER(pCalculator) (CALCULATOR(pCalculator).getX())
-
 Calculator* findInstance(const HCALC hCalc) {
     const auto it = g_instances.find(hCalc);
     if (it == g_instances.end())
@@ -27,24 +22,39 @@ Calculator* findInstance(const HCALC hCalc) {
     return it->second;
 }
 
+HCALC findFreeHandle() {
+    for (int value = 1; value <= std::numeric_limits<HCALC>::max(); ++value) {
+        // ReSharper disable once CppTooWideScopeInitStatement
+        const auto handle = static_cast<HCALC>(value);
+        if (g_instances.find(handle) == g_instances.end())
+            return handle;
+    }
+    return 0;
+}
+
 CALCULATOR_API CalculatorResult CreateCalculator(const uint8_t digits, const uint8_t options, HCALC *hcalc) {
     if (hcalc == nullptr) {
-        return CALC_ERR_INVALID_ARGUMENT;
+        return CALC_ERR_INVALID_OUT_ARGUMENT;
     }
-    if (digits < Config::MIN_SIZE || digits > Config::MAX_SIZE) {
+
+    *hcalc = 0;
+
+    if (digits < Config::MIN_SIZE || digits > Config::MAX_SIZE)
         return CALC_ERR_UNSUPPORTED_SIZE;
-    }
-    if (g_calc_hnd == std::numeric_limits<HCALC>::max())
+
+    const HCALC handle = findFreeHandle();
+    if (handle == 0)
         return CALC_ERR_TOO_MANY_INSTANCES;
-    const HCALC newCalcHnd = g_calc_hnd + 1;
-    *hcalc = newCalcHnd;
+
+    Calculator* calculator = nullptr;
     try {
-        g_instances[newCalcHnd] = new Calculator(digits, options);
-        g_calc_hnd = newCalcHnd;
+        calculator = new Calculator(digits, options);
     } catch (...) {
-        if (hcalc != nullptr) *hcalc = 0;
         return CALC_ERR_INTERNAL;
     }
+
+    g_instances[handle] = calculator;
+    *hcalc = handle;
     return CALC_OK;
 }
 
@@ -63,7 +73,6 @@ CALCULATOR_API void DisposeAll() {
         delete g_instance.second;
 
     g_instances.clear();
-    g_calc_hnd = 0;
 }
 
 CALCULATOR_API CalculatorResult SetDisplayEventCallback(const HCALC hCalc, const DisplayEventCallback callback) {
@@ -84,7 +93,7 @@ CALCULATOR_API CalculatorResult CalculatorInput(const HCALC hCalc, const Calcula
 
 CALCULATOR_API CalculatorResult GetSize(const HCALC hCalc, uint8_t *size) {
     if (size == nullptr)
-        return CALC_ERR_INVALID_ARGUMENT;
+        return CALC_ERR_INVALID_OUT_ARGUMENT;
     const Calculator* calculator = findInstance(hCalc);
     if (calculator == nullptr)
         return CALC_ERR_NO_INSTANCE;
@@ -94,7 +103,7 @@ CALCULATOR_API CalculatorResult GetSize(const HCALC hCalc, uint8_t *size) {
 
 CALCULATOR_API CalculatorResult GetNegative(const HCALC hCalc, bool *negative) {
     if (negative == nullptr)
-        return CALC_ERR_INVALID_ARGUMENT;
+        return CALC_ERR_INVALID_OUT_ARGUMENT;
     Calculator* calculator = findInstance(hCalc);
     if (calculator == nullptr)
         return CALC_ERR_NO_INSTANCE;
@@ -104,7 +113,7 @@ CALCULATOR_API CalculatorResult GetNegative(const HCALC hCalc, bool *negative) {
 
 CALCULATOR_API CalculatorResult GetError(const HCALC hCalc, bool *hasError) {
     if (hasError == nullptr)
-        return CALC_ERR_INVALID_ARGUMENT;
+        return CALC_ERR_INVALID_OUT_ARGUMENT;
     Calculator* calculator = findInstance(hCalc);
     if (calculator == nullptr)
         return CALC_ERR_NO_INSTANCE;
@@ -114,7 +123,7 @@ CALCULATOR_API CalculatorResult GetError(const HCALC hCalc, bool *hasError) {
 
 CALCULATOR_API CalculatorResult GetMemory(const HCALC hCalc, bool *memoryHasValue) {
     if (memoryHasValue == nullptr)
-        return CALC_ERR_INVALID_ARGUMENT;
+        return CALC_ERR_INVALID_OUT_ARGUMENT;
     const Calculator* calculator = findInstance(hCalc);
     if (calculator == nullptr)
         return CALC_ERR_NO_INSTANCE;
@@ -124,7 +133,7 @@ CALCULATOR_API CalculatorResult GetMemory(const HCALC hCalc, bool *memoryHasValu
 
 CALCULATOR_API CalculatorResult GetPointPos(const HCALC hCalc, int8_t *pointPos) {
     if (pointPos == nullptr)
-        return CALC_ERR_INVALID_ARGUMENT;
+        return CALC_ERR_INVALID_OUT_ARGUMENT;
     Calculator* calculator = findInstance(hCalc);
     if (calculator == nullptr)
         return CALC_ERR_NO_INSTANCE;
@@ -134,27 +143,31 @@ CALCULATOR_API CalculatorResult GetPointPos(const HCALC hCalc, int8_t *pointPos)
 
 CALCULATOR_API CalculatorResult GetDigit(const HCALC hCalc, const int8_t index, int8_t *digit) {
     if (digit == nullptr)
-        return CALC_ERR_INVALID_ARGUMENT;
+        return CALC_ERR_INVALID_OUT_ARGUMENT;
     Calculator* calculator = findInstance(hCalc);
     if (calculator == nullptr)
         return CALC_ERR_NO_INSTANCE;
+    if (index < 0 || index >= calculator->getSize())
+        return CALC_ERR_INVALID_INDEX_ARGUMENT;
     *digit = calculator->getX().getDigit(index);
     return CALC_OK;
 }
 
 CALCULATOR_API CalculatorResult GetDisplayDigit(const HCALC hCalc, const int8_t index, int8_t *digit) {
     if (digit == nullptr)
-        return CALC_ERR_INVALID_ARGUMENT;
+        return CALC_ERR_INVALID_OUT_ARGUMENT;
     Calculator* calculator = findInstance(hCalc);
     if (calculator == nullptr)
         return CALC_ERR_NO_INSTANCE;
+    if (index < 0 || index >= calculator->getSize())
+        return CALC_ERR_INVALID_INDEX_ARGUMENT;
     *digit = calculator->getX().getDisplayDigit(index);
     return CALC_OK;
 }
 
 CALCULATOR_API CalculatorResult ExportDump(const HCALC hCalc, uint8_t *dump, uint8_t *dumpSize) {
     if (dumpSize == nullptr)
-        return CALC_ERR_INVALID_ARGUMENT;
+        return CALC_ERR_INVALID_OUT_ARGUMENT;
     Calculator* calculator = findInstance(hCalc);
     if (calculator == nullptr)
         return CALC_ERR_NO_INSTANCE;
@@ -164,7 +177,7 @@ CALCULATOR_API CalculatorResult ExportDump(const HCALC hCalc, uint8_t *dump, uin
 
 CALCULATOR_API CalculatorResult ImportDump(const HCALC hCalc, const uint8_t *dump, const uint8_t dumpSize) {
     if (dump == nullptr)
-        return CALC_ERR_INVALID_ARGUMENT;
+        return CALC_ERR_INVALID_OUT_ARGUMENT;
     Calculator* calculator = findInstance(hCalc);
     if (calculator == nullptr)
         return CALC_ERR_NO_INSTANCE;
