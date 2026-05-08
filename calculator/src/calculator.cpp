@@ -353,7 +353,7 @@ void Calculator::memPlusOrMinus(const Operation memOperation) {
 
     Register acc(m_.getSize());
     acc.set(m_);
-    if ((options_ & Config::OPTION_MEM_CAN_TRUNC_X) != 0x00) {
+    if ((options_ & Config::OPTION_MEMORY_OVERFLOW_CLEARS_X) != 0x00) {
         Math::calculate(acc, x_, memOperation, options_);
     } else {
         Register xT(x_.getSize());

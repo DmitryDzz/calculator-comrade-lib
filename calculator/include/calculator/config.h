@@ -7,6 +7,7 @@
 #ifndef CALCULATORCOMRADE_CONFIG_H
 #define CALCULATORCOMRADE_CONFIG_H
 
+#include "calculator/option_codes.h"
 #include "calculator/types.h"
 
 namespace calculatorcomrade {
@@ -21,13 +22,9 @@ namespace calculatorcomrade {
 
         static constexpr uint8_t DUMP_VERSION = 1;
 
-        static constexpr CalcOptions OPTION_TRUNC_ZEROS_ON_OVERFLOW = 0b00000001;
-        // See test MemTruncsX for explanation of OPTION_MEM_CAN_TRUNC_X.
-        static constexpr CalcOptions OPTION_MEM_CAN_TRUNC_X = 0b00000010;
-
-        //    static constexpr CalcOptions OPTIONS_DEFAULT = 0;
-        //    static constexpr CalcOptions OPTIONS_DEFAULT = OPTION_TRUNC_ZEROS_ON_OVERFLOW | OPTION_MEM_CAN_TRUNC_X;
-        static constexpr CalcOptions OPTIONS_DEFAULT = OPTION_MEM_CAN_TRUNC_X;
+        static constexpr CalcOptions OPTION_TRUNC_ZEROS_ON_OVERFLOW = CALC_OPTION_TRUNC_ZEROS_ON_OVERFLOW;
+        static constexpr CalcOptions OPTION_MEMORY_OVERFLOW_CLEARS_X = CALC_OPTION_MEMORY_OVERFLOW_CLEARS_X;
+        static constexpr CalcOptions OPTIONS_DEFAULT = CALC_OPTIONS_DEFAULT;
     };
 }
 

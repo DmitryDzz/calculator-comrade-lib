@@ -10,6 +10,7 @@ set(CALCULATOR_SOURCES
         include/calculator/math.h
         include/calculator/operation_codes.h
         include/calculator/operation.h
+        include/calculator/option_codes.h
         include/calculator/register.h
 )
 

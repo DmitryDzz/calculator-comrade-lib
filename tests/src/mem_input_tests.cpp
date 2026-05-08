@@ -485,7 +485,7 @@ TEST_MEM(MemOverflow) {
     ASSERT_TRUE(c.memHasValue());
 }
 
-void TestMemTruncatesX(Calculator &c) {
+void  TestMemoryOverflowClearsX(Calculator &c) {
     Register &x = c.getX();
     Register &m = c.getM();
 
@@ -504,7 +504,7 @@ void TestMemTruncatesX(Calculator &c) {
 
     // ReSharper disable once CppTooWideScopeInitStatement
     const CalcOptions options = c.getOptions();
-    if ((options & Config::OPTION_MEM_CAN_TRUNC_X) != 0) {
+    if ((options & Config::OPTION_MEMORY_OVERFLOW_CLEARS_X) != 0) {
         ASSERT_TRUE(x.isZero());
     } else {
         ASSERT_EQ(1, getIntValue(x));
@@ -531,13 +531,13 @@ TEST_MEM(MemTruncsX) {
     Calculator c(8);
     CalcOptions options = c.getOptions();
 
-    options |= Config::OPTION_MEM_CAN_TRUNC_X;
+    options |= Config::OPTION_MEMORY_OVERFLOW_CLEARS_X;
     c.setOptions(options);
-    TestMemTruncatesX(c);
+    TestMemoryOverflowClearsX(c);
 
-    options &= ~Config::OPTION_MEM_CAN_TRUNC_X;
+    options &= ~Config::OPTION_MEMORY_OVERFLOW_CLEARS_X;
     c.setOptions(options);
-    TestMemTruncatesX(c);
+    TestMemoryOverflowClearsX(c);
 }
 
 TEST_MEM(DivMemRestore) {
