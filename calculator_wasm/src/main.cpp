@@ -1,0 +1,1 @@
+// This translation unit exists only to produce the final Emscripten module.

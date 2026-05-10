@@ -7,6 +7,7 @@ project(CalculatorComrade
 
 option(BUILD_SHARED_LIBS "Build shared libraries" ON)
 option(CALCULATOR_BUILD_LIB "Build calculator C API wrapper library" ON)
+option(CALCULATOR_BUILD_WASM "Build calculator WebAssembly module" OFF)
 
 include(CTest)
 
@@ -18,6 +19,10 @@ add_subdirectory(calculator)
 
 if(CALCULATOR_BUILD_LIB)
     add_subdirectory(calculator_lib)
+endif()
+
+if(CALCULATOR_BUILD_WASM)
+    add_subdirectory(calculator_wasm)
 endif()
 
 if(BUILD_TESTING)
