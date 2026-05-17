@@ -31,6 +31,10 @@ HCALC findFreeHandle() {
     return 0;
 }
 
+CALCULATOR_API const char *GetCalculatorVersion() {
+    return CALCULATOR_COMRADE_VERSION;
+}
+
 CALCULATOR_API CalculatorResult CreateCalculator(const uint8_t digits, const uint8_t options, HCALC *hcalc) {
     if (hcalc == nullptr) {
         return CALC_ERR_INVALID_OUT_ARGUMENT;

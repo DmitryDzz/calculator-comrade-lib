@@ -11,6 +11,8 @@
 * Added shared/static library export support.
 * Added export/import macros for building the public C API as a shared library.
 * Added generated `libcalc_version.h` header with project version macros.
+* Added `GetCalculatorVersion()` to the public C API.
+* Added WASM export for `GetCalculatorVersion()`.
 * Added clang-tidy configuration for source code checks.
 * Improved source file header comments and SPDX license identifiers.
 * Added project documentation updates.

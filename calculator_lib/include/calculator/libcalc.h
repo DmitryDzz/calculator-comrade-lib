@@ -18,6 +18,8 @@
 
 #include "calculator/button_codes.h"
 #include "calculator/option_codes.h"
+// ReSharper disable once CppUnusedIncludeDirective
+#include "calculator/libcalc_version.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -81,6 +83,16 @@ enum {
     /** An internal error occurred. */
     CALC_ERR_INTERNAL = -8
 };
+
+/**
+ * Gets the Calculator Comrade library version string.
+ *
+ * The returned string is a static null-terminated string and must not be freed
+ * or modified by the caller.
+ *
+ * \return Library version string in MAJOR.MINOR.PATCH format.
+ */
+CALCULATOR_API const char *GetCalculatorVersion(void);
 
 /**
  * Creates a calculator instance.

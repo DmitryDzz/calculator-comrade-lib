@@ -1,6 +1,18 @@
+set(CALCULATOR_LIB_GENERATED_INCLUDE_DIR
+        "${CMAKE_CURRENT_BINARY_DIR}/generated"
+)
+
+configure_file(
+        "${CMAKE_CURRENT_SOURCE_DIR}/include/calculator/libcalc_version.h.in"
+        "${CALCULATOR_LIB_GENERATED_INCLUDE_DIR}/calculator/libcalc_version.h"
+        @ONLY
+)
+
 set(CALCULATOR_LIB_SOURCES
         src/libcalc.cpp
         include/calculator/libcalc.h
+        include/calculator/libcalc_version.h.in
+        "${CALCULATOR_LIB_GENERATED_INCLUDE_DIR}/calculator/libcalc_version.h"
 )
 
 add_library(calculator_lib ${CALCULATOR_LIB_SOURCES})
@@ -8,7 +20,7 @@ add_library(calculator_lib ${CALCULATOR_LIB_SOURCES})
 target_include_directories(calculator_lib
         PUBLIC
         "${CMAKE_CURRENT_SOURCE_DIR}/include"
-        "${CMAKE_CURRENT_BINARY_DIR}/generated"
+        "${CALCULATOR_LIB_GENERATED_INCLUDE_DIR}"
 )
 
 target_link_libraries(calculator_lib

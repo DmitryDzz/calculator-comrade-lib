@@ -33,7 +33,7 @@ target_link_options(calculator_wasm
         "SHELL:-s ENVIRONMENT=web"
         "SHELL:-s ALLOW_MEMORY_GROWTH=1"
 
-        "SHELL:-sEXPORTED_FUNCTIONS=['_CreateCalculator','_DisposeCalculator','_DisposeAll','_SetDisplayEventCallback','_CalculatorInput','_GetSize','_GetNegative','_GetError','_GetMemory','_GetPointPos','_GetDigit','_GetDisplayDigit','_ExportDump','_ImportDump','_malloc','_free']"
+        "SHELL:-sEXPORTED_FUNCTIONS=['_GetCalculatorVersion','_CreateCalculator','_DisposeCalculator','_DisposeAll','_SetDisplayEventCallback','_CalculatorInput','_GetSize','_GetNegative','_GetError','_GetMemory','_GetPointPos','_GetDigit','_GetDisplayDigit','_ExportDump','_ImportDump','_malloc','_free']"
 
         "SHELL:-sEXPORTED_RUNTIME_METHODS=['ccall','cwrap','getValue','setValue','UTF8ToString','HEAPU8','HEAP8']"
 )
