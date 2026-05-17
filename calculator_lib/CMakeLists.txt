@@ -8,6 +8,7 @@ add_library(calculator_lib ${CALCULATOR_LIB_SOURCES})
 target_include_directories(calculator_lib
         PUBLIC
         "${CMAKE_CURRENT_SOURCE_DIR}/include"
+        "${CMAKE_CURRENT_BINARY_DIR}/generated"
 )
 
 target_link_libraries(calculator_lib

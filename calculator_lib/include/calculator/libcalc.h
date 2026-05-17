@@ -4,9 +4,8 @@
  * Calculator Comrade C API.
  * WARNING: The C API is not thread-safe!
  *
- * License: https://github.com/DmitryDzz/calculator-comrade-lib/blob/master/LICENSE
- * Author: Dmitry Dzakhov
- * Email: info@robot-mitya.ru
+ * Copyright (c) 2019-2026 Dmitry Dzakhov (dmitrydzz)
+ * SPDX-License-Identifier: MIT
  */
 #ifndef CALCULATORCOMRADE_LIBCALC_H
 #define CALCULATORCOMRADE_LIBCALC_H
